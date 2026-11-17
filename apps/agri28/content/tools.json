@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "note": "Catalogue des outils d'IA cités par les leçons. Rien n'entre ici sans vérification web. availabilityDZ : « oui » = confirmé sur une page officielle de l'éditeur ; « a_verifier » = non confirmé depuis cette session.",
+  "tools": [
+    {
+      "id": "claude",
+      "name": "Claude",
+      "vendor": "Anthropic",
+      "url": "https://claude.ai",
+      "freeTier": true,
+      "availabilityDZ": "oui",
+      "checkedOn": "2026-11-17",
+      "source": "https://www.anthropic.com/supported-countries",
+      "note": {
+        "fr": "L'Algérie figure explicitement sur la liste officielle des pays pris en charge par Anthropic. Version gratuite limitée en nombre de messages.",
+        "ar": "الجزائر مذكورة صراحةً في القائمة الرسمية للبلدان المدعومة من Anthropic. النسخة المجانية محدودة في عدد الرسائل."
+      }
+    },
+    {
+      "id": "chatgpt",
+      "name": "ChatGPT",
+      "vendor": "OpenAI",
+      "url": "https://chatgpt.com",
+      "freeTier": true,
+      "availabilityDZ": "a_verifier",
+      "checkedOn": "2026-11-17",
+      "source": null,
+      "note": {
+        "fr": "Largement utilisé en Algérie, mais la liste officielle des pays pris en charge n'a pas pu être consultée depuis l'environnement de développement. À confirmer avant publication.",
+        "ar": "مستعمل على نطاق واسع في الجزائر، لكن القائمة الرسمية للبلدان المدعومة تعذّر الاطّلاع عليها. يجب التأكّد قبل النشر."
+      }
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini",
+      "vendor": "Google",
+      "url": "https://gemini.google.com",
+      "freeTier": true,
+      "availabilityDZ": "a_verifier",
+      "checkedOn": "2026-11-17",
+      "source": null,
+      "note": {
+        "fr": "Liste officielle des pays non consultable depuis l'environnement de développement. À confirmer avant publication.",
+        "ar": "تعذّر الاطّلاع على قائمة البلدان الرسمية. يجب التأكّد قبل النشر."
+      }
+    },
+    {
+      "id": "notebooklm",
+      "name": "NotebookLM",
+      "vendor": "Google",
+      "url": "https://notebooklm.google.com",
+      "freeTier": true,
+      "availabilityDZ": "a_verifier",
+      "checkedOn": "2026-11-17",
+      "source": null,
+      "note": {
+        "fr": "Utilisé en semaine 4 pour l'analyse de documents. Disponibilité en Algérie à confirmer avant publication.",
+        "ar": "يُستعمل في الأسبوع الرابع لتحليل الوثائق. يجب تأكيد توفّره في الجزائر قبل النشر."
+      }
+    }
+  ]
+}

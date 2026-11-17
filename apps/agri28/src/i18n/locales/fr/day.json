@@ -1,0 +1,89 @@
+{
+  "steps": {
+    "concept": "Concept",
+    "practice": "Pratique",
+    "quiz": "Quiz",
+    "review": "Bilan"
+  },
+  "stepOf": "Étape {{current}} sur {{total}}",
+  "minutes": "{{count}} min",
+  "timer": {
+    "label": "Minuteur",
+    "start": "Démarrer",
+    "pause": "Pause",
+    "resume": "Reprendre",
+    "finished": "Les 15 minutes sont écoulées — terminez tranquillement.",
+    "aria": "Temps restant : {{time}}"
+  },
+  "nav": {
+    "next": "Continuer",
+    "back": "Retour",
+    "finish": "Valider ma journée"
+  },
+  "concept": {
+    "keyPoints": "À retenir"
+  },
+  "practice": {
+    "promptTitle": "Prompt à copier",
+    "copy": "Copier le prompt",
+    "copied": "Prompt copié",
+    "openTool": "Ouvrir {{tool}}",
+    "followUps": "Relances utiles",
+    "yourAnswer": "Votre réponse",
+    "optional": "facultatif",
+    "missingVars": "Complétez votre fiche projet pour remplir : {{list}}",
+    "toolUnverified": "Disponibilité de cet outil en Algérie non confirmée."
+  },
+  "quiz": {
+    "question": "Question {{current}} sur {{total}}",
+    "correct": "Bonne réponse",
+    "wrong": "Réponse incorrecte",
+    "score": "{{score}} bonnes réponses sur {{total}}",
+    "answerAll": "Répondez aux trois questions pour continuer."
+  },
+  "review": {
+    "checklist": "Ce que vous avez produit",
+    "confidence": "Note de confiance",
+    "confidenceHelp": "1 = pas du tout à l'aise, 5 = tout à fait à l'aise",
+    "dossier": "Ajouté au Dossier de projet",
+    "dossierEmpty": "Rien à ajouter au Dossier aujourd'hui : vos saisies étaient vides.",
+    "validate": "Valider ma journée",
+    "validated": "Journée validée",
+    "alreadyDone": "Journée déjà validée — vous pouvez la relire ou la refaire."
+  },
+  "guardrails": {
+    "title": "À garder en tête"
+  },
+  "verifyLocally": {
+    "title": "À vérifier localement"
+  },
+  "sources": {
+    "title": "Sources"
+  },
+  "draft": {
+    "label": "Brouillon",
+    "note": "Ce contenu est provisoire : il sera relu et validé avant publication."
+  },
+  "locked": {
+    "title": "Jour verrouillé",
+    "description": "Validez le jour {{previous}} pour ouvrir celui-ci.",
+    "unlock": "Ouvrir quand même",
+    "goToCurrent": "Aller au jour {{day}}"
+  },
+  "missing": {
+    "title": "Contenu indisponible",
+    "description": "La leçon du jour {{day}} n'existe pas encore dans cette langue."
+  },
+  "list": {
+    "title": "Mon parcours",
+    "subtitle": "28 jours, 15 minutes par jour. Le jour suivant s'ouvre dès que le précédent est validé.",
+    "week": "Semaine {{week}}",
+    "day": "Jour {{day}}"
+  },
+  "status": {
+    "locked": "Verrouillé",
+    "available": "À faire",
+    "in_progress": "En cours",
+    "done": "Validé"
+  }
+}

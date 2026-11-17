@@ -59,6 +59,7 @@ Chemins ci-dessous relatifs à `apps/agri28/` :
 - `src/export/` : `.docx`, `.xlsx`, certificat PDF — en chunks séparés.
 - `content/` : `days/day-NN.<lang>.json`, `templates/`, `tools.json`, `guardrails.json`, `wilayas.json`, `sources.json`.
 - `src/lib/` : langue, apparence (thème/direction), formatage `Intl`.
+- `src/hooks/` : minuteur de séance (la logique reste dans `src/domain/timer.ts`).
 - `src/store/` : état d'interface Zustand, hydraté depuis IndexedDB.
 
 Schéma d'une leçon : [`docs/lesson-schema.md`](docs/lesson-schema.md) · exemple : [`docs/examples/day-01.fr.sample.json`](docs/examples/day-01.fr.sample.json).
@@ -86,6 +87,7 @@ Contraste AA · cibles tactiles ≥ 44 px · focus visible · libellés ARIA · 
 tailles en `rem` · navigation clavier · jamais d'information portée par la seule couleur.
 
 ### Contenu
+- **Rien n'entre dans `content/` sans vérification.** `tools.json` porte `availabilityDZ` + `checkedOn` ; `sources.json` porte la date de consultation et un niveau de confiance ; `validate:content` avertit pour tout outil non confirmé et tout contenu marqué `draft`.
 - Un jour = une idée. La pratique produit toujours quelque chose de concret.
 - **Garde-fous obligatoires** dans chaque leçon concernée, au point du risque :
   *l'IA ne remplace ni l'agronome, ni le vétérinaire, ni le juriste, ni le comptable ; toute dose, tout
@@ -116,11 +118,17 @@ tailles en `rem` · navigation clavier · jamais d'information portée par la se
 | D14 | Manifeste PWA statique en français | 2026-11-17 | un manifeste ne porte qu'une langue ; nom localisé à étudier en phase 7 |
 | D15 | Icônes PNG générées par Chromium (`npm run icons`) à partir du même dessin que `favicon.svg` | 2026-11-17 | aucune dépendance d'image native, rendu identique au navigateur |
 | D16 | Cache de peinture `localStorage` (`agri28.theme`, `agri28.lang`) lu par un script en ligne dans `index.html` | 2026-11-17 | évite le clignotement de thème et de direction au démarrage ; IndexedDB reste la source de vérité |
+| D17 | **69 wilayas**, pas 58 | 2026-11-17 | loi 26-06, *Journal officiel* n° 25 du 5 avril 2026 (vérifié : texte du JO + jeu de données MIT concordants). Les wilayas 59 à 69 sont marquées `new2026` et l'application signale que les services agricoles peuvent encore dépendre de la wilaya mère |
+| D18 | Écrans chargés à la demande (`React.lazy`), seul l'accueil est dans le paquet initial | 2026-11-17 | le paquet initial passait à 184 Ko gzip ; il est redescendu à **69 Ko** |
+| D19 | La série est calculée **dans le store, à l'écriture**, jamais pendant le rendu | 2026-11-17 | `Date.now()` n'est pas pur : React 19 l'interdit en rendu, et un sélecteur Zustand qui recrée un objet fait boucler `useSyncExternalStore` |
+| D20 | `validate:content` est en TypeScript, exécuté par `node --experimental-strip-types`, et importe les **mêmes schémas Zod** que l'application | 2026-11-17 | un contenu validé en CI se charge forcément dans l'app : une seule source de vérité |
+| D21 | Le jour 1 présent dans `content/days/` est un **brouillon** (`draft: true`), écrit pour faire tourner le moteur | 2026-11-17 | il sera relu, corrigé et validé en phase 3 avec les jours 2 à 7. L'application affiche un bandeau « Brouillon » et la validation du contenu émet un avertissement |
 
 ### Questions ouvertes
 - Chiffres occidentaux (`1 500 DA`) ou arabo-indiens (`١٥٠٠`) en arabe ? *(implémenté en occidentaux, décision D12 — à confirmer)*
 - Vouvoiement en FR ? Arabe standard simple en AR ? *(recommandation : oui aux deux)*
 - Nom public de l'application et de la PWA ? *(provisoire : « 28 jours — Mon projet agricole avec l'IA », abrégé « Agri28 »)*
+- **Bloquant pour la phase 3** : la disponibilité de ChatGPT, Gemini et NotebookLM en Algérie n'a pas pu être vérifiée — `platform.openai.com` et `support.google.com` ne sont pas joignables depuis cette session. Soit ces domaines sont autorisés dans les paramètres réseau de la session, soit vous me confirmez vous-même la disponibilité. Claude est confirmé (page officielle d'Anthropic, l'Algérie y figure).
 
 ### Questions tranchées
 - ~~API `docx`~~ : **confirmée** en lisant les types du paquet — `bidirectional?: boolean` sur les options de paragraphe, `rightToLeft?: boolean` sur celles d'un run, `AlignmentType.START/END` logiques, `sizeComplexScript` pour la taille en script complexe.
@@ -154,8 +162,8 @@ Dans `apps/agri28` uniquement : `npm run icons` (régénère les icônes PWA),
 | Phase | Objet | État |
 |---|---|---|
 | 0 | Cadrage : architecture, modèle de données, arborescence, schéma de leçon, stratégie RTL/i18n | terminée |
-| 1 | Squelette : routage, i18n AR/FR + RTL, thème, PWA, écrans vides, tests de base | **terminée — en attente de GO** |
-| 2 | Moteur de parcours : leçons, minuteur, validation, progression, série, verrouillage, profil projet | à faire |
+| 1 | Squelette : routage, i18n AR/FR + RTL, thème, PWA, écrans vides, tests de base | terminée |
+| 2 | Moteur de parcours : leçons, minuteur, validation, progression, série, verrouillage, profil projet | **terminée — en attente de GO** |
 | 3 | Contenu semaine 1 (jours 1-7), FR + AR | à faire |
 | 4 | Contenu semaines 2, 3, 4 (un GO entre chaque) | à faire |
 | 5 | Dossier de projet, exports `.docx`/`.xlsx`, carnet, badges, certificat, rappels | à faire |

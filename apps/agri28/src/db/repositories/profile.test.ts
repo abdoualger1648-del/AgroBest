@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { db } from '../db';
+import { db, SCHEMA_VERSION } from '../db';
 import { buildDefaultProfile, clearProfile, getProfile, updateProfile } from './profile';
 
 describe('profil (IndexedDB)', () => {
@@ -16,7 +16,8 @@ describe('profil (IndexedDB)', () => {
     expect(['fr', 'ar']).toContain(profile.lang);
     expect(profile.theme).toBe('system');
     expect(profile.onboardingDone).toBe(false);
-    expect(profile.schemaVersion).toBe(1);
+    expect(profile.schemaVersion).toBe(SCHEMA_VERSION);
+    expect(profile.activeProjectId).toBeNull();
     expect(await db.profile.count()).toBe(1);
   });
 

@@ -1,0 +1,107 @@
+{
+  "create": {
+    "title": "Mon projet",
+    "subtitle": "Quelques informations sur votre exploitation. Elles rempliront automatiquement tous les prompts du parcours.",
+    "submit": "Créer mon projet"
+  },
+  "edit": {
+    "title": "Modifier mon projet",
+    "submit": "Enregistrer",
+    "saved": "Modifications enregistrées"
+  },
+  "fields": {
+    "name": {
+      "label": "Nom du projet",
+      "placeholder": "Élevage ovin Aïn Defla",
+      "help": "Un nom court, pour vous y retrouver."
+    },
+    "type": {
+      "label": "Type d'activité"
+    },
+    "scale": {
+      "label": "Taille",
+      "help": "Superficie ou nombre de têtes, selon votre activité."
+    },
+    "unit": {
+      "label": "Unité"
+    },
+    "wilaya": {
+      "label": "Wilaya",
+      "placeholder": "Choisir une wilaya"
+    },
+    "commune": {
+      "label": "Commune",
+      "optional": "facultatif"
+    },
+    "objective": {
+      "label": "Objectif",
+      "placeholder": "Vendre 40 agneaux et connaître le coût de chacun.",
+      "help": "En une phrase : ce que vous voulez avoir réussi."
+    },
+    "horizon": {
+      "label": "Horizon (mois)"
+    },
+    "budget": {
+      "label": "Budget maximal (DA)",
+      "optional": "facultatif"
+    },
+    "water": {
+      "label": "Source d'eau"
+    },
+    "startMonth": {
+      "label": "Mois de démarrage"
+    }
+  },
+  "types": {
+    "ovin": "Élevage ovin",
+    "bovin": "Élevage bovin",
+    "avicole": "Élevage avicole",
+    "maraichage": "Maraîchage",
+    "serre": "Culture sous serre",
+    "cereales": "Céréaliculture",
+    "arboriculture": "Arboriculture",
+    "apiculture": "Apiculture",
+    "autre": "Autre"
+  },
+  "typeOther": {
+    "label": "Précisez l'activité",
+    "placeholder": "Escargotière, champignonnière…"
+  },
+  "units": {
+    "ha": "hectares",
+    "m2": "m²",
+    "tete": "têtes",
+    "sujet": "sujets",
+    "ruche": "ruches"
+  },
+  "water": {
+    "forage": "Forage",
+    "reseau": "Réseau public",
+    "pluvial": "Pluvial",
+    "bassin": "Bassin",
+    "autre": "Autre",
+    "inconnu": "Je ne sais pas encore"
+  },
+  "errors": {
+    "nameRequired": "Donnez un nom à votre projet.",
+    "scalePositive": "Indiquez une taille supérieure à zéro.",
+    "wilayaRequired": "Choisissez votre wilaya.",
+    "objectiveRequired": "Décrivez votre objectif en une phrase."
+  },
+  "summary": {
+    "title": "Fiche projet",
+    "scale": "Taille",
+    "wilaya": "Wilaya",
+    "objective": "Objectif",
+    "horizon": "Horizon",
+    "budget": "Budget maximal",
+    "water": "Source d'eau",
+    "edit": "Modifier"
+  },
+  "newWilaya": "Wilaya créée en 2026. Vos démarches agricoles peuvent encore passer par {{mother}}.",
+  "none": {
+    "title": "Aucun projet pour l'instant",
+    "description": "Le parcours s'appuie sur votre projet : créez-le pour commencer.",
+    "cta": "Créer mon projet"
+  }
+}

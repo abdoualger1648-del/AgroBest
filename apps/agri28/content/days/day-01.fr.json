@@ -1,0 +1,210 @@
+{
+  "schema": 1,
+  "id": "day-01",
+  "day": 1,
+  "week": 1,
+  "lang": "fr",
+  "draft": true,
+  "title": "Ce qu'une IA sait faire — et ce qu'elle ne sait pas",
+  "subtitle": "Vous comprenez à quoi sert une IA générative pour une exploitation, et vous créez la fiche de votre projet.",
+  "durationMin": 15,
+  "objectives": [
+    "Expliquer en une phrase ce qu'est une IA générative et ce qu'elle n'est pas",
+    "Repérer trois tâches de mon exploitation où elle me fait gagner du temps",
+    "Créer la fiche de mon projet, qui servira de base aux 27 jours suivants"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": false,
+  "produces": {
+    "dossierKind": "fiche_projet",
+    "label": "Fiche projet (version 1)"
+  },
+  "guardrails": ["ai_not_agronomist", "verify_prices", "data_privacy_basic"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "example",
+          "label": "Sur le terrain",
+          "text": "Kamel élève 60 brebis à Aïn Defla. Chaque mois, il passe une soirée entière à recopier ses dépenses sur un cahier, puis à deviner s'il gagne ou perd de l'argent. Il n'a besoin ni d'un logiciel, ni d'un comptable pour commencer : il a besoin de **mettre de l'ordre dans ce qu'il sait déjà**."
+        },
+        {
+          "type": "p",
+          "text": "Une IA générative, c'est un **assistant qui écrit, organise et explique**. Vous lui parlez normalement, elle vous répond en texte : un tableau de dépenses, un courrier, un calendrier de travaux, une liste de questions à poser à votre vétérinaire."
+        },
+        {
+          "type": "p",
+          "text": "Elle ne va pas dans votre étable et elle ne lit pas votre compteur d'eau. Elle travaille **uniquement avec ce que vous lui donnez** : vos chiffres, vos dates, vos observations."
+        },
+        {
+          "type": "note",
+          "variant": "warning",
+          "text": "Elle peut écrire une bêtise avec une grande assurance : un prix inventé, une dose de traitement fausse, une démarche administrative qui n'existe pas. C'est le point le plus important de ces 28 jours : **vous restez celui qui vérifie**."
+        },
+        {
+          "type": "ul",
+          "items": [
+            "Ce qu'elle fait très bien : rédiger, résumer, structurer, traduire, comparer, reformuler, générer des tableaux",
+            "Ce qu'elle fait mal : donner un prix du jour, citer un texte de loi exact, diagnostiquer une maladie sans examen",
+            "Ce qu'elle ne fait pas du tout : décider à votre place"
+          ]
+        }
+      ],
+      "keyPoints": [
+        "Une IA générative écrit et organise ; elle n'observe pas votre exploitation",
+        "Elle ne connaît ni les prix du jour, ni votre parcelle : c'est vous qui les fournissez",
+        "Tout chiffre, toute dose, toute règle se vérifie auprès d'une source locale fiable"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "On commence par le plus utile : **décrire votre projet une bonne fois**. Cette description sera réutilisée automatiquement dans tous les prompts des 27 jours suivants."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Votre fiche projet est déjà créée. Relisez-la, puis formulez votre objectif en une phrase concrète.",
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "En une phrase, qu'est-ce que vous voulez avoir réussi dans 12 mois ?",
+            "placeholder": "Exemple : vendre 40 agneaux et savoir exactement ce que chacun m'a coûté.",
+            "required": true,
+            "dossier": {
+              "kind": "fiche_projet",
+              "block": "kv",
+              "key": "Objectif à 12 mois"
+            }
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Ouvrez un assistant IA (le bouton vous y emmène), copiez ce prompt, et lisez sa réponse sans rien prendre pour argent comptant.",
+          "prompt": {
+            "id": "p1",
+            "title": "Faire relire mon projet par l'IA",
+            "tool": "claude",
+            "template": "Tu es un conseiller agricole habitué aux petites exploitations en Algérie.\n\nMon projet : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}.\nMon objectif sur {{project.horizonMonths}} mois : {{project.objective}}.\n\nFais trois choses, dans cet ordre :\n1. Reformule mon projet en cinq lignes claires, comme si tu l'expliquais à un banquier.\n2. Pose-moi les 5 questions les plus importantes auxquelles je n'ai pas encore répondu.\n3. Dis-moi les 3 risques les plus fréquents pour ce type de projet dans ma région.\n\nRègle : si une information dépend d'un prix local, d'une dose ou de la réglementation algérienne, ne l'invente pas. Dis-le clairement et demande-moi de vérifier auprès de ma Chambre d'agriculture, de mon vétérinaire ou de mon fournisseur.",
+            "hint": "Collez la reformulation obtenue dans le champ ci-dessous : elle entrera dans votre Dossier de projet.",
+            "followUps": [
+              "Reformule encore plus simplement, en évitant les mots techniques.",
+              "Parmi tes 5 questions, laquelle dois-je traiter en premier et pourquoi ?"
+            ]
+          },
+          "capture": {
+            "id": "c2",
+            "type": "textarea",
+            "label": "La reformulation de mon projet (collez-la, puis corrigez ce qui est faux)",
+            "dossier": {
+              "kind": "fiche_projet",
+              "block": "paragraph"
+            }
+          }
+        },
+        {
+          "id": "s3",
+          "optional": true,
+          "instruction": "Dernière étape, la plus formatrice : trouvez dans la réponse de l'IA **une chose inexacte ou impossible à vérifier**. Il y en a presque toujours une.",
+          "capture": {
+            "id": "c3",
+            "type": "textarea",
+            "label": "Ce que l'IA a affirmé et que je dois vérifier moi-même",
+            "placeholder": "Exemple : elle parle d'une aide à l'investissement sans dire si elle existe encore.",
+            "dossier": {
+              "kind": "fiche_projet",
+              "block": "list"
+            }
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Vous demandez à une IA le prix du quintal d'orge cette semaine dans votre wilaya. Que faites-vous de sa réponse ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Je l'utilise telle quelle dans mon budget"
+            },
+            {
+              "id": "b",
+              "text": "Je la traite comme une estimation à confronter à un prix relevé chez un fournisseur ou au marché"
+            },
+            {
+              "id": "c",
+              "text": "Je lui demande trois fois : si elle répète, c'est que c'est juste"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Une IA générative n'a pas accès aux prix du jour de votre marché. Elle produit un ordre de grandeur plausible, parfois ancien, parfois faux. Le prix qui compte est celui que vous relevez vous-même. Répéter la question ne vérifie rien : le modèle peut répéter la même erreur avec la même assurance."
+        },
+        {
+          "id": "q2",
+          "text": "Quelle tâche convient le mieux à une IA générative aujourd'hui ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Décider si je dois traiter mon troupeau contre les parasites"
+            },
+            {
+              "id": "b",
+              "text": "Rédiger la lettre de demande que je déposerai à la Chambre d'agriculture"
+            },
+            {
+              "id": "c",
+              "text": "Mesurer l'humidité de mon sol"
+            },
+            {
+              "id": "d",
+              "text": "Me dire combien j'ai réellement dépensé le mois dernier"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Rédiger, structurer, reformuler : c'est son terrain. Le traitement relève du vétérinaire, la mesure relève d'un capteur ou de votre observation, et vos dépenses réelles ne sont connues que si vous les saisissez vous-même — ce que vous ferez en semaine 2."
+        },
+        {
+          "id": "q3",
+          "text": "Pourquoi commencer ces 28 jours par une fiche projet ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Pour que l'application ait quelque chose à afficher sur l'accueil"
+            },
+            {
+              "id": "b",
+              "text": "Parce qu'une IA ne donne de réponse utile que si elle connaît votre situation précise"
+            },
+            {
+              "id": "c",
+              "text": "Parce que c'est obligatoire pour obtenir une aide"
+            }
+          ],
+          "answer": "b",
+          "explanation": "« Comment améliorer mon élevage ? » donne une réponse de manuel. « Élevage ovin, 60 têtes, Aïn Defla, objectif 40 agneaux vendus en 12 mois » donne une réponse utilisable. Votre fiche projet sera insérée automatiquement dans tous les prompts suivants."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "Ma fiche projet est créée et exacte",
+        "J'ai obtenu une reformulation de mon projet et je l'ai corrigée",
+        "J'ai repéré au moins une affirmation de l'IA à vérifier"
+      ],
+      "confidencePrompt": "Aujourd'hui, à quel point vous sentez-vous à l'aise avec l'idée d'utiliser une IA pour votre exploitation ?",
+      "dossierPreview": true
+    }
+  },
+  "verifyLocally": [
+    "Aucune aide, démarche ou obligation citée par une IA ne doit être tenue pour vraie : la Chambre d'agriculture de votre wilaya et la DSA sont les sources qui font foi."
+  ],
+  "nextTeaser": "Demain : la différence entre une question vague et un prompt qui donne une réponse utilisable — en 7 minutes de pratique sur votre propre projet."
+}

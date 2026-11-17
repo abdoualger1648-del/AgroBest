@@ -87,14 +87,14 @@ Principe directeur : **le contenu est une donnée, pas du code**. Ajouter un jou
     │
     ├── content/                   # ← CONTENU PÉDAGOGIQUE (hors du code)
     │   ├── guardrails.json        # 8 garde-fous, FR + AR
-    │   ├── days/                  # day-NN.<lang>.json              (phases 3-4)
+    │   ├── days/day-01.{fr,ar}.json  # jour 1 (BROUILLON, relu en phase 3)
     │   ├── templates/             # modèles exportables              (phase 5)
-    │   ├── tools.json             # catalogue des outils IA vérifiés (phase 3)
-    │   ├── wilayas.json           #                                  (phase 2)
-    │   └── sources.json           #                                  (phase 3)
+    │   ├── tools.json             # outils IA : gratuité, disponibilité en Algérie, date de vérif.
+    │   ├── wilayas.json           # 69 wilayas (loi 26-06, JO n° 25 du 5 avril 2026)
+    │   └── sources.json           # sources consultées, datées, avec niveau de confiance
     │
     ├── scripts/
-    │   ├── validate-content.mjs   # validation du contenu (grandit avec lui)
+    │   ├── validate-content.ts    # Zod (mêmes schémas que l'app) + parité AR/FR + prix sans source
     │   └── generate-icons.mjs     # icônes PWA rendues par Chromium
     │
     ├── public/
@@ -116,8 +116,9 @@ Principe directeur : **le contenu est une donnée, pas du code**. Ajouter un jou
         ├── styles/index.css       # jetons de couleur, thème clair/sombre, base
         ├── test/                  # garde-fou RTL, utilitaire de rendu
         │
-        ├── domain/                # logique pure du parcours              (phase 2)
-        ├── content/               # schémas Zod + chargeur de leçons      (phase 2)
+        ├── domain/                # logique pure : course, streak, quiz, prompt, timer, dossier
+        ├── content/               # schémas Zod, chargeur à la demande, catalogues, markdown
+        ├── hooks/                 # useTimer (cadence le minuteur du domaine)
         └── export/                # .docx, .xlsx, certificat PDF          (phase 5)
 ```
 

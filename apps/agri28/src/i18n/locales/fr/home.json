@@ -9,8 +9,16 @@
   },
   "dossier": {
     "label": "Dossier de projet",
-    "empty": "Aucune brique pour l'instant"
+    "empty": "Aucune brique pour l'instant",
+    "count": "{{count}} brique(s)"
   },
   "cta": "Commencer mes 15 minutes",
-  "phaseNotice": "Squelette de l'application : la progression, le minuteur et les leçons arrivent aux phases 2 et 3."
+  "phaseNotice": "Squelette de l'application : la progression, le minuteur et les leçons arrivent aux phases 2 et 3.",
+  "ctaContinue": "Reprendre le jour {{day}}",
+  "ctaDone": "Parcours terminé",
+  "day": "Jour {{day}}",
+  "project": {
+    "label": "Mon projet",
+    "none": "Projet non créé"
+  }
 }

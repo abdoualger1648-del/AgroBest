@@ -7,14 +7,26 @@ import frNav from './locales/fr/nav.json';
 import frHome from './locales/fr/home.json';
 import frSettings from './locales/fr/settings.json';
 import frScreens from './locales/fr/screens.json';
+import frProject from './locales/fr/project.json';
+import frDay from './locales/fr/day.json';
 
 import arCommon from './locales/ar/common.json';
 import arNav from './locales/ar/nav.json';
 import arHome from './locales/ar/home.json';
 import arSettings from './locales/ar/settings.json';
 import arScreens from './locales/ar/screens.json';
+import arProject from './locales/ar/project.json';
+import arDay from './locales/ar/day.json';
 
-export const NAMESPACES = ['common', 'nav', 'home', 'settings', 'screens'] as const;
+export const NAMESPACES = [
+  'common',
+  'nav',
+  'home',
+  'settings',
+  'screens',
+  'project',
+  'day',
+] as const;
 export type Namespace = (typeof NAMESPACES)[number];
 
 /**
@@ -29,6 +41,8 @@ export const resources = {
     home: frHome,
     settings: frSettings,
     screens: frScreens,
+    project: frProject,
+    day: frDay,
   },
   ar: {
     common: arCommon,
@@ -36,6 +50,8 @@ export const resources = {
     home: arHome,
     settings: arSettings,
     screens: arScreens,
+    project: arProject,
+    day: arDay,
   },
 } as const;
 

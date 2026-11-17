@@ -11,6 +11,7 @@ export function buildDefaultProfile(now: number = Date.now()): ProfileRecord {
     reminderEnabled: false,
     reminderTime: null,
     onboardingDone: false,
+    activeProjectId: null,
     createdAt: now,
     updatedAt: now,
     schemaVersion: SCHEMA_VERSION,

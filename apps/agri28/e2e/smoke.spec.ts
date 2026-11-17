@@ -17,9 +17,14 @@ test.describe('squelette de l’application', () => {
     await page.goto('./parametres');
 
     await expect(page.locator('html')).toHaveAttribute('dir', 'ltr');
-    await page.getByRole('radio', { name: 'العربية' }).check();
 
-    await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+    // L'application est rendue côté client : entre l'apparition de l'écran et
+    // le branchement des gestionnaires d'événements, un clic peut se perdre.
+    // On réessaie jusqu'à ce que le changement prenne effet.
+    await expect(async () => {
+      await page.getByRole('radio', { name: 'العربية' }).check();
+      await expect(page.locator('html')).toHaveAttribute('dir', 'rtl', { timeout: 1000 });
+    }).toPass({ timeout: 15_000 });
     await expect(page.locator('html')).toHaveAttribute('lang', 'ar');
 
     await page.reload();
@@ -30,8 +35,10 @@ test.describe('squelette de l’application', () => {
   test('bascule en thème sombre et le conserve', async ({ page }) => {
     await page.goto('./parametres');
 
-    await page.getByRole('radio', { name: 'Sombre' }).check();
-    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+    await expect(async () => {
+      await page.getByRole('radio', { name: 'Sombre' }).check();
+      await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark', { timeout: 1000 });
+    }).toPass({ timeout: 15_000 });
 
     await page.reload();
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
@@ -75,8 +82,10 @@ test.describe('squelette de l’application', () => {
 
   test('n’a aucun défilement horizontal en arabe sur mobile', async ({ page }) => {
     await page.goto('./parametres');
-    await page.getByRole('radio', { name: 'العربية' }).check();
-    await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+    await expect(async () => {
+      await page.getByRole('radio', { name: 'العربية' }).check();
+      await expect(page.locator('html')).toHaveAttribute('dir', 'rtl', { timeout: 1000 });
+    }).toPass({ timeout: 15_000 });
 
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,

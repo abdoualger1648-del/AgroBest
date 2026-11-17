@@ -1,8 +1,13 @@
 import type { ReactElement } from 'react';
-import { render, type RenderResult } from '@testing-library/react';
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved,
+  type RenderResult,
+} from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import App from '@/App';
-import { initI18n } from '@/i18n';
+import { initI18n, resources } from '@/i18n';
 import { applyLang, applyTheme } from '@/lib/appearance';
 import { getProfile, updateProfile } from '@/db/repositories/profile';
 import { usePreferences } from '@/store/preferences';
@@ -22,5 +27,14 @@ export async function renderApp(lang: Lang = 'fr', route = '/'): Promise<RenderR
       <App />
     </MemoryRouter>
   );
-  return render(tree);
+  const result = render(tree);
+
+  // Les écrans sont chargés à la demande : on attend que le repli de
+  // Suspense ait disparu avant de rendre la main aux tests.
+  const loading = resources[profile.lang].common.status.loading;
+  if (screen.queryByText(loading)) {
+    await waitForElementToBeRemoved(() => screen.queryByText(loading));
+  }
+
+  return result;
 }

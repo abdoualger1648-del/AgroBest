@@ -16,7 +16,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
-    "validate:content": "node scripts/validate-content.mjs",
+    "validate:content": "node --experimental-strip-types scripts/validate-content.ts",
     "icons": "node scripts/generate-icons.mjs",
     "verify": "npm run typecheck && npm run lint && npm run validate:content && npm run test"
   },

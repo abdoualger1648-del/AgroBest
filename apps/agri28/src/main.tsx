@@ -7,6 +7,7 @@ import { initI18n } from './i18n';
 import { getProfile } from './db/repositories/profile';
 import { applyLang, applyTheme } from './lib/appearance';
 import { usePreferences } from './store/preferences';
+import { useCourse } from './store/course';
 
 /**
  * Démarrage : le profil (IndexedDB) décide de la langue, de la direction et du
@@ -19,6 +20,7 @@ applyLang(profile.lang);
 applyTheme(profile.theme);
 usePreferences.getState().init(profile);
 await initI18n(profile.lang);
+await useCourse.getState().load();
 
 const container = document.getElementById('root');
 if (!container) throw new Error('Élément #root absent de index.html');
