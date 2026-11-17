@@ -1,5 +1,12 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { applyLang, applyTheme, isThemePreference, resolveTheme } from './appearance';
+import {
+  applyLang,
+  applyTheme,
+  isThemePreference,
+  readCachedLang,
+  readCachedTheme,
+  resolveTheme,
+} from './appearance';
 
 describe('apparence', () => {
   beforeEach(() => {
@@ -35,5 +42,28 @@ describe('apparence', () => {
 
     applyLang('fr');
     expect(document.documentElement.getAttribute('dir')).toBe('ltr');
+  });
+});
+
+describe('cache de peinture', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  it('relit la préférence de thème écrite au clic', () => {
+    expect(readCachedTheme()).toBeNull();
+    applyTheme('dark');
+    expect(readCachedTheme()).toBe('dark');
+  });
+
+  it('ignore une valeur de thème corrompue', () => {
+    localStorage.setItem('agri28.theme', 'sepia');
+    expect(readCachedTheme()).toBeNull();
+  });
+
+  it('relit la langue écrite au clic', () => {
+    expect(readCachedLang()).toBeNull();
+    applyLang('ar');
+    expect(readCachedLang()).toBe('ar');
   });
 });

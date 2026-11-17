@@ -1,0 +1,198 @@
+{
+  "schema": 1,
+  "id": "day-02",
+  "day": 2,
+  "week": 1,
+  "lang": "fr",
+  "title": "Un bon prompt tient en quatre morceaux",
+  "subtitle": "Vous transformez une question vague en demande précise, et vous gardez un prompt réutilisable pour votre projet.",
+  "durationMin": 15,
+  "objectives": [
+    "Nommer les quatre morceaux d'un prompt utile",
+    "Réécrire une question vague en demande précise sur mon projet",
+    "Garder un prompt de référence que je réutiliserai tout le mois"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "libre",
+    "label": "Mon prompt de référence"
+  },
+  "guardrails": ["ai_not_agronomist", "verify_prices"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "example",
+          "label": "Sur le terrain",
+          "text": "Hamid cultive la pomme de terre à Aïn Defla. Il demande à l'IA : « comment augmenter ma production ? » Il reçoit une page de conseils de manuel, vrais partout et utiles nulle part. Il recommence autrement, et obtient une liste de travaux datés pour sa parcelle."
+        },
+        {
+          "type": "p",
+          "text": "La différence ne vient pas de l'outil. Elle vient de **ce que vous mettez dans votre demande**."
+        },
+        {
+          "type": "ol",
+          "items": [
+            "**Le rôle** : à qui vous parlez. « Tu es un conseiller agricole habitué aux petites exploitations en Algérie. »",
+            "**Le contexte** : votre situation. Type d'activité, taille, wilaya, saison, moyens.",
+            "**La tâche** : ce que vous voulez obtenir, en un verbe. Rédige, compare, liste, calcule, explique.",
+            "**Le format** : la forme de la réponse. Un tableau, cinq lignes, une liste de dix points."
+          ]
+        },
+        {
+          "type": "p",
+          "text": "Une IA ne devine pas ce que vous ne dites pas, et elle ne vous demandera rien de son propre chef. Ajoutez cette phrase à la fin de vos prompts : *« Si une information te manque, pose-moi la question avant de répondre. »*"
+        },
+        {
+          "type": "note",
+          "variant": "info",
+          "text": "Votre fiche projet remplit déjà le contexte à votre place dans tous les prompts de ce parcours. C'est pour cela que le jour 1 commençait par elle."
+        }
+      ],
+      "keyPoints": [
+        "Rôle, contexte, tâche, format : les quatre morceaux",
+        "Le contexte, c'est votre exploitation — pas une exploitation en général",
+        "Demandez explicitement le format, sinon vous recevrez un texte long",
+        "Terminez par « pose-moi une question si tu manques d'information »"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "On va faire l'expérience en deux temps, sur votre projet. Gardez les deux réponses sous les yeux : c'est la comparaison qui instruit."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "D'abord la question vague, celle que tout le monde pose. Copiez-la telle quelle.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "La question vague",
+            "template": "Comment améliorer mon {{project.type}} ?"
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Maintenant la même demande, avec les quatre morceaux. Comparez la longueur, la précision et l'utilité des deux réponses.",
+          "prompt": {
+            "id": "p2",
+            "tool": "claude",
+            "title": "La même demande, en quatre morceaux",
+            "template": "Tu es un conseiller agricole habitué aux petites exploitations en Algérie.\n\nMa situation : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}.\nMon objectif sur {{project.horizonMonths}} mois : {{project.objective}}.\nNous sommes le {{today}}.\n\nTâche : liste les 5 actions qui auront le plus d'effet sur mon objectif dans les 3 prochains mois.\n\nFormat : un tableau à 4 colonnes — action, mois conseillé, ce que ça me coûte en temps, ce que ça change si je ne le fais pas. Une ligne par action, pas de paragraphe autour.\n\nRègles : si une information te manque, pose-moi la question avant de répondre. Si une réponse dépend d'un prix local, d'une dose ou de la réglementation algérienne, ne l'invente pas : dis-le et demande-moi de vérifier.",
+            "hint": "Si la réponse reste vague, c'est souvent qu'il manque une contrainte : ajoutez votre budget, votre main-d'œuvre ou votre saison.",
+            "followUps": [
+              "Refais le tableau en supposant que je n'ai aucun budget supplémentaire ce trimestre.",
+              "Parmi ces 5 actions, laquelle dois-je commencer cette semaine, et pourquoi elle avant les autres ?"
+            ]
+          },
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "Qu'est-ce que la deuxième réponse vous apporte que la première n'apportait pas ?",
+            "placeholder": "Exemple : des dates, et le coût en temps de chaque action.",
+            "dossier": {
+              "kind": "libre",
+              "block": "paragraph"
+            }
+          }
+        },
+        {
+          "id": "s3",
+          "instruction": "Gardez votre prompt. Vous le réutiliserez toute l'année en changeant seulement la tâche et le format.",
+          "capture": {
+            "id": "c2",
+            "type": "textarea",
+            "label": "Mon prompt de référence (collez-le et adaptez-le à votre façon de parler)",
+            "required": true,
+            "dossier": {
+              "kind": "libre",
+              "block": "kv",
+              "key": "Prompt de référence"
+            }
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Votre réponse est longue, générale, et ne parle pas de votre parcelle. Quel morceau manque le plus souvent ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Le rôle"
+            },
+            {
+              "id": "b",
+              "text": "Le contexte : votre activité, votre taille, votre wilaya, votre saison"
+            },
+            {
+              "id": "c",
+              "text": "La politesse"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Sans contexte, l'IA répond pour un agriculteur moyen qui n'existe pas. La politesse ne change rien à la qualité de la réponse. Le rôle aide, mais c'est le contexte qui fait passer une réponse de « vraie en général » à « utilisable chez moi »."
+        },
+        {
+          "id": "q2",
+          "text": "Vous voulez un tableau de dépenses, mais vous recevez trois paragraphes. Que fallait-il ajouter ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Le format attendu : un tableau, et le nom des colonnes"
+            },
+            {
+              "id": "b",
+              "text": "Demander plus poliment"
+            },
+            {
+              "id": "c",
+              "text": "Rien : l'IA ne sait pas faire de tableaux"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Le format se demande, comme le reste. « Un tableau à 4 colonnes : poste, quantité, prix unitaire, total » donne un tableau. Sans précision, vous recevez du texte, car c'est la forme par défaut."
+        },
+        {
+          "id": "q3",
+          "text": "Pourquoi ajouter « pose-moi la question si une information te manque » ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Pour que l'IA travaille moins vite"
+            },
+            {
+              "id": "b",
+              "text": "Parce que sinon elle comble les trous toute seule, souvent en inventant"
+            },
+            {
+              "id": "c",
+              "text": "Parce que c'est obligatoire dans tous les outils"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Une IA préfère répondre plutôt qu'avouer qu'elle ne sait pas. Si votre nombre d'hectares manque, elle en choisira un. Lui donner le droit de poser une question évite une réponse construite sur une invention."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "J'ai posé la question vague et la demande précise, et j'ai vu la différence",
+        "J'ai gardé mon prompt de référence dans mon Dossier"
+      ],
+      "confidencePrompt": "À quel point vous sentez-vous capable d'écrire seul une demande précise ?",
+      "dossierPreview": true
+    }
+  },
+  "nextTeaser": "Demain : trois assistants, la même question, trois réponses différentes — et ce que cela vous apprend."
+}

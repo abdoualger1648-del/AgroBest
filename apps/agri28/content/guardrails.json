@@ -64,6 +64,14 @@
         "fr": "Ce que vous écrivez dans un outil d'IA en ligne peut être conservé par son éditeur. Évitez d'y mettre des pièces d'identité, des numéros de compte ou les données personnelles de vos employés.",
         "ar": "ما تكتبه في أداة ذكاء اصطناعي على الإنترنت قد يحتفظ به صاحبها. تجنّب وضع وثائق الهوية أو أرقام الحسابات أو البيانات الشخصية لعمّالك."
       }
+    },
+    {
+      "id": "data_privacy_people",
+      "severity": "warning",
+      "text": {
+        "fr": "Les données d'autrui ne vous appartiennent pas : noms, salaires, santé ou pièces d'identité de vos ouvriers, associés ou voisins n'ont rien à faire dans un outil en ligne.",
+        "ar": "بيانات غيرك ليست ملكك: أسماء عمّالك أو شركائك أو جيرانك وأجورهم وصحّتهم ووثائق هويّتهم لا مكان لها في أداة على الإنترنت."
+      }
     }
   ]
 }

@@ -1,0 +1,219 @@
+{
+  "schema": 1,
+  "id": "day-07",
+  "day": 7,
+  "week": 1,
+  "lang": "fr",
+  "title": "Un objectif qu'on peut vérifier, et les gens dont il dépend",
+  "subtitle": "Vous transformez « je veux mieux produire » en objectif daté et chiffré, puis vous recensez les personnes qui pèsent sur sa réussite.",
+  "durationMin": 15,
+  "objectives": [
+    "Écrire un objectif daté, chiffré et vérifiable",
+    "Recenser les personnes dont dépend mon projet, et ce que j'attends de chacune",
+    "Clôturer la semaine 1 avec une fiche projet complète"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "objectifs",
+    "label": "Mon objectif SMART"
+  },
+  "guardrails": ["ai_not_agronomist", "verify_regulation", "verify_prices"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "p",
+          "text": "« Je veux produire plus » n'est pas un objectif : on ne peut ni le vérifier, ni savoir quand on l'a atteint. Un objectif utile tient en une phrase qui répond à cinq questions."
+        },
+        {
+          "type": "ul",
+          "items": [
+            "**Quoi exactement ?** Pas « améliorer », mais « vendre », « réduire », « produire ».",
+            "**Combien ?** Un nombre. Sans nombre, on discute dans le vide.",
+            "**Avec quels moyens ?** Un objectif qu'on ne peut pas financer ni faire tenir par l'équipe reste un souhait.",
+            "**En quoi cela compte ?** Si l'atteindre ne change rien pour l'exploitation, ce n'est pas le bon objectif.",
+            "**Pour quand ?** Une date, pas « bientôt »."
+          ]
+        },
+        {
+          "type": "example",
+          "label": "Avant / après",
+          "text": "Avant : « améliorer mon élevage ». Après : « vendre 40 agneaux entre mars et mai, en connaissant le coût de revient de chacun, sans dépasser le budget que je me suis fixé ». La seconde phrase se vérifie en mai, un carnet à la main."
+        },
+        {
+          "type": "p",
+          "text": "Deuxième moitié de la leçon : **personne ne réussit seul**. Fournisseur d'intrants, vétérinaire ou technicien, ouvriers et saisonniers, acheteur, voisin avec qui l'eau se partage, Chambre d'agriculture de la wilaya, banque ou assureur. Chacun peut bloquer ou accélérer votre objectif."
+        },
+        {
+          "type": "note",
+          "variant": "info",
+          "text": "La Chambre d'agriculture de votre wilaya tient le registre des agriculteurs et délivre la carte professionnelle (carte de fellah). C'est l'interlocuteur à qui poser les questions administratives que l'IA ne peut pas trancher."
+        }
+      ],
+      "keyPoints": [
+        "Quoi, combien, avec quels moyens, pourquoi, pour quand",
+        "Un objectif se vérifie une date à la main",
+        "Listez qui peut bloquer votre projet avant qu'il ne le bloque"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "Deux prompts, deux briques pour votre Dossier : votre objectif réécrit, et la liste des personnes qui comptent."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Faites reformuler votre objectif. Vous garderez la version qui vous ressemble, pas forcément celle de l'IA.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "Mon objectif, version vérifiable",
+            "template": "Tu es un conseiller agricole en Algérie.\n\nMon exploitation : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}.\nMon objectif actuel, tel que je l'ai écrit : {{project.objective}}\nMon horizon : {{project.horizonMonths}} mois. Nous sommes le {{today}}.\n\nTâche :\n1. Réécris mon objectif en une seule phrase qui dit quoi, combien, avec quels moyens, pourquoi et pour quand.\n2. Propose deux indicateurs simples que je pourrai relever moi-même, sans matériel, pour savoir si j'avance.\n3. Signale ce qui, dans mon objectif, dépend d'une chose que je ne maîtrise pas.\n\nRègles : ne me propose aucun chiffre de rendement, de prix ou de dose comme s'il était certain. Si un nombre te manque, demande-le-moi.",
+            "followUps": [
+              "Rends l'objectif plus prudent : qu'est-ce que je garde si la saison est mauvaise ?"
+            ]
+          },
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "Mon objectif, en une phrase vérifiable",
+            "required": true,
+            "dossier": {
+              "kind": "objectifs",
+              "block": "paragraph"
+            }
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Passons aux personnes. Le prompt vous aide à n'oublier personne ; vous corrigerez avec ce que vous seul savez de votre village.",
+          "prompt": {
+            "id": "p2",
+            "tool": "claude",
+            "title": "Qui pèse sur mon projet",
+            "template": "Même exploitation : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}.\nObjectif : {{project.objective}}\n\nTâche : liste les personnes et organismes dont dépend concrètement cet objectif en Algérie. Pour chacun : ce que j'attends de lui, ce qu'il attend de moi, et le risque si la relation se passe mal.\n\nFormat : un tableau à 4 colonnes — qui, ce que j'attends, ce qu'il attend, risque. Dix lignes au maximum.\n\nRègle : s'il s'agit d'une démarche administrative, nomme l'organisme sans inventer de procédure ni de délai.",
+            "hint": "Ajoutez à la main ceux que l'IA ne peut pas connaître : le mandataire du marché, le voisin du forage, le transporteur."
+          },
+          "capture": {
+            "id": "c2",
+            "type": "textarea",
+            "label": "Les personnes dont dépend mon projet (une ligne par personne)",
+            "required": true,
+            "dossier": {
+              "kind": "equipe",
+              "block": "list"
+            }
+          }
+        },
+        {
+          "id": "s3",
+          "instruction": "Une semaine de travail ne vaut que si elle débouche sur un geste. Choisissez une personne, une seule, à voir dans les jours qui viennent.",
+          "capture": {
+            "id": "c3",
+            "type": "text",
+            "label": "La personne que je vais voir cette semaine, et pourquoi",
+            "placeholder": "Exemple : la Chambre d'agriculture, pour la carte de fellah.",
+            "dossier": {
+              "kind": "equipe",
+              "block": "kv",
+              "key": "Prochain rendez-vous"
+            }
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Lequel de ces objectifs est vérifiable ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Augmenter sensiblement mon rendement cette année"
+            },
+            {
+              "id": "b",
+              "text": "Vendre 40 agneaux entre mars et mai en connaissant le coût de chacun"
+            },
+            {
+              "id": "c",
+              "text": "Devenir le meilleur éleveur de la commune"
+            }
+          ],
+          "answer": "b",
+          "explanation": "« Sensiblement » ne se mesure pas, et « le meilleur » ne se constate pas. La deuxième phrase donne un nombre, une période et un critère : en mai, vous saurez si c'est fait."
+        },
+        {
+          "id": "q2",
+          "text": "À quoi sert la liste des personnes dont dépend le projet ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "À repérer d'avance ce qui peut bloquer, pendant qu'on a encore le temps d'agir"
+            },
+            {
+              "id": "b",
+              "text": "À faire bonne impression dans un dossier de demande"
+            },
+            {
+              "id": "c",
+              "text": "À rien de concret, c'est de la théorie"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Un fournisseur en rupture, un vétérinaire injoignable en pleine campagne, un acheteur qui se retire : ces blocages se voient venir quand ils sont écrits. Le dossier administratif, lui, n'est qu'un sous-produit."
+        },
+        {
+          "id": "q3",
+          "text": "L'IA propose un rendement précis à l'hectare pour votre wilaya. Comment le traitez-vous dans votre objectif ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Je le mets dans mon objectif : il connaît la région"
+            },
+            {
+              "id": "b",
+              "text": "Je pars de mes propres résultats passés, et je vérifie ce chiffre auprès de la DSA ou d'un technicien"
+            },
+            {
+              "id": "c",
+              "text": "Je le divise par deux par prudence"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Vos propres relevés valent mieux qu'une moyenne régionale pour fixer un objectif. Diviser par deux au hasard n'est pas de la prudence, c'est un autre chiffre inventé. La Direction des services agricoles et les techniciens de terrain disposent, eux, de références locales."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "Mon objectif est écrit en une phrase vérifiable",
+        "J'ai la liste des personnes dont dépend mon projet",
+        "J'ai choisi une personne à voir cette semaine",
+        "Semaine 1 terminée : ma fiche projet tient debout"
+      ],
+      "confidencePrompt": "Après cette première semaine, à quel point l'IA vous paraît-elle utilisable au quotidien ?",
+      "dossierPreview": true
+    }
+  },
+  "sources": [
+    {
+      "label": "Modèle de la carte professionnelle de l'agriculteur, Journal officiel algérien (mars 2023) : la carte est rattachée au registre tenu par la chambre d'agriculture de wilaya — copie hébergée par la FAO.",
+      "url": "https://faolex.fao.org/docs/pdf/alg220678.pdf",
+      "checkedOn": "2026-11-17"
+    }
+  ],
+  "verifyLocally": [
+    "Les conditions d'obtention de la carte de fellah, les aides et les délais évoluent : la Chambre d'agriculture de votre wilaya et la Direction des services agricoles font seules foi."
+  ],
+  "nextTeaser": "Semaine 2 : l'argent. Étude de faisabilité, budget avec vos prix réels, business plan et calendrier de travaux."
+}

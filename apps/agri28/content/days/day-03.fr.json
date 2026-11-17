@@ -1,0 +1,193 @@
+{
+  "schema": 1,
+  "id": "day-03",
+  "day": 3,
+  "week": 1,
+  "lang": "fr",
+  "title": "Trois assistants, trois réponses",
+  "subtitle": "Vous posez la même question à deux outils, vous voyez où ils divergent, et vous choisissez celui qui vous servira tous les jours.",
+  "durationMin": 15,
+  "objectives": [
+    "Comparer deux assistants sur une question qui me concerne",
+    "Savoir quoi faire quand deux réponses se contredisent",
+    "Choisir mon outil principal et savoir pourquoi"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "libre",
+    "label": "Mes outils et leur usage"
+  },
+  "guardrails": ["verify_prices", "data_privacy_basic"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "p",
+          "text": "Il existe plusieurs assistants d'IA. Les plus connus sont **Claude**, **ChatGPT** et **Gemini**. Tous les trois ont une version gratuite."
+        },
+        {
+          "type": "p",
+          "text": "Posée à trois outils, la même question donne trois réponses différentes. Ce n'est pas un défaut : c'est l'information la plus utile de cette leçon. **Là où ils divergent, il y a une incertitude** — et c'est exactement là qu'il faut aller vérifier."
+        },
+        {
+          "type": "ul",
+          "items": [
+            "Aucun n'est « la vérité ». Ils produisent un texte plausible, pas un constat.",
+            "Les limites des versions gratuites changent souvent et ne sont pas publiées. Constatez-les vous-même à l'usage.",
+            "Certains savent chercher sur Internet et affichent des liens ; d'autres répondent de mémoire. Regardez si des liens apparaissent sous la réponse."
+          ]
+        },
+        {
+          "type": "note",
+          "variant": "warning",
+          "text": "Un outil peut ne pas s'ouvrir depuis votre connexion : certains services limitent l'accès selon le pays, et cela change dans le temps. **Vérifiez simplement lequel fonctionne chez vous**, et travaillez avec celui-là. Dans cette application, un outil dont la disponibilité en Algérie n'est pas confirmée est signalé."
+        },
+        {
+          "type": "p",
+          "text": "Méthode de travail : **un outil principal** pour le quotidien, **un second** qu'on sort uniquement pour les décisions qui coûtent cher."
+        }
+      ],
+      "keyPoints": [
+        "Trois outils, trois réponses : la divergence signale l'incertitude",
+        "Aucun n'est une source : ils écrivent, ils ne constatent pas",
+        "Un outil principal, un second pour les décisions importantes"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "Vous allez copier **le même prompt** dans deux outils différents, puis comparer. Les boutons ci-dessous ouvrent chacun le sien."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Copiez ce prompt et envoyez-le dans un premier outil. Gardez la réponse ouverte.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "La même question, outil n° 1",
+            "template": "Tu es un conseiller agricole en Algérie.\n\nMon exploitation : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}.\n\nTâche : donne-moi les 3 erreurs les plus fréquentes dans ce type de projet en Algérie, et pour chacune le signe qui permet de la repérer tôt.\n\nFormat : 3 points courts. Pour chaque point, une phrase pour l'erreur, une phrase pour le signe.\n\nRègle : n'invente ni prix, ni dose, ni texte réglementaire. Si tu n'es pas sûr, écris « à vérifier localement »."
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Envoyez **exactement le même texte** dans un deuxième outil. Puis posez les deux réponses côte à côte.",
+          "prompt": {
+            "id": "p2",
+            "tool": "chatgpt",
+            "title": "La même question, outil n° 2",
+            "template": "Tu es un conseiller agricole en Algérie.\n\nMon exploitation : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}.\n\nTâche : donne-moi les 3 erreurs les plus fréquentes dans ce type de projet en Algérie, et pour chacune le signe qui permet de la repérer tôt.\n\nFormat : 3 points courts. Pour chaque point, une phrase pour l'erreur, une phrase pour le signe.\n\nRègle : n'invente ni prix, ni dose, ni texte réglementaire. Si tu n'es pas sûr, écris « à vérifier localement »."
+          },
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "Sur quoi les deux réponses sont-elles d'accord ? Sur quoi divergent-elles ?",
+            "placeholder": "Exemple : les deux citent le même risque sanitaire, mais l'un parle d'une aide que l'autre ignore.",
+            "required": true,
+            "dossier": {
+              "kind": "libre",
+              "block": "paragraph"
+            }
+          }
+        },
+        {
+          "id": "s3",
+          "instruction": "Décidez maintenant, et notez-le : avec lequel travaillerez-vous au quotidien ?",
+          "capture": {
+            "id": "c2",
+            "type": "text",
+            "label": "Mon outil principal, et ce qui m'a décidé",
+            "placeholder": "Exemple : celui qui s'ouvre vite sur mon téléphone et répond en arabe correctement.",
+            "required": true,
+            "dossier": {
+              "kind": "libre",
+              "block": "kv",
+              "key": "Mon outil principal"
+            }
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Deux assistants donnent deux chiffres différents pour la même question. Que concluez-vous ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Le plus récent a raison"
+            },
+            {
+              "id": "b",
+              "text": "Aucun n'est prouvé : le chiffre est à vérifier auprès d'une source locale"
+            },
+            {
+              "id": "c",
+              "text": "Je prends la moyenne des deux"
+            }
+          ],
+          "answer": "b",
+          "explanation": "La divergence vous dit une chose : ni l'un ni l'autre ne tient le chiffre d'une source sûre. La moyenne de deux estimations incertaines reste une estimation incertaine. Un prix se relève chez un fournisseur ; une règle se vérifie à la Chambre d'agriculture."
+        },
+        {
+          "id": "q2",
+          "text": "Un outil ne s'ouvre pas depuis votre connexion. Quelle est la bonne réaction ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Travailler avec un outil qui fonctionne chez moi"
+            },
+            {
+              "id": "b",
+              "text": "Chercher un moyen de contourner la restriction"
+            },
+            {
+              "id": "c",
+              "text": "Abandonner l'IA, elle n'est pas pour nous"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Aucun outil n'est indispensable : ce parcours fonctionne avec n'importe quel assistant. Contourner une restriction d'accès peut être contraire aux conditions d'utilisation du service et vous faire perdre votre compte. Et abandonner serait dommage : il suffit d'un seul outil qui marche."
+        },
+        {
+          "id": "q3",
+          "text": "Quel est le meilleur usage d'un deuxième assistant ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Poser deux fois la même question pour aller plus vite"
+            },
+            {
+              "id": "b",
+              "text": "Croiser les réponses avant une décision qui engage de l'argent ou un traitement"
+            },
+            {
+              "id": "c",
+              "text": "Avoir plus de messages gratuits"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Le second outil sert de contrôle, pas de rallonge. Quand une décision engage un achat, un traitement ou un emprunt, poser la même question ailleurs révèle ce qui est solide et ce qui ne l'est pas."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "J'ai envoyé le même prompt dans deux outils",
+        "J'ai noté un point d'accord et un point de divergence",
+        "J'ai choisi mon outil principal"
+      ],
+      "confidencePrompt": "Vous sentez-vous capable de choisir entre deux réponses qui se contredisent ?",
+      "dossierPreview": true
+    }
+  },
+  "nextTeaser": "Demain : obliger l'IA à citer ses sources — et vérifier que ces sources existent vraiment."
+}

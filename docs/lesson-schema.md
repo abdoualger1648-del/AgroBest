@@ -128,7 +128,8 @@ Convention : les prompts se terminent toujours par une consigne de prudence adap
 7. Toute variable `{{…}}` d'un `template` appartient à la liste du §2.
 8. Les identifiants (`steps[].id`, `capture.id`, `prompt.id`, `questions[].id`) sont uniques dans le fichier.
 9. **Parité AR/FR** : même ensemble d'identifiants, même nombre de questions, de choix, d'étapes et de captures ; mêmes `tools`, `guardrails`, `produces.dossierKind`.
-10. **Chiffres** : si le texte contient un montant (`DA`, `دج`, `د.ج`) ou un terme réglementaire de la liste surveillée (carte de fellah, Chambre d'agriculture, subvention, agrément…), le fichier doit contenir au moins une entrée `sources[]` datée. Sinon la validation échoue.
+10. **Chiffres et droit** : si le texte contient un montant (`DA`, `DZD`, `دج`, `د.ج`) **ou** la référence à un texte réglementaire précis (« loi n° », décret, arrêté, *Journal officiel*, « article 7 »), le fichier doit contenir au moins une entrée `sources[]` datée. Sinon la validation échoue.
+    *Nommer une institution ne déclenche rien* : « demandez à la Chambre d'agriculture » est une consigne de vérification, pas une affirmation à sourcer.
 11. Aucun lien `http://` (HTTPS uniquement) ; aucune URL raccourcie.
 12. Markdown restreint : aucune balise HTML, aucune image distante.
 

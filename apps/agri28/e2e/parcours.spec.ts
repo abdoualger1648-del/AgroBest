@@ -31,12 +31,12 @@ test.describe('parcours', () => {
     const groups = page.getByRole('radiogroup');
     await groups
       .nth(0)
-      .getByRole('radio', { name: /estimation à confronter/ })
+      .getByRole('radio', { name: /estimation, à confronter/ })
       .check();
     await expect(page.getByText('Bonne réponse')).toBeVisible();
     await groups
       .nth(1)
-      .getByRole('radio', { name: /Rédiger la lettre/ })
+      .getByRole('radio', { name: /Rédiger la demande/ })
       .check();
     await groups
       .nth(2)
@@ -80,10 +80,26 @@ test.describe('parcours', () => {
     await page.goto('./jour/2');
 
     await expect(page.getByRole('heading', { level: 1, name: 'Jour verrouillé' })).toBeVisible();
-    await page.getByRole('button', { name: 'Ouvrir quand même' }).click();
-    await expect(
-      page.getByRole('heading', { level: 1, name: 'Contenu indisponible' }),
-    ).toBeVisible();
+
+    // Le clic peut se perdre pendant le montage de l'écran : on réessaie.
+    await expect(async () => {
+      await page.getByRole('button', { name: 'Ouvrir quand même' }).click();
+      await expect(page.getByRole('heading', { level: 1, name: /Un bon prompt/ })).toBeVisible({
+        timeout: 2000,
+      });
+    }).toPass({ timeout: 15_000 });
+  });
+
+  test('annonce un contenu encore absent pour un jour non écrit', async ({ page }) => {
+    await createProject(page);
+    await page.goto('./jour/9');
+
+    await expect(async () => {
+      await page.getByRole('button', { name: 'Ouvrir quand même' }).click();
+      await expect(
+        page.getByRole('heading', { level: 1, name: 'Contenu indisponible' }),
+      ).toBeVisible({ timeout: 2000 });
+    }).toPass({ timeout: 15_000 });
   });
 
   test('affiche le jour 1 en arabe, en RTL, sans débordement', async ({ page }) => {

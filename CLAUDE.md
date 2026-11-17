@@ -1,4 +1,6 @@
-# CLAUDE.md — 28 jours pour gérer mon projet agricole avec l'IA
+# CLAUDE.md — Agricole DZ 360
+
+*28 jours pour gérer mon projet agricole avec l'IA.*
 
 Document de référence du projet : stack, conventions, structure, décisions.
 **À mettre à jour à la fin de chaque phase.**
@@ -95,6 +97,7 @@ tailles en `rem` · navigation clavier · jamais d'information portée par la se
 - **Chiffres algériens** : prix précis quand une source fiable existe (avec `sources[]` daté), sinon fourchette ; toujours la date de relevé. La validation refuse une leçon qui cite un montant en DA sans source datée.
 - **Outils IA** : aucun outil n'entre dans le contenu avant vérification web (nom exact, gratuité, accessibilité depuis l'Algérie), consignée dans `content/tools.json` avec `checkedOn` et `availabilityDZ`. Tout doute est signalé à l'utilisateur du projet (vous).
 - Parité AR/FR imposée par les tests : mêmes identifiants, même nombre de questions, d'étapes, de captures.
+- Pour **créer** un nouveau jour : `apps/agri28/scripts/authoring/` (les deux langues sont écrites côte à côte, la parité est garantie par construction). Pour **corriger** un jour existant : on édite directement son JSON, jamais le générateur.
 
 ---
 
@@ -122,15 +125,17 @@ tailles en `rem` · navigation clavier · jamais d'information portée par la se
 | D18 | Écrans chargés à la demande (`React.lazy`), seul l'accueil est dans le paquet initial | 2026-11-17 | le paquet initial passait à 184 Ko gzip ; il est redescendu à **69 Ko** |
 | D19 | La série est calculée **dans le store, à l'écriture**, jamais pendant le rendu | 2026-11-17 | `Date.now()` n'est pas pur : React 19 l'interdit en rendu, et un sélecteur Zustand qui recrée un objet fait boucler `useSyncExternalStore` |
 | D20 | `validate:content` est en TypeScript, exécuté par `node --experimental-strip-types`, et importe les **mêmes schémas Zod** que l'application | 2026-11-17 | un contenu validé en CI se charge forcément dans l'app : une seule source de vérité |
-| D21 | Le jour 1 présent dans `content/days/` est un **brouillon** (`draft: true`), écrit pour faire tourner le moteur | 2026-11-17 | il sera relu, corrigé et validé en phase 3 avec les jours 2 à 7. L'application affiche un bandeau « Brouillon » et la validation du contenu émet un avertissement |
+| D21 | ~~Jour 1 en brouillon~~ — **levé** en phase 3 : les 7 jours sont finalisés, plus aucun `draft` | 2026-11-17 | |
+| D22 | **Ton** : français au **vouvoiement**, phrases courtes, vocabulaire de terrain, aucun anglicisme non expliqué. Arabe **standard simple**, avec les mots réellement employés en Algérie (مستثمرة, الغرفة الفلاحية, رزنامة), sans dialecte écrit | 2026-11-17 | l'utilisateur est débutant en IA, pas en agriculture : on ne lui explique jamais son métier, et on ne promet aucun miracle |
+| D23 | Nom public **Agricole DZ 360**. Les identifiants internes restent `agri28` (base IndexedDB, clés `localStorage`, nom du paquet) | 2026-11-17 | renommer la base effacerait les données des utilisateurs existants ; le nom public n'a pas à fuiter dans le stockage |
+| D24 | Au démarrage, le **cache de peinture fait foi** s'il diffère du profil en base : il est appliqué puis réécrit dans IndexedDB | 2026-11-17 | corrige une perte réelle : le cache est écrit au clic, l'écriture IndexedDB arrive juste après ; fermer l'application entre les deux faisait perdre le choix de thème ou de langue |
 
 ### Questions ouvertes
 - Chiffres occidentaux (`1 500 DA`) ou arabo-indiens (`١٥٠٠`) en arabe ? *(implémenté en occidentaux, décision D12 — à confirmer)*
-- Vouvoiement en FR ? Arabe standard simple en AR ? *(recommandation : oui aux deux)*
-- Nom public de l'application et de la PWA ? *(provisoire : « 28 jours — Mon projet agricole avec l'IA », abrégé « Agri28 »)*
 - **Bloquant pour la phase 3** : la disponibilité de ChatGPT, Gemini et NotebookLM en Algérie n'a pas pu être vérifiée — `platform.openai.com` et `support.google.com` ne sont pas joignables depuis cette session. Soit ces domaines sont autorisés dans les paramètres réseau de la session, soit vous me confirmez vous-même la disponibilité. Claude est confirmé (page officielle d'Anthropic, l'Algérie y figure).
 
 ### Questions tranchées
+- **Nom public** : Agricole DZ 360 (D23). **Ton** : vouvoiement FR, arabe standard simple (D22).
 - ~~API `docx`~~ : **confirmée** en lisant les types du paquet — `bidirectional?: boolean` sur les options de paragraphe, `rightToLeft?: boolean` sur celles d'un run, `AlignmentType.START/END` logiques, `sizeComplexScript` pour la taille en script complexe.
 
 ---
@@ -164,7 +169,7 @@ Dans `apps/agri28` uniquement : `npm run icons` (régénère les icônes PWA),
 | 0 | Cadrage : architecture, modèle de données, arborescence, schéma de leçon, stratégie RTL/i18n | terminée |
 | 1 | Squelette : routage, i18n AR/FR + RTL, thème, PWA, écrans vides, tests de base | terminée |
 | 2 | Moteur de parcours : leçons, minuteur, validation, progression, série, verrouillage, profil projet | **terminée — en attente de GO** |
-| 3 | Contenu semaine 1 (jours 1-7), FR + AR | à faire |
+| 3 | Contenu semaine 1 (jours 1-7), FR + AR | **terminée — en attente de GO** |
 | 4 | Contenu semaines 2, 3, 4 (un GO entre chaque) | à faire |
 | 5 | Dossier de projet, exports `.docx`/`.xlsx`, carnet, badges, certificat, rappels | à faire |
 | 6 | Qualité : accessibilité, performance, hors ligne, relecture du contenu et des chiffres | à faire |

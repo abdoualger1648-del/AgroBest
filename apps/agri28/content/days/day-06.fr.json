@@ -1,0 +1,193 @@
+{
+  "schema": 1,
+  "id": "day-06",
+  "day": 6,
+  "week": 1,
+  "lang": "fr",
+  "title": "Ce qu'on ne tape jamais dans une IA",
+  "subtitle": "Vous apprenez à poser votre question sans livrer vos papiers, vos comptes ni les données de vos ouvriers.",
+  "durationMin": 15,
+  "objectives": [
+    "Savoir ce qui ne doit jamais sortir de mon exploitation",
+    "Réécrire une demande délicate sans donnée personnelle",
+    "Écrire ma règle de confidentialité en une phrase"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "libre",
+    "label": "Ma règle de confidentialité"
+  },
+  "guardrails": ["data_privacy_basic", "data_privacy_people"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "p",
+          "text": "Quand vous écrivez dans un outil d'IA en ligne, votre texte part sur les serveurs de l'éditeur. Il peut y être conservé, lu par des personnes en cas de contrôle, et parfois servir à améliorer le service. Les réglages varient d'un outil à l'autre et changent avec le temps."
+        },
+        {
+          "type": "p",
+          "text": "La règle pratique ne demande aucune compétence technique : **n'écrivez rien que vous ne diriez pas à voix haute au café du village.**"
+        },
+        {
+          "type": "p",
+          "text": "Trois catégories ne sortent jamais :"
+        },
+        {
+          "type": "ul",
+          "items": [
+            "**Vos papiers** : carte nationale, actes de propriété, titres fonciers, documents d'immatriculation.",
+            "**Vos comptes** : numéros de compte, relevés bancaires, codes, photos de chèques.",
+            "**Les données des autres** : noms, salaires, état de santé ou pièces de vos ouvriers, associés et voisins. Elles ne vous appartiennent pas."
+          ]
+        },
+        {
+          "type": "example",
+          "label": "Anonymiser, c'est simple",
+          "text": "Au lieu de « Mon ouvrier Brahim, né en 1979, carte n° … , réclame ses congés », écrivez « un ouvrier permanent, 6 ans d'ancienneté, réclame ses congés ». La réponse de l'IA sera exactement la même, et vous n'aurez rien livré."
+        },
+        {
+          "type": "note",
+          "variant": "info",
+          "text": "Cette application-ci ne vous expose à rien : tout ce que vous saisissez reste dans la mémoire de votre téléphone, sans serveur et sans compte. Ce sont les outils d'IA, ouverts dans votre navigateur, qui demandent cette prudence."
+        }
+      ],
+      "keyPoints": [
+        "N'écrivez rien que vous ne diriez pas à voix haute en public",
+        "Papiers, comptes, données d'autrui : jamais",
+        "Anonymiser ne dégrade pas la réponse",
+        "Vos données dans cette application restent sur votre téléphone"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "Prenez une vraie situation de votre exploitation que vous auriez envie de soumettre à l'IA : un courrier difficile, un litige, une demande. On va la poser proprement."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Écrivez d'abord votre situation **comme vous la raconteriez**, puis relisez-la et barrez mentalement chaque nom propre, chaque numéro, chaque document.",
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "Ma situation, version anonyme (rôles au lieu des noms, pas de numéros)",
+            "placeholder": "Exemple : un ouvrier saisonnier, 3 campagnes avec moi, conteste le décompte de ses journées.",
+            "required": true
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Envoyez maintenant la demande. Remplacez la situation d'exemple par la vôtre, telle que vous venez de l'anonymiser.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "Une demande utile, sans donnée personnelle",
+            "template": "Tu es un conseiller qui accompagne des exploitants agricoles en Algérie.\n\nMon exploitation : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}.\n\nSituation (volontairement anonyme) : [COLLEZ ICI VOTRE SITUATION ANONYMISÉE]\n\nTâche : propose-moi la marche à suivre en 5 étapes, puis un courrier court, poli et ferme, que je pourrai adapter.\n\nRègles :\n- N'invente aucun article de loi et aucune obligation chiffrée.\n- Si la réponse dépend du droit algérien du travail ou d'un texte précis, dis-le et renvoie-moi vers une personne compétente.\n- Laisse en blanc, entre crochets, tout endroit où un nom ou un chiffre devra être ajouté par moi.",
+            "hint": "Remarquez que la réponse est tout aussi utile sans les noms : c'est la preuve que les livrer n'apportait rien."
+          }
+        },
+        {
+          "id": "s3",
+          "instruction": "Formulez votre règle, en une phrase que vous relirez quand vous serez pressé. C'est dans l'urgence qu'on colle une photo de papier d'identité.",
+          "capture": {
+            "id": "c2",
+            "type": "text",
+            "label": "Ma règle de confidentialité, en une phrase",
+            "placeholder": "Exemple : aucun nom, aucun numéro, aucune photo de document — jamais, même pressé.",
+            "required": true,
+            "dossier": {
+              "kind": "libre",
+              "block": "kv",
+              "key": "Ma règle de confidentialité"
+            }
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Laquelle de ces trois choses pouvez-vous coller sans risque dans un outil d'IA ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "La photo de ma carte nationale pour remplir un formulaire"
+            },
+            {
+              "id": "b",
+              "text": "Mon tableau de dépenses sans nom de personne"
+            },
+            {
+              "id": "c",
+              "text": "La liste de mes ouvriers avec leurs salaires"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Des chiffres de dépenses sans identité ne désignent personne et suffisent largement à obtenir de l'aide. Une pièce d'identité et une liste nominative de salaires concernent des personnes, et la seconde ne vous appartient même pas."
+        },
+        {
+          "id": "q2",
+          "text": "Pourquoi remplacer les noms par des rôles change-t-il si peu la réponse ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Parce que l'IA raisonne sur la situation, pas sur l'identité des personnes"
+            },
+            {
+              "id": "b",
+              "text": "Parce que l'IA ignore les noms de toute façon"
+            },
+            {
+              "id": "c",
+              "text": "Parce que les noms algériens ne sont pas reconnus"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Ce qui compte pour la réponse, c'est « ouvrier saisonnier, 3 campagnes, litige sur les journées ». Le prénom n'apporte rien au raisonnement — mais il vous engage, lui, auprès d'un tiers."
+        },
+        {
+          "id": "q3",
+          "text": "Où vivent les données que vous saisissez dans cette application ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Sur un serveur, avec mon compte"
+            },
+            {
+              "id": "b",
+              "text": "Dans la mémoire de mon téléphone, sans serveur ni compte"
+            },
+            {
+              "id": "c",
+              "text": "Chez l'éditeur de l'outil d'IA"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Cette application n'a ni serveur ni compte : votre projet, vos saisies et votre Dossier restent dans la mémoire de votre téléphone. En contrepartie, si vous effacez les données du navigateur, elles disparaissent — d'où l'export que vous pourrez faire plus tard dans le parcours."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "J'ai réécrit une situation réelle sans aucune donnée personnelle",
+        "J'ai constaté que la réponse restait aussi utile",
+        "Ma règle de confidentialité est écrite"
+      ],
+      "confidencePrompt": "Vous sentez-vous à l'aise pour décider seul de ce qui peut sortir ou non ?",
+      "dossierPreview": true
+    }
+  },
+  "verifyLocally": [
+    "Pour tout ce qui touche au contrat de travail, aux salaires ou à un litige, l'interlocuteur est un juriste ou l'inspection du travail — pas une IA."
+  ],
+  "nextTeaser": "Demain, dernier jour de la semaine : transformer votre objectif en objectif SMART, et recenser les personnes dont dépend votre projet."
+}

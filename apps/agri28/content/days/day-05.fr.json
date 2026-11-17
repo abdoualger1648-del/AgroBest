@@ -1,0 +1,196 @@
+{
+  "schema": 1,
+  "id": "day-05",
+  "day": 5,
+  "week": 1,
+  "lang": "fr",
+  "title": "Le test du connu : révéler ce que l'IA invente",
+  "subtitle": "Vous posez à l'IA une question dont vous connaissez déjà la réponse. Ce qu'elle rate vous dit où elle est dangereuse.",
+  "durationMin": 15,
+  "objectives": [
+    "Mesurer moi-même l'écart entre une estimation de l'IA et ma réalité",
+    "Reconnaître les trois signaux d'une réponse inventée",
+    "Faire trier à l'IA ses propres affirmations : sûr, à vérifier, inconnu"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "risques",
+    "label": "Points à vérifier"
+  },
+  "guardrails": ["verify_prices", "verify_doses", "verify_regulation", "ai_not_vet"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "p",
+          "text": "Une IA ne ment pas : elle **complète**. Quand elle ne sait pas, elle produit la suite la plus vraisemblable, avec le même ton assuré que lorsqu'elle sait. Rien dans la réponse ne distingue les deux."
+        },
+        {
+          "type": "p",
+          "text": "D'où une méthode simple, qui ne demande aucune connaissance technique : **posez-lui une question dont vous connaissez déjà la réponse**. Votre coût d'alimentation, votre rendement de l'an dernier, le prix que vous avez payé la semaine passée. L'écart que vous mesurez sur le connu vaut pour l'inconnu."
+        },
+        {
+          "type": "p",
+          "text": "Trois signaux doivent vous alerter :"
+        },
+        {
+          "type": "ul",
+          "items": [
+            "**Un chiffre trop précis.** Un prix annoncé au dinar près, sans source ni date, est une invention bien habillée.",
+            "**Une règle sans référence.** « C'est obligatoire », « vous avez droit à » — sans texte ni organisme, c'est à vérifier.",
+            "**Une dose ou un traitement.** Produit, quantité, délai : le seul interlocuteur est le vétérinaire ou le technicien, jamais l'IA."
+          ]
+        },
+        {
+          "type": "note",
+          "variant": "danger",
+          "text": "Reposer la même question ne vérifie rien. L'IA répétera son erreur avec la même assurance, et cette répétition vous donnera à tort l'impression d'une confirmation."
+        }
+      ],
+      "keyPoints": [
+        "L'IA complète ; elle ne sait pas qu'elle ne sait pas",
+        "Testez-la sur ce que vous connaissez pour la jauger sur le reste",
+        "Chiffre précis sans source, règle sans référence, dose : trois alertes",
+        "Répéter la question ne prouve rien"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "Deux exercices : d'abord le test du connu, ensuite le tri des affirmations. Le second prompt est celui que vous garderez toute l'année."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Demandez à l'IA d'estimer quelque chose que vous connaissez déjà par cœur dans votre exploitation. Ne lui donnez surtout pas la réponse.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "Le test du connu",
+            "template": "Tu es un conseiller agricole en Algérie.\n\nMon exploitation : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}.\n\nTâche : estime, pour une exploitation comme la mienne, les trois postes de dépense les plus lourds sur une année, et donne pour chacun un ordre de grandeur.\n\nPour chaque estimation, indique sur quoi tu te bases et à quelle période elle correspond.\n\nSi tu n'as pas de base fiable, écris-le franchement plutôt que de donner un chiffre."
+          },
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "Sur ce que vous connaissez : l'IA tombe-t-elle juste, et de combien s'écarte-t-elle ?",
+            "placeholder": "Exemple : son estimation d'alimentation est très en dessous de ce que je paie réellement.",
+            "required": true,
+            "dossier": {
+              "kind": "risques",
+              "block": "paragraph"
+            }
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Maintenant, faites-lui trier ses propres affirmations. Copiez ce prompt dans la **même conversation**, juste après sa réponse.",
+          "prompt": {
+            "id": "p2",
+            "tool": "claude",
+            "title": "Le tri : sûr / à vérifier / inconnu",
+            "template": "Reprends ta réponse précédente et classe chacune de tes affirmations dans l'une de ces trois catégories, sans rien ajouter de nouveau :\n\n1. SÛR — information stable, que tu peux rattacher à une source.\n2. À VÉRIFIER — ordre de grandeur, estimation, pratique courante, information qui dépend de la saison ou de la région.\n3. INCONNU — tu n'as pas de base sérieuse.\n\nFormat : trois listes, une par catégorie. Déplace sans hésiter vers « à vérifier » tout ce qui est un prix, une dose ou une règle administrative.",
+            "hint": "La liste « à vérifier » est souvent la plus longue. C'est normal, et c'est précisément ce que vous cherchiez.",
+            "followUps": [
+              "Pour chaque point « à vérifier », dis-moi à qui je dois poser la question en Algérie."
+            ]
+          },
+          "capture": {
+            "id": "c2",
+            "type": "textarea",
+            "label": "Ce qui part dans mes points à vérifier (une ligne par point)",
+            "required": true,
+            "dossier": {
+              "kind": "risques",
+              "block": "list"
+            }
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "L'IA annonce un prix d'aliment au dinar près, sans source. Que vaut ce chiffre ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Il est fiable : une telle précision vient forcément de quelque part"
+            },
+            {
+              "id": "b",
+              "text": "La précision ne prouve rien : sans source ni date, c'est à relever soi-même"
+            },
+            {
+              "id": "c",
+              "text": "Il est faux par principe"
+            }
+          ],
+          "answer": "b",
+          "explanation": "La précision est un style, pas une preuve. Un chiffre peut d'ailleurs être juste : le problème est que rien ne permet de le savoir. Un prix se relève chez votre fournisseur, le jour où vous achetez."
+        },
+        {
+          "id": "q2",
+          "text": "Pourquoi commencer par une question dont vous connaissez déjà la réponse ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Pour mesurer l'écart et savoir jusqu'où lui faire confiance ensuite"
+            },
+            {
+              "id": "b",
+              "text": "Pour l'entraîner à mon exploitation"
+            },
+            {
+              "id": "c",
+              "text": "Pour gagner du temps"
+            }
+          ],
+          "answer": "a",
+          "explanation": "C'est un étalonnage : vous mesurez l'erreur là où vous pouvez la mesurer. L'outil, lui, n'apprend rien de votre exploitation d'une conversation à l'autre — ce que vous écrivez aujourd'hui n'est pas réutilisé demain dans une nouvelle discussion."
+        },
+        {
+          "id": "q3",
+          "text": "Parmi ces réponses de l'IA, laquelle ne doit jamais être appliquée telle quelle ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Un modèle de lettre pour la Chambre d'agriculture"
+            },
+            {
+              "id": "b",
+              "text": "Un tableau pour suivre mes dépenses"
+            },
+            {
+              "id": "c",
+              "text": "Une dose de traitement pour mon troupeau ou ma culture"
+            }
+          ],
+          "answer": "c",
+          "explanation": "Une lettre mal tournée se corrige, un tableau se réajuste. Une dose erronée tue des animaux, détruit une récolte ou rend un produit impropre à la vente. Doses et traitements : vétérinaire ou technicien, et l'étiquette du produit."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "J'ai mesuré l'écart entre l'estimation de l'IA et ce que je sais",
+        "J'ai obtenu le tri sûr / à vérifier / inconnu",
+        "Mes points à vérifier sont dans le Dossier"
+      ],
+      "confidencePrompt": "Repérez-vous maintenant une affirmation inventée sans aide ?",
+      "dossierPreview": true
+    }
+  },
+  "verifyLocally": [
+    "Aucune dose, aucun traitement et aucun produit cité par une IA ne doit être appliqué : votre vétérinaire, votre technicien et l'étiquette du produit font seuls autorité.",
+    "Les prix se relèvent chez le fournisseur ou au marché, le jour de l'achat."
+  ],
+  "nextTeaser": "Demain : ce qu'on ne tape jamais dans une IA — et comment poser sa question sans livrer ses papiers."
+}

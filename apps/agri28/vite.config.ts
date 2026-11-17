@@ -53,8 +53,8 @@ export default defineConfig(({ mode }) => ({
       registerType: 'prompt',
       includeAssets: ['favicon.svg', 'icons/apple-touch-icon-180.png'],
       manifest: {
-        name: '28 jours — Mon projet agricole avec l’IA',
-        short_name: 'Agri28',
+        name: 'Agricole DZ 360 — 28 jours avec l’IA',
+        short_name: 'Agricole DZ',
         description:
           'Parcours de 15 minutes par jour pendant 28 jours pour organiser, planifier et piloter son projet agricole avec l’IA.',
         // Un manifeste est statique : il ne peut pas porter deux langues.

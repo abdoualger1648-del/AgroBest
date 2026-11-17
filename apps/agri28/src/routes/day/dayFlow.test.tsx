@@ -105,7 +105,9 @@ describe('journée complète (jour 1)', () => {
     const questions = await screen.findAllByRole('radiogroup');
     expect(questions).toHaveLength(3);
 
-    await user.click(within(questions[0]!).getByRole('radio', { name: /estimation à confronter/ }));
+    await user.click(
+      within(questions[0]!).getByRole('radio', { name: /estimation, à confronter/ }),
+    );
     expect(await screen.findByText('Bonne réponse')).toBeInTheDocument();
 
     await user.click(within(questions[1]!).getByRole('radio', { name: /Mesurer l'humidité/ }));
@@ -148,9 +150,20 @@ describe('journée complète (jour 1)', () => {
     expect(screen.getByRole('button', { name: 'Ouvrir quand même' })).toBeInTheDocument();
   });
 
-  it('annonce clairement un contenu encore absent', async () => {
+  it('ouvre la leçon du jour 2 après un déverrouillage manuel', async () => {
     const user = userEvent.setup();
     await renderApp('fr', '/jour/2');
+
+    await user.click(screen.getByRole('button', { name: 'Ouvrir quand même' }));
+
+    expect(
+      await screen.findByRole('heading', { level: 1, name: /Un bon prompt/ }),
+    ).toBeInTheDocument();
+  });
+
+  it('annonce clairement un contenu encore absent', async () => {
+    const user = userEvent.setup();
+    await renderApp('fr', '/jour/9');
 
     await user.click(screen.getByRole('button', { name: 'Ouvrir quand même' }));
 

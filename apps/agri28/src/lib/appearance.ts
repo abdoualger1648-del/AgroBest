@@ -52,6 +52,29 @@ export function applyTheme(preference: ThemePreference): ResolvedTheme {
   return resolved;
 }
 
+/**
+ * Lit le cache de peinture. Ce cache est écrit de façon SYNCHRONE au moment du
+ * clic, alors que l'enregistrement dans IndexedDB est asynchrone : si
+ * l'application est fermée entre les deux, le cache est la valeur la plus
+ * récente. Au démarrage, il fait donc foi, et il est réécrit dans la base.
+ */
+export function readCachedTheme(): ThemePreference | null {
+  try {
+    const value = localStorage.getItem('agri28.theme');
+    return isThemePreference(value) ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+export function readCachedLang(): string | null {
+  try {
+    return localStorage.getItem('agri28.lang');
+  } catch {
+    return null;
+  }
+}
+
 export function applyLang(lang: Lang): void {
   const html = document.documentElement;
   html.setAttribute('lang', lang);

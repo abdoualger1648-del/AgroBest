@@ -1,0 +1,197 @@
+{
+  "schema": 1,
+  "id": "day-04",
+  "day": 4,
+  "week": 1,
+  "lang": "fr",
+  "title": "Exiger les sources, et les ouvrir",
+  "subtitle": "Vous obligez l'IA à dire d'où elle tient ses informations, puis vous vérifiez d'un clic si la source existe.",
+  "durationMin": 15,
+  "objectives": [
+    "Écrire une demande qui oblige l'IA à citer ses sources",
+    "Reconnaître une source utilisable d'une source inventée",
+    "Vérifier une source en moins d'une minute"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "libre",
+    "label": "Mes informations vérifiées"
+  },
+  "guardrails": ["verify_regulation", "verify_prices"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "p",
+          "text": "Une IA peut écrire une source qui n'existe pas. Un numéro de décret crédible, un nom de site plausible, une date ronde : tout y est, sauf que rien ne correspond."
+        },
+        {
+          "type": "p",
+          "text": "Une source est **utilisable** quand elle réunit trois choses :"
+        },
+        {
+          "type": "ol",
+          "items": [
+            "**Elle s'ouvre.** Le lien mène à une page réelle, pas à une erreur.",
+            "**Elle est datée.** Sans date, un prix ou une règle ne vaut rien.",
+            "**Elle concerne l'Algérie.** Une dose, une aide ou un calendrier venus d'ailleurs ne s'appliquent pas chez vous."
+          ]
+        },
+        {
+          "type": "example",
+          "label": "À quoi ressemble une vraie source",
+          "text": "Le modèle de la carte professionnelle de l'agriculteur a été publié au *Journal officiel* en mars 2023 : on peut ouvrir le document, lire le texte, voir la date. C'est cela, une source. Un « décret n° 23-XX » cité sans lien n'en est pas une tant que vous ne l'avez pas vu."
+        },
+        {
+          "type": "note",
+          "variant": "warning",
+          "text": "Certains assistants cherchent sur Internet et affichent des liens ; d'autres répondent de mémoire. Si aucun lien n'apparaît sous la réponse, considérez qu'il n'y a **aucune** source."
+        }
+      ],
+      "keyPoints": [
+        "Une source qui ne s'ouvre pas n'est pas une source",
+        "Pas de date, pas de valeur",
+        "Une source étrangère ne vaut pas pour l'Algérie",
+        "« Je ne sais pas » est une bonne réponse : exigez-la"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "Posez une question qui compte pour votre exploitation, en imposant les sources. Puis ouvrez vraiment un lien : c'est la seule étape qui vérifie quelque chose."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Copiez ce prompt. Remplacez si besoin la question par celle qui vous préoccupe en ce moment.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "Une réponse sourcée, ou rien",
+            "template": "Tu es un documentaliste agricole. Tu travailles pour un exploitant en Algérie.\n\nMon exploitation : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}.\n\nQuestion : quelles sont les principales obligations ou démarches administratives qui concernent ce type d'exploitation en Algérie aujourd'hui ?\n\nRègles strictes :\n1. Pour chaque affirmation, donne la source : le nom de l'organisme ou du texte, un lien si tu en as un, et la date.\n2. Si tu n'as pas de source fiable pour une affirmation, écris exactement : « Je n'ai pas de source fiable, à vérifier auprès de la Chambre d'agriculture. »\n3. N'invente aucun numéro de texte réglementaire.\n4. Sépare clairement ce qui est documenté de ce qui est une pratique courante.\n\nFormat : une liste de 4 points au maximum, chacun suivi de sa ligne « Source : … »."
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Choisissez **une** affirmation de la réponse, celle qui vous servirait le plus. Ouvrez son lien, ou cherchez l'organisme cité. La source tient-elle ?",
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "L'information que j'ai vérifiée, et ce que la source dit vraiment",
+            "placeholder": "Exemple : l'IA parle d'une inscription obligatoire ; la page de la Chambre d'agriculture le confirme / ne le dit nulle part.",
+            "required": true,
+            "dossier": {
+              "kind": "libre",
+              "block": "paragraph"
+            }
+          }
+        },
+        {
+          "id": "s3",
+          "optional": true,
+          "instruction": "Notez ce qui n'a pas pu être vérifié. Cette liste vous servira quand vous passerez à la Chambre d'agriculture ou chez votre vétérinaire.",
+          "capture": {
+            "id": "c2",
+            "type": "textarea",
+            "label": "À demander à une personne compétente (une ligne par point)",
+            "dossier": {
+              "kind": "risques",
+              "block": "list"
+            }
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "L'IA cite « le décret n° 21-47 » sans lien. Que faites-vous ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Je le cite dans mon dossier : un numéro aussi précis ne s'invente pas"
+            },
+            {
+              "id": "b",
+              "text": "Je le traite comme non vérifié tant que je n'ai pas vu le texte"
+            },
+            {
+              "id": "c",
+              "text": "Je demande à l'IA si elle est sûre ; si elle confirme, c'est bon"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Un numéro précis est exactement ce qu'une IA produit le mieux, y compris quand il est faux : la forme est apprise, pas le contenu. Et lui redemander confirmation ne vérifie rien, elle confirmera. Le texte se lit au Journal officiel ou s'obtient auprès de la Chambre d'agriculture."
+        },
+        {
+          "id": "q2",
+          "text": "Le lien s'ouvre, mais la page est un site agricole français. L'information est-elle utilisable ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Oui, l'agronomie est la même partout"
+            },
+            {
+              "id": "b",
+              "text": "Pour une technique peut-être ; pour une aide, une dose homologuée ou une démarche, non"
+            },
+            {
+              "id": "c",
+              "text": "Non, aucune information étrangère n'a de valeur"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Un principe agronomique voyage ; un droit, un prix, un produit homologué et un calendrier administratif ne voyagent pas. Le climat et les variétés diffèrent aussi : un calendrier de semis français n'est pas celui de votre wilaya."
+        },
+        {
+          "id": "q3",
+          "text": "L'IA répond : « Je n'ai pas de source fiable pour ce point. » Comment le prenez-vous ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "C'est un bon signe : c'est ce que je lui ai demandé de faire"
+            },
+            {
+              "id": "b",
+              "text": "L'outil est mauvais, j'en change"
+            },
+            {
+              "id": "c",
+              "text": "J'insiste jusqu'à obtenir une réponse"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Un aveu d'ignorance vaut mieux qu'une invention bien tournée. Si vous insistez, vous obtiendrez une réponse — et c'est précisément comme cela qu'on fabrique une fausse certitude. Le point reste ouvert : il part sur votre liste de questions à poser."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "J'ai obtenu une réponse avec des sources et des dates",
+        "J'ai ouvert au moins une source et vu ce qu'elle dit",
+        "J'ai listé ce qui reste à vérifier auprès d'une personne compétente"
+      ],
+      "confidencePrompt": "Sauriez-vous repérer une source inventée dans une réponse d'IA ?",
+      "dossierPreview": true
+    }
+  },
+  "sources": [
+    {
+      "label": "Modèle de la carte professionnelle de l'agriculteur, publié au Journal officiel algérien (mars 2023) — copie hébergée par la FAO ; le texte officiel reste celui du Journal officiel.",
+      "url": "https://faolex.fao.org/docs/pdf/alg220678.pdf",
+      "checkedOn": "2026-11-17"
+    }
+  ],
+  "verifyLocally": [
+    "Les obligations et démarches citées par une IA doivent être confirmées par la Chambre d'agriculture de votre wilaya ou la Direction des services agricoles (DSA)."
+  ],
+  "nextTeaser": "Demain : le test qui révèle ce que l'IA invente — en lui posant une question dont vous connaissez déjà la réponse."
+}
