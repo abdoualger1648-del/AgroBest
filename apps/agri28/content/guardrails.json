@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "guardrails": [
+    {
+      "id": "ai_not_agronomist",
+      "severity": "warning",
+      "text": {
+        "fr": "L'IA ne remplace pas un agronome. Avant d'appliquer un conseil technique à votre parcelle, faites-le valider par un technicien ou un ingénieur agronome.",
+        "ar": "الذكاء الاصطناعي لا يعوّض المهندس الزراعي. قبل تطبيق أي نصيحة تقنية على قطعتك، اعرضها على تقني أو مهندس فلاحي."
+      }
+    },
+    {
+      "id": "ai_not_vet",
+      "severity": "danger",
+      "text": {
+        "fr": "L'IA ne remplace pas un vétérinaire. Aucun traitement, aucune dose, aucun diagnostic ne doit être appliqué sans l'avis d'un vétérinaire.",
+        "ar": "الذكاء الاصطناعي لا يعوّض الطبيب البيطري. لا تطبّق أي علاج أو جرعة أو تشخيص دون رأي طبيب بيطري."
+      }
+    },
+    {
+      "id": "ai_not_lawyer",
+      "severity": "warning",
+      "text": {
+        "fr": "L'IA ne remplace pas un juriste. Un texte réglementaire cité par une IA doit être vérifié auprès de la Chambre d'agriculture, de la DSA ou du Journal officiel.",
+        "ar": "الذكاء الاصطناعي لا يعوّض رجل القانون. أي نص تنظيمي يذكره الذكاء الاصطناعي يجب التأكد منه لدى الغرفة الفلاحية أو مديرية المصالح الفلاحية أو الجريدة الرسمية."
+      }
+    },
+    {
+      "id": "ai_not_accountant",
+      "severity": "warning",
+      "text": {
+        "fr": "L'IA ne remplace pas un comptable. Les calculs produits sont une aide à la décision, pas une comptabilité officielle ni une déclaration fiscale.",
+        "ar": "الذكاء الاصطناعي لا يعوّض المحاسب. الحسابات التي ينتجها مساعدة على القرار، وليست محاسبة رسمية ولا تصريحًا جبائيًا."
+      }
+    },
+    {
+      "id": "verify_prices",
+      "severity": "warning",
+      "text": {
+        "fr": "Tout prix donné par une IA est une estimation, souvent ancienne. Relevez le prix du jour chez votre fournisseur ou au marché avant de décider.",
+        "ar": "كل سعر يقدّمه الذكاء الاصطناعي هو تقدير، غالبًا قديم. تحقّق من سعر اليوم عند مورّدك أو في السوق قبل أن تقرّر."
+      }
+    },
+    {
+      "id": "verify_regulation",
+      "severity": "warning",
+      "text": {
+        "fr": "Les aides, agréments et démarches changent souvent. Vérifiez auprès de votre Chambre d'agriculture ou de la DSA de votre wilaya.",
+        "ar": "الإعانات والاعتمادات والإجراءات تتغيّر كثيرًا. تحقّق لدى الغرفة الفلاحية أو مديرية المصالح الفلاحية لولايتك."
+      }
+    },
+    {
+      "id": "verify_doses",
+      "severity": "danger",
+      "text": {
+        "fr": "Ne suivez jamais une dose de produit, de traitement ou d'aliment donnée par une IA : lisez l'étiquette du produit et demandez à un professionnel.",
+        "ar": "لا تعتمد أبدًا على جرعة منتج أو علاج أو علف يقدّمها الذكاء الاصطناعي: اقرأ بطاقة المنتج واسأل مختصًّا."
+      }
+    },
+    {
+      "id": "data_privacy_basic",
+      "severity": "info",
+      "text": {
+        "fr": "Ce que vous écrivez dans un outil d'IA en ligne peut être conservé par son éditeur. Évitez d'y mettre des pièces d'identité, des numéros de compte ou les données personnelles de vos employés.",
+        "ar": "ما تكتبه في أداة ذكاء اصطناعي على الإنترنت قد يحتفظ به صاحبها. تجنّب وضع وثائق الهوية أو أرقام الحسابات أو البيانات الشخصية لعمّالك."
+      }
+    }
+  ]
+}

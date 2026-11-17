@@ -1,0 +1,16 @@
+{
+  "greeting": "Bienvenue",
+  "subtitle": "Votre parcours de 28 jours commence par votre projet.",
+  "progress": {
+    "label": "Progression",
+    "value": "{{done}} / {{total}} jours",
+    "week": "Semaine {{week}} sur 4",
+    "streak": "Série : {{count}} j"
+  },
+  "dossier": {
+    "label": "Dossier de projet",
+    "empty": "Aucune brique pour l'instant"
+  },
+  "cta": "Commencer mes 15 minutes",
+  "phaseNotice": "Squelette de l'application : la progression, le minuteur et les leçons arrivent aux phases 2 et 3."
+}

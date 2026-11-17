@@ -9,7 +9,7 @@
 
 | Sujet | Décision | Conséquence technique |
 |---|---|---|
-| Emplacement du code | Racine du dépôt `abdoualger1648-del/WinBest`, branche `claude/28-days-ai-agriculture-3ga039` | `package.json`, `src/`, `content/` à la racine. *À confirmer au GO si vous préférez `apps/agri28/`.* |
+| Emplacement du code | **`apps/agri28/`** dans `abdoualger1648-del/WinBest`, branche `claude/28-days-ai-agriculture-3ga039` | monorepo npm workspaces ; `CLAUDE.md` et `docs/` restent à la racine, la plateforme Winbest pourra vivre à côté |
 | Usage | PWA installée sur téléphone | Mobile-first strict, hors ligne complet, poids surveillé |
 | Chiffres algériens | **Prix précis quand une source fiable existe**, sinon fourchette ; source + date de relevé dans chaque leçon ; mention « à vérifier localement » sur les doses, traitements, règlements et aides | Champ `sources[]` obligatoire dans le JSON de leçon + fichier `content/sources.json` ; test qui refuse une leçon citant un prix sans source datée |
 | Rythme | **Libre** : dès qu'un jour est validé, le suivant s'ouvre | Verrouillage = « jour N−1 validé », pas de contrainte de date. La série (streak) reste affichée mais devient informative, jamais bloquante |
@@ -63,95 +63,63 @@ Principe directeur : **le contenu est une donnée, pas du code**. Ajouter un jou
 
 ---
 
-## 3. Arborescence proposée
+## 3. Arborescence
+
+État réel après la phase 1 ; les dossiers marqués *(phase N)* n'existent pas encore.
 
 ```
-/
-├── CLAUDE.md                  # stack, conventions, décisions, journal des phases
-├── README.md                  # (Phase 7)
-├── index.html
-├── package.json
-├── vite.config.ts             # base, PWA, alias @/
-├── tsconfig.json              # strict
-├── eslint.config.js
-├── vitest.config.ts
-├── playwright.config.ts
-├── .github/workflows/ci.yml   # typecheck · lint · tests · validation contenu · build · Pages
-│
-├── content/                   # ← CONTENU PÉDAGOGIQUE (hors du code)
-│   ├── days/
-│   │   ├── day-01.fr.json
-│   │   ├── day-01.ar.json
-│   │   └── … jusqu'à day-28
-│   ├── templates/             # fiche-projet, budget, calendrier, risques, rapport-mensuel
-│   │   ├── budget.fr.json
-│   │   └── budget.ar.json
-│   ├── tools.json             # catalogue des outils IA (nom, url, gratuité, dispo Algérie, vérifié le)
-│   ├── guardrails.json        # textes des garde-fous, réutilisés par identifiant
-│   ├── wilayas.json           # 58 wilayas (code, nom FR, nom AR)
-│   └── sources.json           # sources web vérifiées + date de consultation
-│
-├── scripts/
-│   ├── validate-content.ts    # Zod + parité AR/FR + prix sans source → échec
-│   └── check-links.ts         # vérifie que les URL des outils répondent (manuel, en ligne)
-│
+/                                  ← racine du dépôt (monorepo npm workspaces)
+├── CLAUDE.md                      # stack, conventions, décisions, journal des phases
+├── package.json                   # workspaces + scripts relayés vers l'application
+├── .github/workflows/ci.yml       # types · lint · format · contenu · tests · build · e2e
 ├── docs/
-│   ├── ARCHITECTURE.md        # ce document
-│   ├── lesson-schema.md       # schéma d'une leçon, commenté
-│   ├── CONTENT_GUIDE.md       # (Phase 7) comment ajouter/corriger une leçon
+│   ├── ARCHITECTURE.md            # ce document
+│   ├── lesson-schema.md
 │   └── examples/day-01.fr.sample.json
 │
-├── public/
-│   ├── manifest.webmanifest   # (généré par vite-plugin-pwa)
-│   ├── icons/                 # 192, 512, maskable
-│   └── fonts/                 # woff2 sous-ensemblés (arabe + latin)
-│
-└── src/
-    ├── main.tsx
-    ├── App.tsx
-    ├── routes/                # un dossier par écran
-    │   ├── dashboard/
-    │   ├── onboarding/
-    │   ├── project/
-    │   ├── day/               # Concept · Pratique · Quiz · Bilan + minuteur
-    │   ├── dossier/
-    │   ├── notebook/          # carnet de prompts
-    │   ├── templates/
-    │   ├── badges/
-    │   └── settings/
-    ├── components/            # Button, Card, Timer, PromptCard, CopyButton, Stepper…
-    ├── domain/                # logique pure, 100 % testée
-    │   ├── course.ts          # déverrouillage, validation, progression
-    │   ├── streak.ts
-    │   ├── quiz.ts
-    │   ├── prompt.ts          # résolution des variables {{project.*}}
-    │   ├── dossier.ts         # construction des briques
-    │   └── types.ts
-    ├── content/               # accès au contenu
-    │   ├── schema.ts          # schémas Zod
-    │   ├── loader.ts          # import() dynamique par jour + langue
-    │   └── markdown.ts        # rendu d'un Markdown restreint (gras, listes, liens)
-    ├── db/
-    │   ├── db.ts              # déclaration Dexie + versions
-    │   ├── repositories/      # profile, project, progress, dossier, notebook, badges
-    │   └── backup.ts          # export/import JSON
-    ├── export/                # chargés à la demande
-    │   ├── docx.ts            # dossier de projet (.docx, RTL correct)
-    │   ├── xlsx.ts            # budget, suivi, calendrier (.xlsx, feuille RTL)
-    │   └── certificate.ts     # canvas → PNG → PDF (évite le problème de liaison des lettres arabes)
-    ├── i18n/
-    │   ├── index.ts
-    │   └── locales/{fr,ar}/{common,nav,onboarding,day,quiz,dossier,settings}.json
-    ├── pwa/
-    │   ├── register.ts        # mise à jour « sur demande » (jamais pendant une leçon)
-    │   └── reminder.ts        # notification quotidienne + repli .ics
-    ├── styles/
-    │   ├── tokens.css         # couleurs, espacements, clair/sombre
-    │   └── index.css
-    └── test/                  # setup Vitest, utilitaires, fixtures
+└── apps/agri28/
+    ├── index.html                 # pose thème/langue/direction avant le premier rendu
+    ├── vite.config.ts             # base, PWA, alias @/, configuration Vitest
+    ├── tsconfig.json              # strict + noUncheckedIndexedAccess
+    ├── eslint.config.js           # analyse typée ; Dexie interdit hors de src/db/
+    ├── playwright.config.ts       # e2e sur le build, base /WinBest/, profil mobile
+    ├── vitest.setup.ts            # jest-dom, fake-indexeddb, matchMedia
+    │
+    ├── content/                   # ← CONTENU PÉDAGOGIQUE (hors du code)
+    │   ├── guardrails.json        # 8 garde-fous, FR + AR
+    │   ├── days/                  # day-NN.<lang>.json              (phases 3-4)
+    │   ├── templates/             # modèles exportables              (phase 5)
+    │   ├── tools.json             # catalogue des outils IA vérifiés (phase 3)
+    │   ├── wilayas.json           #                                  (phase 2)
+    │   └── sources.json           #                                  (phase 3)
+    │
+    ├── scripts/
+    │   ├── validate-content.mjs   # validation du contenu (grandit avec lui)
+    │   └── generate-icons.mjs     # icônes PWA rendues par Chromium
+    │
+    ├── public/
+    │   ├── favicon.svg
+    │   └── icons/                 # 192, 512, maskable 512, apple-touch 180
+    │
+    ├── e2e/smoke.spec.ts          # 6 tests : navigation, RTL, thème, lien profond, PWA
+    │
+    └── src/
+        ├── main.tsx               # profil → langue/thème → i18n → rendu
+        ├── App.tsx                # routes
+        ├── components/            # AppShell, BottomNav, Button, Card, Icon, ComingSoon…
+        ├── routes/                # HomePage, MorePage, SettingsPage, Placeholder, NotFound
+        ├── lib/                   # lang, appearance (thème + direction), format (Intl)
+        ├── store/preferences.ts   # Zustand, hydraté depuis IndexedDB
+        ├── db/                    # Dexie + repositories (seul endroit qui connaît Dexie)
+        ├── i18n/                  # init + locales/{fr,ar}/{common,nav,home,settings,screens}
+        ├── pwa/                   # mise à jour du service worker (+ stub de test)
+        ├── styles/index.css       # jetons de couleur, thème clair/sombre, base
+        ├── test/                  # garde-fou RTL, utilitaire de rendu
+        │
+        ├── domain/                # logique pure du parcours              (phase 2)
+        ├── content/               # schémas Zod + chargeur de leçons      (phase 2)
+        └── export/                # .docx, .xlsx, certificat PDF          (phase 5)
 ```
-
----
 
 ## 4. Modèle de données (IndexedDB via Dexie)
 
@@ -427,4 +395,4 @@ Je ne promettrai pas dans l'interface une notification à l'heure exacte si la p
 | RTL dans un `.docx` généré en JS | Les éléments OOXML `w:bidi` (paragraphe) et `w:rtl` (run) portent la direction ; un ticket ouvert sur `dolanmiu/docx` signale que l'alignement à droite n'est pas automatique → il faut poser l'alignement explicitement | GitHub `dolanmiu/docx` #3419, référence OOXML |
 | Arabe en PDF côté navigateur | pdf-lib et jsPDF ne lient pas les lettres arabes ; le canvas du navigateur, si | documentation pdf-lib/naqqash, adaptateur `bidi-shaper` |
 
-> `docx.js.org` n'est pas joignable depuis cette session (domaine hors de la liste réseau autorisée). Je confirmerai l'API exacte de la bibliothèque `docx` en lisant ses types TypeScript après installation, ce qui est de toute façon plus fiable que la documentation en ligne.
+> `docx.js.org` n'est pas joignable depuis cette session (domaine hors de la liste réseau autorisée). L'API a donc été confirmée **en lisant les types TypeScript du paquet `docx`** présent dans l'environnement : `bidirectional?: boolean` sur les options de paragraphe, `rightToLeft?: boolean` sur celles d'un run, `AlignmentType.START` / `AlignmentType.END` (logiques, donc justes dans les deux directions) et `sizeComplexScript` pour la taille du script complexe. Question tranchée.

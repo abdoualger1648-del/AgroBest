@@ -1,0 +1,19 @@
+{
+  "name": "winbest-monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "workspaces": ["apps/*"],
+  "scripts": {
+    "dev": "npm run dev -w agri28",
+    "build": "npm run build -w agri28",
+    "preview": "npm run preview -w agri28",
+    "typecheck": "npm run typecheck -w agri28",
+    "lint": "npm run lint -w agri28",
+    "format": "npm run format -w agri28",
+    "test": "npm run test -w agri28",
+    "test:e2e": "npm run test:e2e -w agri28",
+    "validate:content": "npm run validate:content -w agri28",
+    "verify": "npm run verify -w agri28"
+  },
+  "engines": { "node": ">=22" }
+}

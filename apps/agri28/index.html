@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="fr" dir="ltr" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#2f6b46" />
+    <meta name="description" content="15 minutes par jour pendant 28 jours pour organiser, planifier et piloter votre projet agricole avec l'IA." />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon-180.png" />
+    <title>28 jours — Mon projet agricole avec l'IA</title>
+    <script>
+      /* Applique thème, langue et direction AVANT le premier rendu.
+         localStorage sert de cache de peinture ; IndexedDB reste la source de vérité. */
+      (function () {
+        try {
+          var theme = localStorage.getItem('agri28.theme') || 'system';
+          var stored = localStorage.getItem('agri28.lang');
+          var lang = stored || (navigator.language || 'fr').slice(0, 2);
+          if (lang !== 'ar') lang = 'fr';
+          var resolved =
+            theme === 'system'
+              ? window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light'
+              : theme;
+          var html = document.documentElement;
+          html.setAttribute('data-theme', resolved);
+          html.setAttribute('lang', lang);
+          html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+        } catch (e) {
+          /* mode privé ou stockage bloqué : on garde les valeurs par défaut */
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

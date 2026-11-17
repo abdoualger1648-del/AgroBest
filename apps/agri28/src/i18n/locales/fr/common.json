@@ -1,0 +1,36 @@
+{
+  "appName": "28 jours — Mon projet agricole avec l'IA",
+  "appShortName": "Agri28",
+  "tagline": "15 minutes par jour pour organiser, planifier et piloter votre projet.",
+  "actions": {
+    "start": "Commencer",
+    "continue": "Continuer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "back": "Retour",
+    "next": "Suivant",
+    "copy": "Copier",
+    "copied": "Copié",
+    "close": "Fermer"
+  },
+  "status": {
+    "comingSoon": "Bientôt disponible",
+    "inPreparation": "Cet écran sera construit à la phase suivante.",
+    "loading": "Chargement…",
+    "offlineReady": "Disponible hors ligne"
+  },
+  "a11y": {
+    "skipToContent": "Aller au contenu principal",
+    "mainNavigation": "Navigation principale"
+  },
+  "update": {
+    "title": "Une nouvelle version est prête",
+    "body": "Mettez à jour pour obtenir les derniers contenus et corrections.",
+    "reload": "Mettre à jour",
+    "later": "Plus tard"
+  },
+  "languages": {
+    "fr": "Français",
+    "ar": "العربية"
+  }
+}

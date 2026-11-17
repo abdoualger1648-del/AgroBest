@@ -1,0 +1,29 @@
+{
+  "title": "Paramètres",
+  "subtitle": "Langue, apparence et données de l'application.",
+  "language": {
+    "label": "Langue",
+    "help": "L'arabe passe automatiquement l'interface en écriture de droite à gauche."
+  },
+  "theme": {
+    "label": "Apparence",
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Comme l'appareil"
+  },
+  "reminder": {
+    "label": "Rappel quotidien",
+    "help": "Le web ne garantit pas de notification à l'heure exacte sans serveur. Un rappel d'agenda sera proposé à la phase 5."
+  },
+  "data": {
+    "label": "Mes données",
+    "help": "Tout reste sur votre téléphone : aucune donnée n'est envoyée sur Internet. Export, import et réinitialisation arrivent à la phase 5."
+  },
+  "about": {
+    "label": "À propos",
+    "version": "Version {{version}}",
+    "storage": "Stockage local : {{status}}",
+    "storageOk": "actif",
+    "storageError": "indisponible"
+  }
+}
