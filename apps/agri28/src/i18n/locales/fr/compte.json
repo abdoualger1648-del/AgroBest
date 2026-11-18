@@ -75,7 +75,11 @@
     "connecteComme": "Connecté : {{email}}",
     "actif": "Compte activé",
     "essai": "Compte en essai",
-    "horsLigneAvertissement": "Pas de connexion : votre accès reste celui de la dernière vérification."
+    "horsLigneAvertissement": "Pas de connexion : votre accès reste celui de la dernière vérification.",
+    "identifiant": "Identifiant du compte",
+    "identifiantAide": "C'est cet identifiant qu'il faut donner à l'administrateur pour ouvrir des droits particuliers.",
+    "copier": "Copier l'identifiant",
+    "copie": "Identifiant copié"
   },
   "admin": {
     "titre": "Administration",

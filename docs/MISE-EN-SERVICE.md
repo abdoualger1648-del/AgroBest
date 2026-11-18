@@ -194,8 +194,9 @@ Dans l'application :
 L'administrateur n'est écrit nulle part dans le code : il est désigné par un document dans la
 base. C'est ce qui évite d'inscrire votre adresse dans un dépôt public.
 
-1. Ouvrez **https://console.firebase.google.com/project/agricole360-4a470/authentication/users**
-   et copiez l'**UID** de votre compte (une longue suite de lettres et de chiffres).
+1. Dans l'application : **Plus → Mon compte**. La carte « Identifiant du compte » affiche votre
+   UID, avec un bouton pour le copier.
+   *(Il est aussi lisible dans la console, sous Authentication → Users.)*
 2. Ouvrez **https://console.firebase.google.com/project/agricole360-4a470/firestore/data**
 3. *Démarrer une collection* → identifiant **`admins`**.
 4. Pour l'identifiant du document, **collez votre UID** (n'utilisez pas « ID automatique »).

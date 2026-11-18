@@ -243,4 +243,18 @@ describe('édition APK : accès au parcours', () => {
     await rouvrir('/');
     expect(screen.queryByText(/leçon\(s\) d'essai/)).not.toBeInTheDocument();
   });
+  it('affiche l’identifiant du compte, et permet de le copier', async () => {
+    const user = userEvent.setup();
+    await allerJusquALEssai(user);
+
+    await rouvrir('/compte');
+    const uid = useCompte.getState().uid;
+    expect(uid).toBeTruthy();
+
+    // C'est cet identifiant qui désigne un administrateur (D56) : sans cet
+    // affichage, il fallait aller le chercher dans la console Firebase.
+    expect(await screen.findByText('Identifiant du compte')).toBeInTheDocument();
+    expect(screen.getByText(uid ?? '')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Copier l'identifiant/ })).toBeInTheDocument();
+  });
 });
