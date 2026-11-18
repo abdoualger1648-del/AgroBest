@@ -1,0 +1,183 @@
+{
+  "schema": 1,
+  "id": "day-11",
+  "day": 11,
+  "week": 2,
+  "lang": "fr",
+  "title": "Douze mois sur une page",
+  "subtitle": "Vous obtenez un calendrier de travaux mois par mois, puis vous le corrigez avec ce que l'IA ne peut pas savoir : votre région et votre expérience.",
+  "durationMin": 15,
+  "objectives": [
+    "Obtenir un calendrier mois par mois adapté à mon activité",
+    "Distinguer ce qui est général de ce qui dépend de ma région",
+    "Repérer mes trois pics de travail dans l'année"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "calendrier",
+    "label": "Calendrier des travaux"
+  },
+  "guardrails": ["ai_not_agronomist", "ai_not_vet", "verify_doses"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "p",
+          "text": "Un calendrier agricole n'est pas un planning de bureau. Il suit un cycle : semis, croissance, récolte ; ou mise à la reproduction, mise bas, sevrage, vente. Ce cycle, vous le connaissez mieux que n'importe quel outil."
+        },
+        {
+          "type": "p",
+          "text": "Ce que l'IA apporte, c'est **la mise en forme et l'exhaustivité** : elle n'oublie ni l'entretien du matériel, ni la commande d'intrants deux mois à l'avance, ni les démarches à faire pendant le creux de l'hiver."
+        },
+        {
+          "type": "note",
+          "variant": "danger",
+          "text": "Ce que l'IA ne peut pas savoir : **les dates exactes chez vous**. Entre le littoral, les Hauts Plateaux et le Sud, entre une année sèche et une année pluvieuse, les mêmes travaux se décalent de plusieurs semaines. Et toute dose ou tout traitement inscrit au calendrier se valide auprès du vétérinaire ou du technicien."
+        },
+        {
+          "type": "p",
+          "text": "Le vrai gain du calendrier, ce sont les **pics de charge** : les deux ou trois moments de l'année où il faut plus de bras, plus de trésorerie, plus de place. Les connaître six mois à l'avance change tout ; les découvrir la veille coûte cher."
+        }
+      ],
+      "keyPoints": [
+        "Le cycle, c'est vous qui le connaissez ; la mise en forme, c'est l'IA",
+        "Les dates varient avec la région et l'année : à confirmer localement",
+        "Les pics de charge se préparent des mois à l'avance",
+        "Toute dose inscrite au calendrier passe par un professionnel"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "Le prompt demande explicitement une colonne « à confirmer localement ». C'est elle qui transforme un calendrier générique en outil de travail."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Lancez le calendrier. Vous le corrigerez juste après, à partir de vos propres années passées.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "Mon calendrier sur douze mois",
+            "template": "Tu es un technicien agricole qui travaille en Algérie.\n\nMon exploitation : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}.\nDémarrage ou point de départ du cycle : {{project.startMonth}}.\nEau : {{project.waterSource}}.\n\nTâche : construis mon calendrier sur douze mois, à partir de {{project.startMonth}}.\n\nFormat : un tableau à 5 colonnes — mois, travaux principaux, achats ou commandes à passer ce mois-là, besoin en main-d'œuvre (faible / moyen / fort), à confirmer localement (oui / non).\n\nRègles :\n- Mets « oui » dans la dernière colonne chaque fois que la date dépend du climat, de l'altitude ou de la variété.\n- N'indique aucune dose, aucun produit commercial, aucun traitement précis : écris seulement « voir vétérinaire » ou « voir technicien ».\n- Ajoute une ligne « entretien du matériel » et une ligne « démarches administratives » là où elles ont leur place.",
+            "followUps": [
+              "Décale tout le calendrier d'un mois : que se passe-t-il si je démarre plus tard que prévu ?",
+              "Quels travaux peuvent être reportés sans conséquence, et lesquels ne se rattrapent jamais ?"
+            ]
+          },
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "Mon calendrier corrigé (une ligne par mois, avec vos dates réelles)",
+            "required": true,
+            "dossier": {
+              "kind": "calendrier",
+              "block": "list"
+            }
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Repérez vos pics. Ce sont eux qui dictent le recrutement des saisonniers et les besoins de trésorerie.",
+          "capture": {
+            "id": "c2",
+            "type": "text",
+            "label": "Mes deux ou trois mois les plus chargés de l'année",
+            "placeholder": "Exemple : mars et avril (mises bas), puis septembre (vente).",
+            "required": true,
+            "dossier": {
+              "kind": "calendrier",
+              "block": "kv",
+              "key": "Pics de charge"
+            }
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "L'IA place un travail en octobre, mais chez vous il se fait toujours en novembre. Qui a raison ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "L'IA : elle s'appuie sur des références techniques"
+            },
+            {
+              "id": "b",
+              "text": "Vous : vos années passées sur cette parcelle valent plus qu'une moyenne nationale"
+            },
+            {
+              "id": "c",
+              "text": "Il faut faire la moyenne des deux dates"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Un calendrier générique est une moyenne qui ne correspond à aucune exploitation précise. Votre observation locale, répétée sur plusieurs années, est une donnée de terrain. Gardez la date de l'IA seulement comme signal : si l'écart est d'un mois entier, demandez-vous pourquoi."
+        },
+        {
+          "id": "q2",
+          "text": "Le calendrier généré contient une ligne « traitement antiparasitaire, 2 ml par tête ». Que faites-vous ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Je supprime la dose et j'écris « voir vétérinaire »"
+            },
+            {
+              "id": "b",
+              "text": "Je l'applique, la dose paraît raisonnable"
+            },
+            {
+              "id": "c",
+              "text": "Je demande à l'IA de confirmer la dose"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Une dose dépend du produit, de la concentration, du poids de l'animal et du délai d'attente avant commercialisation. Aucun de ces éléments n'est connu de l'IA, et lui demander confirmation ne fera que répéter l'invention. Le calendrier note l'intention, le professionnel fixe la dose."
+        },
+        {
+          "id": "q3",
+          "text": "À quoi sert surtout de connaître ses pics de charge à l'avance ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "À prévoir les bras et l'argent avant d'en manquer"
+            },
+            {
+              "id": "b",
+              "text": "À remplir le calendrier proprement"
+            },
+            {
+              "id": "c",
+              "text": "À justifier un retard auprès de l'acheteur"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Un saisonnier se trouve quand on le cherche un mois avant, pas la veille, et au prix du marché calme. Même chose pour la trésorerie : une avance se négocie quand on n'en a pas encore un besoin urgent."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "J'ai un calendrier sur douze mois, corrigé avec mes dates réelles",
+        "Les lignes incertaines sont marquées « à confirmer localement »",
+        "Mes pics de charge sont identifiés"
+      ],
+      "confidencePrompt": "Ce calendrier vous paraît-il assez juste pour organiser vos achats et vos bras ?",
+      "dossierPreview": true
+    }
+  },
+  "verifyLocally": [
+    "Les dates de semis, de traitement et de récolte dépendent de votre région, de l'altitude et de l'année : confirmez-les auprès de la subdivision agricole, d'un technicien ou d'exploitants voisins.",
+    "Aucune dose ni aucun produit ne doit figurer au calendrier sans l'avis d'un vétérinaire ou d'un technicien."
+  ],
+  "nextTeaser": "Demain : les bras. Qui travaille, quand, et comment tenir un pic sans épuiser son monde."
+}

@@ -28,12 +28,23 @@ describe('prompts pré-remplis', () => {
   });
 
   it('rend visible ce qui manque au lieu de laisser un trou', () => {
+    // La commune est facultative : un projet peut très bien ne pas en avoir.
     const context = buildPromptContext(project, 'fr');
-    const text = renderPrompt('Budget maximal : {{project.budgetCeiling}}.', context, 'fr');
-    expect(text).toBe('Budget maximal : [à compléter : budgetCeiling].');
-    expect(missingVariables('{{project.budgetCeiling}} {{project.type}}', context)).toEqual([
-      'project.budgetCeiling',
+    const text = renderPrompt('Commune : {{project.commune}}.', context, 'fr');
+    expect(text).toBe('Commune : [à compléter : commune].');
+    expect(missingVariables('{{project.commune}} {{project.type}}', context)).toEqual([
+      'project.commune',
     ]);
+  });
+
+  it('insère les champs facultatifs quand ils sont renseignés', () => {
+    const context = buildPromptContext(project, 'fr');
+    // fr-DZ sépare les milliers par une espace fine insécable.
+    expect(
+      renderPrompt('{{project.budgetCeiling}}', context, 'fr').replace(/[\u00a0\u202f]/g, ' '),
+    ).toBe('1 200 000 DA');
+    expect(renderPrompt('{{project.startMonth}}', context, 'fr')).toBe('mars');
+    expect(renderPrompt('{{project.waterSource}}', context, 'fr')).toBe('forage');
   });
 
   it('utilise le marqueur arabe quand la langue est l’arabe', () => {

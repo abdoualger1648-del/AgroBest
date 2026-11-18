@@ -7,7 +7,9 @@
       "label": "Loi 26-06 — nouveau découpage administratif, 69 wilayas (Journal officiel n° 25 du 5 avril 2026)",
       "url": "https://github.com/islam-re/Algeria-wilayas/blob/main/JO%20Article%202026.md",
       "checkedOn": "2026-11-17",
-      "usedFor": ["wilayas.json"],
+      "usedFor": [
+        "wilayas.json"
+      ],
       "confidence": "moyenne",
       "caveat": "Reproduction du texte par un tiers. Le texte officiel fait foi (joradp.dz)."
     },
@@ -16,7 +18,9 @@
       "label": "GeoAlgeria — découpage administratif algérien bilingue (jeu de données MIT), aligné sur la loi 26-06",
       "url": "https://github.com/yasserstudio/geoalgeria",
       "checkedOn": "2026-11-17",
-      "usedFor": ["wilayas.json"],
+      "usedFor": [
+        "wilayas.json"
+      ],
       "confidence": "moyenne",
       "caveat": "Jeu de données communautaire, concordant avec le Journal officiel sur le total de 69 wilayas."
     },
@@ -25,9 +29,22 @@
       "label": "Anthropic — pays et régions pris en charge (l'Algérie y figure)",
       "url": "https://www.anthropic.com/supported-countries",
       "checkedOn": "2026-11-17",
-      "usedFor": ["tools.json"],
+      "usedFor": [
+        "tools.json"
+      ],
       "confidence": "haute",
       "caveat": null
+    },
+    {
+      "id": "aliment-betail-circuits",
+      "label": "Circuits de l'aliment du bétail en Algérie : orge subventionnée via les CCLS (listes d'éleveurs établies par commission de wilaya), son commercialisé par l'ONAB — presse économique algérienne, fin 2025 / début 2026",
+      "url": "https://algerie-eco.com/tag/aliments-de-betail/",
+      "checkedOn": "2026-11-18",
+      "usedFor": [
+        "days/day-09"
+      ],
+      "confidence": "faible",
+      "caveat": "Presse secondaire. Prix, quotas et conditions changent plusieurs fois par an : aucun montant n'est repris dans le contenu, seuls les circuits sont cités. La CCLS et la DSA de wilaya font foi."
     }
   ]
 }

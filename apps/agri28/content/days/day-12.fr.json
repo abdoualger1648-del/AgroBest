@@ -1,0 +1,188 @@
+{
+  "schema": 1,
+  "id": "day-12",
+  "day": 12,
+  "week": 2,
+  "lang": "fr",
+  "title": "Les bras : qui fait quoi, et quand",
+  "subtitle": "Vous chiffrez votre besoin en journées de travail aux pics, et vous construisez une rotation qui tient sans épuiser personne.",
+  "durationMin": 15,
+  "objectives": [
+    "Traduire mes pics de charge en journées de travail à pourvoir",
+    "Construire une rotation lisible, avec du repos",
+    "Savoir ce qui relève du juriste et pas de l'IA"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "equipe",
+    "label": "Équipe et rotation"
+  },
+  "guardrails": ["ai_not_lawyer", "data_privacy_people", "verify_regulation"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "p",
+          "text": "La main-d'œuvre agricole ne se compte pas en personnes mais en **journées de travail**. Une mise bas, une récolte ou une campagne de plantation demande un nombre de journées ; à vous de dire qui les fournit."
+        },
+        {
+          "type": "ul",
+          "items": [
+            "**Vous et la famille** : disponibles, mais pas extensibles. On surestime toujours ce qu'on peut faire soi-même en période de pointe.",
+            "**Les permanents** : coût fixe toute l'année, savoir-faire qui reste sur l'exploitation.",
+            "**Les saisonniers** : souples, mais à trouver *avant* le pic — pas la veille, quand tout le monde en cherche en même temps.",
+            "**Les prestataires** : moissonneuse, transport, taille. On paie le résultat, pas la journée."
+          ]
+        },
+        {
+          "type": "p",
+          "text": "Une rotation utile tient sur une feuille et répond à trois questions : **qui est là chaque jour, qui fait quoi, et qui se repose**. Un planning qui ne prévoit pas de repos n'est pas tenu plus de deux semaines."
+        },
+        {
+          "type": "note",
+          "variant": "warning",
+          "text": "Contrats, déclarations, salaires, congés, accidents : **ce n'est pas le terrain de l'IA**. Elle peut vous aider à rédiger une note interne ou à préparer vos questions ; les règles, elles, se vérifient auprès d'un juriste, de l'inspection du travail ou de la caisse compétente."
+        }
+      ],
+      "keyPoints": [
+        "On compte en journées de travail, pas en têtes",
+        "Les saisonniers se trouvent un mois avant le pic",
+        "Un planning sans repos ne tient pas",
+        "Le droit du travail se vérifie auprès d'un professionnel"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "Reprenez vos pics de charge d'hier : ils sont le point de départ. Et rappelez-vous le jour 6 — aucun nom de personne dans vos prompts."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Chiffrez le besoin. Remplacez la période d'exemple par votre propre pic.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "Combien de journées de travail à mon pic",
+            "template": "Tu es un conseiller en organisation du travail agricole en Algérie.\n\nMon exploitation : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}.\nMa période la plus chargée : [INDIQUEZ ICI LE OU LES MOIS]\n\nTâche :\n1. Décompose le travail de cette période en tâches concrètes.\n2. Pour chaque tâche : le nombre de journées de travail nécessaires pour une exploitation de ma taille, et si elle demande une personne expérimentée ou non.\n3. Totalise les journées, puis dis-moi combien de personnes il faut si la période dure deux semaines, puis si elle dure un mois.\n\nRègles : ne me donne aucun salaire ni aucun tarif. N'invente aucune obligation légale. Si ma taille d'exploitation rend ton estimation incertaine, dis-le.",
+            "hint": "Comparez le total obtenu à ce que vous faisiez l'an dernier : l'écart vous dira si vous vous épuisez ou si l'estimation est trop large."
+          },
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "Mon besoin aux pics : tâches, journées, qui les assure",
+            "required": true,
+            "dossier": {
+              "kind": "equipe",
+              "block": "list"
+            }
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Construisez la semaine type. Parlez en rôles — « ouvrier permanent », « saisonnier » — jamais en noms.",
+          "prompt": {
+            "id": "p2",
+            "tool": "claude",
+            "title": "Une semaine type, avec du repos",
+            "template": "Même exploitation : {{project.type}}, {{project.scale}}.\n\nL'équipe disponible, en rôles (sans noms) : [EXEMPLE : moi, 1 ouvrier permanent, 2 saisonniers]\nLes tâches à couvrir chaque jour : [COLLEZ VOS TÂCHES]\n\nTâche : construis une semaine type en tableau — jour, qui travaille, sur quoi, qui se repose.\n\nContraintes :\n- Chaque personne doit avoir au moins un jour de repos dans la semaine.\n- Les tâches qui ne peuvent pas attendre (traite, alimentation, irrigation) doivent être couvertes tous les jours, y compris les jours de repos des autres.\n- Signale clairement les moments où une seule personne porte tout : c'est là que ça casse.\n\nFormat : un tableau, puis trois lignes de commentaire sur les points fragiles."
+          },
+          "capture": {
+            "id": "c2",
+            "type": "textarea",
+            "label": "Ma semaine type, et les moments où une seule personne porte tout",
+            "required": true,
+            "dossier": {
+              "kind": "equipe",
+              "block": "list"
+            }
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Quand faut-il chercher ses saisonniers ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Environ un mois avant le pic, quand tout le monde n'en cherche pas encore"
+            },
+            {
+              "id": "b",
+              "text": "La veille, pour ne pas payer d'attente"
+            },
+            {
+              "id": "c",
+              "text": "Après le début des travaux, selon le besoin réel"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Au moment du pic, toutes les exploitations de la commune cherchent les mêmes bras en même temps : les disponibles sont rares et chers. Chercher un mois avant ne coûte rien et change la négociation du tout au tout."
+        },
+        {
+          "id": "q2",
+          "text": "Votre planning fait tourner tout le monde sans aucun jour de repos pendant trois semaines. Qu'est-ce que cela annonce ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Une bonne optimisation des ressources"
+            },
+            {
+              "id": "b",
+              "text": "Des erreurs, des accidents et des départs : le planning ne sera pas tenu"
+            },
+            {
+              "id": "c",
+              "text": "Rien de particulier, c'est la saison"
+            }
+          ],
+          "answer": "b",
+          "explanation": "La fatigue se paie en bêtes mal surveillées, en matériel cassé et en gens qui partent au pire moment. Un jour de repos prévu coûte moins cher qu'une semaine de désorganisation, et il se planifie à l'avance comme le reste."
+        },
+        {
+          "id": "q3",
+          "text": "L'IA vous indique la durée légale du travail et le montant d'une indemnité. Comment le prenez-vous ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Comme une information à vérifier auprès d'un juriste ou de l'inspection du travail"
+            },
+            {
+              "id": "b",
+              "text": "Comme une base suffisante pour établir un contrat"
+            },
+            {
+              "id": "c",
+              "text": "Comme une erreur : l'IA ne connaît rien au droit"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Elle peut tomber juste comme se tromper d'un texte, d'une année ou d'un régime — et le prix d'une erreur ici se paie en litige. Elle reste utile pour préparer la liste des questions que vous poserez à la personne compétente."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "Je sais combien de journées de travail mon pic demande",
+        "J'ai une semaine type avec des jours de repos",
+        "J'ai repéré les moments où une seule personne porte tout"
+      ],
+      "confidencePrompt": "Votre organisation du travail vous paraît-elle tenable sur une saison entière ?",
+      "dossierPreview": true
+    }
+  },
+  "verifyLocally": [
+    "Contrats, déclarations, durée du travail, congés et accidents relèvent du droit du travail algérien : vérifiez auprès d'un juriste, de l'inspection du travail ou de la caisse compétente."
+  ],
+  "nextTeaser": "Demain : le registre des risques. Ce qui peut mal tourner, et ce que vous faites avant que cela arrive."
+}

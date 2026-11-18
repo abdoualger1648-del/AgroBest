@@ -58,6 +58,11 @@ const MISSING_LABEL: Record<Lang, string> = {
   ar: 'يُستكمل',
 };
 
+/** Nom du mois (1-12) dans la langue demandée. */
+export function monthLabel(month: number, lang: Lang): string {
+  return MONTHS[lang][month - 1] ?? '';
+}
+
 export function projectTypeLabel(project: Project, lang: Lang): string {
   if (project.type === 'autre' && project.typeOther) return project.typeOther;
   return TYPE_LABEL[lang][project.type] ?? project.type;
@@ -67,7 +72,7 @@ export function scaleLabel(project: Project, lang: Lang): string {
   return `${formatNumber(project.scale.value, lang)} ${UNIT_LABEL[lang][project.scale.unit]}`;
 }
 
-const MONTHS: Record<Lang, string[]> = {
+export const MONTHS: Record<Lang, string[]> = {
   fr: [
     'janvier',
     'février',

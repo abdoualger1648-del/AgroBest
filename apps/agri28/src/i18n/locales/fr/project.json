@@ -49,7 +49,8 @@
       "label": "Source d'eau"
     },
     "startMonth": {
-      "label": "Mois de démarrage"
+      "label": "Mois de démarrage",
+      "any": "Je ne sais pas encore"
     }
   },
   "types": {
@@ -96,7 +97,8 @@
     "horizon": "Horizon",
     "budget": "Budget maximal",
     "water": "Source d'eau",
-    "edit": "Modifier"
+    "edit": "Modifier",
+    "startMonth": "Mois de démarrage"
   },
   "newWilaya": "Wilaya créée en 2026. Vos démarches agricoles peuvent encore passer par {{mother}}.",
   "none": {

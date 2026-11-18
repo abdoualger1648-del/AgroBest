@@ -1,0 +1,208 @@
+{
+  "schema": 1,
+  "id": "day-09",
+  "day": 9,
+  "week": 2,
+  "lang": "fr",
+  "title": "Le budget : vos prix, pas ceux de l'IA",
+  "subtitle": "L'IA dresse la liste des postes ; vous allez chercher les prix réels. C'est ce partage des rôles qui donne un budget utilisable.",
+  "durationMin": 15,
+  "objectives": [
+    "Obtenir la liste complète de mes postes de dépense, sans aucun chiffre inventé",
+    "Séparer l'investissement du fonctionnement",
+    "Relever trois prix réels et les dater"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "budget",
+    "label": "Budget"
+  },
+  "guardrails": ["verify_prices", "ai_not_accountant"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "p",
+          "text": "Un budget, c'est deux choses très différentes mises côte à côte : **ce qu'on achète une fois** et **ce qu'on paie tous les mois**."
+        },
+        {
+          "type": "ul",
+          "items": [
+            "**L'investissement** : bâtiment, clôture, forage, matériel, cheptel de départ, plants. On le paie une fois, il dure des années.",
+            "**Le fonctionnement** : aliment, semences, engrais, carburant, main-d'œuvre, eau, vétérinaire, transport. Il revient chaque mois, et c'est lui qui vide la caisse."
+          ]
+        },
+        {
+          "type": "p",
+          "text": "**Une IA ne connaît aucun de vos prix.** Elle ne sait pas ce que coûte le quintal chez votre fournisseur ce mois-ci, ni le tarif du transporteur de votre commune. Lui demander des chiffres, c'est lui demander d'inventer."
+        },
+        {
+          "type": "p",
+          "text": "Le partage des rôles est donc simple : **l'IA structure, vous chiffrez.** Elle dresse la liste des postes — et une liste complète vaut cher, car ce sont les postes oubliés qui font exploser un budget. Vous allez chercher les prix là où ils existent vraiment."
+        },
+        {
+          "type": "example",
+          "label": "Où se relèvent les prix",
+          "text": "Chez votre fournisseur d'intrants, au marché de gros de votre wilaya, auprès d'un voisin qui vient d'acheter. Pour l'orge subventionnée, le circuit passe par la CCLS de votre wilaya et dépend d'une liste d'éleveurs ; pour le son, par l'ONAB. Les conditions et les quantités changent : la Direction des services agricoles de votre wilaya vous dira ce qui s'applique aujourd'hui."
+        },
+        {
+          "type": "note",
+          "variant": "warning",
+          "text": "Un prix sans date ne vaut rien. Écrivez toujours à côté du chiffre : où, auprès de qui, quel jour."
+        }
+      ],
+      "keyPoints": [
+        "L'investissement se paie une fois, le fonctionnement vide la caisse chaque mois",
+        "L'IA structure la liste, vous relevez les prix",
+        "Les postes oubliés coûtent plus cher que les postes mal estimés",
+        "Un prix s'écrit avec son lieu et sa date"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "Premier prompt : la liste, volontairement **sans chiffres**. Ensuite, vous relevez trois prix réels. Le calcul, lui, vient en dernier."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Demandez la liste des postes. Si l'IA glisse des chiffres malgré tout, barrez-les : ce sont des inventions.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "La liste des postes, sans aucun chiffre",
+            "template": "Tu es un conseiller de gestion agricole en Algérie.\n\nMon projet : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}. Démarrage : {{project.startMonth}}. Eau : {{project.waterSource}}.\n\nTâche : dresse la liste COMPLÈTE de mes postes de dépense sur une année, séparés en deux blocs : investissement (payé une fois) et fonctionnement (qui revient).\n\nPour chaque poste : le nom du poste, l'unité dans laquelle il s'achète (quintal, litre, journée, tête, mètre…), et la fréquence (une fois, par mois, par campagne).\n\nINTERDICTION ABSOLUE : n'écris aucun prix, aucun montant, aucun total. La colonne prix doit rester vide, c'est moi qui la remplirai.\n\nAjoute à la fin les 3 postes que les exploitants de ce type oublient le plus souvent.\n\nFormat : deux tableaux — poste, unité, fréquence, prix (vide).",
+            "hint": "Les trois postes oubliés sont souvent les plus instructifs de toute la réponse."
+          },
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "Mes postes de dépense (une ligne par poste, colonne prix encore vide)",
+            "required": true,
+            "dossier": {
+              "kind": "budget",
+              "block": "list"
+            }
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Prenez les trois postes les plus lourds et relevez leur prix réel : un coup de téléphone à votre fournisseur suffit souvent. Notez le lieu et la date.",
+          "capture": {
+            "id": "c2",
+            "type": "textarea",
+            "label": "Trois prix relevés : poste, prix, unité, où, quel jour",
+            "placeholder": "Exemple : son de blé, … DA le quintal, fournisseur de la commune, relevé le …",
+            "required": true,
+            "dossier": {
+              "kind": "budget",
+              "block": "list"
+            }
+          }
+        },
+        {
+          "id": "s3",
+          "optional": true,
+          "instruction": "Faites vérifier vos calculs, et seulement vos calculs : vous fournissez les chiffres, l'IA fait l'addition et cherche l'incohérence.",
+          "prompt": {
+            "id": "p2",
+            "tool": "claude",
+            "title": "Vérifier mes calculs, avec MES chiffres",
+            "template": "Voici MES postes et MES prix relevés, avec leurs dates :\n\n[COLLEZ ICI VOS LIGNES : poste, quantité, prix unitaire, date du relevé]\n\nTâche :\n1. Calcule le total de l'investissement et le total du fonctionnement mensuel, puis le total annuel.\n2. Signale toute ligne qui te paraît incohérente avec les autres (unité qui ne correspond pas, quantité surprenante) — sans corriger mes prix.\n3. Dis-moi quel poste pèse le plus lourd, et de combien il dépasse le suivant.\n\nRègle : n'ajoute aucun poste et ne remplace aucun de mes chiffres. Si une ligne est incomplète, demande-la-moi."
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Pourquoi interdire à l'IA d'écrire des prix dans la liste des postes ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Parce qu'elle n'a accès à aucun prix réel : elle produirait des chiffres plausibles et faux"
+            },
+            {
+              "id": "b",
+              "text": "Parce que c'est plus rapide ainsi"
+            },
+            {
+              "id": "c",
+              "text": "Parce que les prix sont secrets"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Un budget bâti sur des chiffres inventés est plus dangereux qu'une page blanche : il inspire confiance. La liste des postes, elle, a de la valeur, parce qu'elle vous évite d'oublier le transport ou le vétérinaire."
+        },
+        {
+          "id": "q2",
+          "text": "Le forage et l'aliment du mois : comment les classez-vous ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Les deux en fonctionnement"
+            },
+            {
+              "id": "b",
+              "text": "Forage en investissement, aliment en fonctionnement"
+            },
+            {
+              "id": "c",
+              "text": "Les deux en investissement, puisque les deux sont indispensables"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Le critère n'est pas l'importance mais la répétition. Le forage se paie une fois et sert des années ; l'aliment revient chaque mois et doit être couvert par la trésorerie. Mélanger les deux donne un total qui ne dit rien de votre capacité à tenir."
+        },
+        {
+          "id": "q3",
+          "text": "Vous notez un prix relevé la semaine dernière sans écrire la date. Quel est le risque ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Aucun, un prix reste un prix"
+            },
+            {
+              "id": "b",
+              "text": "Dans six mois, personne ne saura s'il est encore valable, ni vous, ni votre banquier"
+            },
+            {
+              "id": "c",
+              "text": "Le risque est seulement pour l'IA"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Un budget se relit des mois plus tard, souvent devant quelqu'un qui doit décider. Sans date, chaque ligne redevient une estimation, et tout le travail de relevé est perdu. La date coûte trois secondes à écrire."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "J'ai la liste complète de mes postes, investissement et fonctionnement séparés",
+        "J'ai relevé au moins trois prix réels, avec le lieu et la date",
+        "Je sais quel poste pèse le plus lourd"
+      ],
+      "confidencePrompt": "Votre budget vous paraît-il assez solide pour être montré à quelqu'un ?",
+      "dossierPreview": true
+    }
+  },
+  "sources": [
+    {
+      "label": "Circuits de l'orge subventionnée (CCLS) et du son (ONAB) — presse économique algérienne, fin 2025 et début 2026. Les prix, quotas et conditions évoluent : à confirmer auprès de la CCLS et de la DSA de votre wilaya.",
+      "url": "https://algerie-eco.com/tag/aliments-de-betail/",
+      "checkedOn": "2026-11-18"
+    }
+  ],
+  "verifyLocally": [
+    "Les prix, les quotas et les conditions d'accès aux aliments subventionnés changent plusieurs fois par an : la CCLS et la Direction des services agricoles de votre wilaya font seules foi."
+  ],
+  "nextTeaser": "Demain : assembler tout cela en un business plan de deux pages, qu'un banquier lit jusqu'au bout."
+}

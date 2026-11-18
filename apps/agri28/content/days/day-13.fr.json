@@ -1,0 +1,192 @@
+{
+  "schema": 1,
+  "id": "day-13",
+  "day": 13,
+  "week": 2,
+  "lang": "fr",
+  "title": "Le registre des risques",
+  "subtitle": "Vous listez ce qui peut mal tourner, vous le classez par gravité, et vous décidez de trois parades à mettre en place ce mois-ci.",
+  "durationMin": 15,
+  "objectives": [
+    "Lister les risques réels de mon projet, pas les risques de manuel",
+    "Classer par gravité et par probabilité",
+    "Associer à chaque risque une parade et un signe avant-coureur"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "risques",
+    "label": "Registre des risques"
+  },
+  "guardrails": ["ai_not_vet", "ai_not_agronomist", "verify_prices"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "p",
+          "text": "Un risque n'est pas une inquiétude : c'est un événement précis, dont on peut dire **s'il est probable** et **ce qu'il coûte s'il arrive**. « J'ai peur pour la récolte » n'est pas un risque. « La grêle de mai détruit la floraison » en est un."
+        },
+        {
+          "type": "p",
+          "text": "Cinq familles couvrent presque tout, dans une exploitation :"
+        },
+        {
+          "type": "ul",
+          "items": [
+            "**Climat** : sécheresse, gel, grêle, vent, pluie au mauvais moment.",
+            "**Sanitaire** : maladie du troupeau, ravageur, mortalité.",
+            "**Marché** : prix de vente qui s'effondre, acheteur qui se retire, intrant qui double.",
+            "**Trésorerie** : retard de paiement, dépense imprévue, crédit refusé.",
+            "**Humain et matériel** : accident, départ d'un ouvrier clé, panne en plein pic, vol."
+          ]
+        },
+        {
+          "type": "p",
+          "text": "Ce qui rend le registre utile, ce n'est pas la liste : c'est **la parade** — ce que vous faites *avant*. Et le **signe avant-coureur** : ce que vous devez surveiller pour réagir à temps."
+        },
+        {
+          "type": "note",
+          "variant": "info",
+          "text": "On ne traite pas tout. Trois parades mises en place valent mieux que vingt écrites. Choisissez les trois risques les plus graves et laissez le reste sous surveillance."
+        }
+      ],
+      "keyPoints": [
+        "Un risque, c'est un événement précis, pas une inquiétude",
+        "Cinq familles : climat, sanitaire, marché, trésorerie, humain et matériel",
+        "La valeur du registre est dans la parade, pas dans la liste",
+        "Trois parades réelles valent mieux que vingt sur le papier"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "Le prompt s'appuie sur votre calendrier d'avant-hier : un risque a une saison. Celui de juillet n'est pas celui de janvier."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Faites établir le registre. Puis barrez ce qui ne vous concerne pas et ajoutez ce que vous seul savez.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "Mon registre des risques",
+            "template": "Tu es un conseiller en gestion du risque agricole en Algérie.\n\nMon exploitation : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}.\nDémarrage du cycle : {{project.startMonth}}. Eau : {{project.waterSource}}.\nMon objectif : {{project.objective}}\n\nTâche : établis mon registre des risques, 8 lignes au maximum, en couvrant les cinq familles : climat, sanitaire, marché, trésorerie, humain et matériel.\n\nFormat : un tableau à 6 colonnes — risque (événement précis), famille, période de l'année concernée, gravité (faible / moyenne / forte), signe avant-coureur à surveiller, parade à mettre en place avant.\n\nRègles :\n- Un risque = un événement daté et concret, pas une inquiétude générale.\n- Aucune dose, aucun produit, aucun traitement : pour le sanitaire, écris « protocole à définir avec le vétérinaire ».\n- Aucun montant : la gravité s'exprime en mots, pas en dinars.\n- Classe de la plus forte gravité à la plus faible.",
+            "followUps": [
+              "Pour les trois risques les plus graves, détaille la parade en étapes concrètes et datées.",
+              "Quels risques de ma liste sont assurables en Algérie, et lesquels ne le sont pas ?"
+            ]
+          },
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "Mon registre corrigé (une ligne par risque : risque, signe, parade)",
+            "required": true,
+            "dossier": {
+              "kind": "risques",
+              "block": "list"
+            }
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Choisissez maintenant. Trois parades, pas dix — et une date pour chacune, sinon elles n'existeront jamais.",
+          "capture": {
+            "id": "c2",
+            "type": "textarea",
+            "label": "Les trois parades que je mets en place ce mois-ci, avec leur date",
+            "placeholder": "Exemple : prendre contact avec un second acheteur avant la fin du mois.",
+            "required": true,
+            "dossier": {
+              "kind": "risques",
+              "block": "kv",
+              "key": "Parades engagées ce mois-ci"
+            }
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Laquelle de ces formulations est un vrai risque ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "La situation du marché est préoccupante"
+            },
+            {
+              "id": "b",
+              "text": "Mon unique acheteur se retire au moment de la récolte"
+            },
+            {
+              "id": "c",
+              "text": "Il faut rester vigilant sur les coûts"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Un risque se reconnaît à ce qu'on peut lui associer une parade. « Mon unique acheteur se retire » appelle immédiatement : en trouver un deuxième. Les deux autres formulations ne mènent à aucune action, donc à rien."
+        },
+        {
+          "id": "q2",
+          "text": "Votre registre compte vingt risques et aucune parade engagée. Où en êtes-vous ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Bien préparé : tout est identifié"
+            },
+            {
+              "id": "b",
+              "text": "Au même point qu'avant : un registre sans parade ne protège de rien"
+            },
+            {
+              "id": "c",
+              "text": "En retard : il en faudrait quarante"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Lister rassure sans protéger. Trois parades réellement mises en place — un deuxième acheteur, une réserve d'aliment, un contrôle du matériel avant le pic — valent mieux que vingt lignes que personne ne relira."
+        },
+        {
+          "id": "q3",
+          "text": "Pour un risque sanitaire, l'IA propose un protocole de traitement complet. Qu'en faites-vous ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Je retiens l'intention — « prévoir un protocole » — et je le construis avec le vétérinaire"
+            },
+            {
+              "id": "b",
+              "text": "Je l'applique dès l'apparition des premiers signes"
+            },
+            {
+              "id": "c",
+              "text": "Je le garde en réserve, au cas où le vétérinaire ne serait pas joignable"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Garder un protocole inventé « au cas où » est le scénario le plus dangereux : c'est précisément dans l'urgence, vétérinaire injoignable, qu'on l'appliquerait sans réfléchir. Le registre note qu'un protocole est nécessaire ; son contenu vient du professionnel, à froid."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "Mon registre couvre les cinq familles de risques",
+        "Chaque risque a un signe avant-coureur et une parade",
+        "Trois parades sont engagées, avec une date"
+      ],
+      "confidencePrompt": "Vous sentez-vous mieux armé face à ce qui peut mal tourner cette année ?",
+      "dossierPreview": true
+    }
+  },
+  "verifyLocally": [
+    "Les dispositifs d'assurance agricole et les conditions d'indemnisation varient : renseignez-vous auprès d'une caisse de mutualité agricole ou d'un assureur avant de compter dessus."
+  ],
+  "nextTeaser": "Demain, dernier jour de la semaine : le tableau de suivi qui se remplit en deux minutes, et qui vous dira où vous en êtes."
+}

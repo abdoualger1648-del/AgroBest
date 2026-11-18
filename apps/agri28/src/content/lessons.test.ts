@@ -9,24 +9,25 @@ import { weekOf } from '@/domain/types';
 import type { Lang } from '@/lib/lang';
 
 const WEEK_1 = [1, 2, 3, 4, 5, 6, 7];
+const WEEK_2 = [8, 9, 10, 11, 12, 13, 14];
+const WRITTEN = [...WEEK_1, ...WEEK_2];
 const LANGS: Lang[] = ['fr', 'ar'];
 
-describe('contenu de la semaine 1', () => {
-  it('fournit les sept jours dans les deux langues', () => {
+describe('contenu rédigé', () => {
+  it('fournit tous les jours écrits dans les deux langues', () => {
     for (const lang of LANGS) {
-      expect(availableDays(lang)).toEqual(expect.arrayContaining(WEEK_1));
+      expect(availableDays(lang)).toEqual(expect.arrayContaining(WRITTEN));
     }
   });
 
-  for (const day of WEEK_1) {
+  for (const day of WRITTEN) {
     describe(`jour ${day}`, () => {
-      it('se charge, appartient à la semaine 1 et dure 15 minutes', async () => {
+      it('se charge, tombe dans la bonne semaine et dure 15 minutes', async () => {
         for (const lang of LANGS) {
           const lesson = await loadLesson(day, lang);
           const { concept, practice, quiz, review } = lesson.sections;
 
           expect(lesson.week).toBe(weekOf(day));
-          expect(lesson.week).toBe(1);
           expect(
             concept.durationMin + practice.durationMin + quiz.durationMin + review.durationMin,
           ).toBe(15);
@@ -60,8 +61,10 @@ describe('contenu de la semaine 1', () => {
             if (!step.prompt) continue;
             const rendered = renderPrompt(step.prompt.template, context, lang);
             expect(rendered, `${lesson.id}.${lang}/${step.prompt.id}`).not.toContain('{{');
-            expect(rendered).not.toContain('à compléter');
-            expect(rendered).not.toContain('يُستكمل');
+            // Marqueur de variable NON résolue (à distinguer d'une consigne
+            // « [À COMPLÉTER] » volontairement adressée au modèle).
+            expect(rendered).not.toContain('[à compléter :');
+            expect(rendered).not.toContain('[يُستكمل :');
           }
         }
       });
@@ -128,9 +131,16 @@ describe('contenu de la semaine 1', () => {
   }
 
   it('enchaîne les jours : chaque leçon annonce la suivante', async () => {
-    for (const day of WEEK_1) {
+    for (const day of WRITTEN) {
       const lesson = await loadLesson(day, 'fr');
       expect(lesson.nextTeaser, `jour ${day}`).toBeTruthy();
+    }
+  });
+
+  it('exige le projet partout sauf au tout premier contact', async () => {
+    for (const day of WRITTEN.slice(1)) {
+      const lesson = await loadLesson(day, 'fr');
+      expect(lesson.requiresProject, `jour ${day}`).toBe(true);
     }
   });
 
@@ -148,6 +158,33 @@ describe('contenu de la semaine 1', () => {
     expect(joined).toContain('objectif'); // jour 7
   });
 
+  it('couvre bien le programme de la semaine 2', async () => {
+    const titles = await Promise.all(
+      WEEK_2.map(async (day) => (await loadLesson(day, 'fr')).title.toLowerCase()),
+    );
+    const joined = titles.join(' | ');
+    expect(joined).toContain('tient debout'); // jour 8 : faisabilité
+    expect(joined).toContain('budget'); // jour 9
+    expect(joined).toContain('business plan'); // jour 10
+    expect(joined).toContain('douze mois'); // jour 11 : calendrier
+    expect(joined).toContain('bras'); // jour 12 : équipe
+    expect(joined).toContain('risques'); // jour 13
+    expect(joined).toContain('tableau'); // jour 14 : suivi
+  });
+
+  it('alimente le Dossier de projet avec des briques variées en semaine 2', async () => {
+    const kinds = new Set<string>();
+    for (const day of WEEK_2) {
+      const lesson = await loadLesson(day, 'fr');
+      for (const step of lesson.sections.practice.steps) {
+        if (step.capture?.dossier) kinds.add(step.capture.dossier.kind);
+      }
+    }
+    for (const expected of ['budget', 'calendrier', 'equipe', 'risques', 'suivi']) {
+      expect(kinds, expected).toContain(expected);
+    }
+  });
+
   it('impose les garde-fous là où ils comptent', async () => {
     const vet = await loadLesson(5, 'fr');
     expect(vet.guardrails).toContain('ai_not_vet');
@@ -155,6 +192,27 @@ describe('contenu de la semaine 1', () => {
 
     const privacy = await loadLesson(6, 'fr');
     expect(privacy.guardrails).toContain('data_privacy_people');
+
+    // Semaine 2 : argent et droit du travail.
+    for (const day of [9, 10, 14]) {
+      const lesson = await loadLesson(day, 'fr');
+      expect(lesson.guardrails, `jour ${day}`).toContain('ai_not_accountant');
+    }
+    expect((await loadLesson(12, 'fr')).guardrails).toContain('ai_not_lawyer');
+    expect((await loadLesson(11, 'fr')).guardrails).toContain('verify_doses');
+  });
+
+  it('n’écrit aucun montant en dinars sans source datée', async () => {
+    const money = /\d[\d\s.,\u00a0]*\s?(?:DA|DZD|دج|د\.ج)/u;
+    for (const day of WRITTEN) {
+      for (const lang of LANGS) {
+        const lesson = await loadLesson(day, lang);
+        const text = JSON.stringify(lesson);
+        if (money.test(text)) {
+          expect(lesson.sources?.length, `jour ${day} (${lang})`).toBeGreaterThan(0);
+        }
+      }
+    }
   });
 
   it('cite une source datée dès qu’un texte réglementaire est évoqué', async () => {

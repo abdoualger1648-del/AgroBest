@@ -1,0 +1,192 @@
+{
+  "schema": 1,
+  "id": "day-08",
+  "day": 8,
+  "week": 2,
+  "lang": "fr",
+  "title": "Est-ce que ça tient debout ?",
+  "subtitle": "Vous passez votre projet au crible en quatre questions, et vous repérez le mois où la caisse sera la plus basse.",
+  "durationMin": 15,
+  "objectives": [
+    "Évaluer mon projet sur ses quatre faces : technique, commerciale, financière, humaine",
+    "Identifier le trou de trésorerie : combien de mois entre ma première dépense et ma première recette",
+    "Nommer la condition sans laquelle rien ne marche"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "libre",
+    "label": "Étude de faisabilité"
+  },
+  "guardrails": ["ai_not_agronomist", "ai_not_accountant", "verify_prices"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "p",
+          "text": "Un projet agricole échoue rarement parce que la technique était mauvaise. Il échoue parce qu'il manquait de l'eau en juillet, parce que l'acheteur s'est retiré, ou parce que la caisse était vide deux mois avant la première vente."
+        },
+        {
+          "type": "p",
+          "text": "Une étude de faisabilité tient en quatre questions. Si une seule reste sans réponse, le projet n'est pas prêt — il est seulement espéré."
+        },
+        {
+          "type": "ol",
+          "items": [
+            "**Technique** : est-ce que je sais le faire, et ai-je l'eau, la terre, le bâtiment, le matériel ?",
+            "**Commerciale** : à qui je vends, à quelle période, et qui fixe le prix ?",
+            "**Financière** : ai-je de quoi tenir jusqu'à la première recette, et combien de temps ?",
+            "**Humaine et administrative** : qui travaille avec moi aux pics, et quelles autorisations sont nécessaires ?"
+          ]
+        },
+        {
+          "type": "note",
+          "variant": "warning",
+          "text": "La question la plus souvent oubliée est le **trou de trésorerie** : le nombre de mois pendant lesquels vous payez sans encaisser. C'est lui qui tue les projets viables sur le papier."
+        },
+        {
+          "type": "p",
+          "text": "L'IA ne décidera pas à votre place : elle ne connaît ni votre terrain, ni votre acheteur, ni ce que vous avez en poche. Elle sert à **poser les bonnes questions dans le bon ordre** et à vous dire ce qui manque à votre raisonnement."
+        }
+      ],
+      "keyPoints": [
+        "Technique, commerciale, financière, humaine : quatre faces, pas une",
+        "Le trou de trésorerie se compte en mois, avant de se compter en dinars",
+        "Une seule question sans réponse suffit à faire tomber le projet"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "Deux prompts : le premier passe votre projet au crible, le second cherche le point de rupture. Gardez les deux réponses, elles alimentent le Dossier."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Lancez l'examen des quatre faces. Répondez ensuite aux questions que l'IA vous renvoie : c'est là que l'exercice devient utile.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "Les quatre faces de mon projet",
+            "template": "Tu es un conseiller qui monte des dossiers de projet agricole en Algérie.\n\nMon projet : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}.\nObjectif : {{project.objective}}\nHorizon : {{project.horizonMonths}} mois. Démarrage prévu : {{project.startMonth}}. Eau : {{project.waterSource}}.\n\nTâche : examine la faisabilité de mon projet sur quatre faces — technique, commerciale, financière, humaine et administrative.\n\nPour chaque face : ce qui me semble acquis, ce qui est incertain, et LA question que je dois trancher avant d'avancer.\n\nTermine par la liste des 5 informations qui te manquent pour te prononcer sérieusement.\n\nRègles : ne donne aucun chiffre de prix, de rendement ou de rentabilité comme s'il était certain. Si une donnée te manque, demande-la, ne l'invente pas.",
+            "followUps": [
+              "Voici mes réponses à tes 5 questions : […]. Reprends ton analyse avec ces éléments."
+            ]
+          },
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "Mon verdict : ce qui est solide, ce qui reste à trancher",
+            "required": true,
+            "dossier": {
+              "kind": "libre",
+              "block": "paragraph"
+            }
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Cherchez maintenant le mois le plus dangereux, celui où vous aurez le plus dépensé sans avoir encore vendu.",
+          "prompt": {
+            "id": "p2",
+            "tool": "claude",
+            "title": "Le trou de trésorerie et le point de rupture",
+            "template": "Même projet : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}, démarrage en {{project.startMonth}}.\n\nTâche en deux parties :\n\n1. Trace la suite des mois, du démarrage à la première recette : à chaque mois, dis seulement si c'est un mois de dépense, de dépense + recette, ou de recette. N'invente aucun montant.\n\n2. Désigne le point de rupture : le seul facteur qui, s'il manque, fait tomber tout le projet. Explique pourquoi en trois lignes, et donne-moi deux façons de m'en prémunir.\n\nFormat : partie 1 en tableau mois / nature. Partie 2 en texte court.",
+            "hint": "Le nombre de mois compte plus que les montants à ce stade : c'est lui qui dit combien de temps vous devez tenir."
+          },
+          "capture": {
+            "id": "c2",
+            "type": "textarea",
+            "label": "Mon trou de trésorerie (en mois) et la condition sans laquelle rien ne marche",
+            "required": true,
+            "dossier": {
+              "kind": "libre",
+              "block": "kv",
+              "key": "Point de rupture"
+            }
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "L'IA conclut : « votre projet est rentable ». Que vaut cette phrase ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Rien tant qu'elle ne s'appuie pas sur mes propres chiffres relevés"
+            },
+            {
+              "id": "b",
+              "text": "C'est encourageant, je peux avancer"
+            },
+            {
+              "id": "c",
+              "text": "C'est une erreur de l'outil"
+            }
+          ],
+          "answer": "a",
+          "explanation": "La rentabilité se calcule avec vos coûts et vos prix de vente, pas avec des moyennes. Une IA qui conclut sans vos chiffres a comblé les trous toute seule. Ce n'est pas une erreur de l'outil : c'est une demande mal posée, et c'est à vous de la refuser."
+        },
+        {
+          "id": "q2",
+          "text": "Quel est le délai le plus souvent sous-estimé dans un projet agricole ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Le temps de montage du dossier administratif"
+            },
+            {
+              "id": "b",
+              "text": "Le temps entre la première dépense et la première recette"
+            },
+            {
+              "id": "c",
+              "text": "Le temps de livraison du matériel"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Les deux autres délais sont réels, mais ils se rattrapent. Le trou de trésorerie, lui, se paie chaque mois : salaires, aliment, carburant, remboursements. Un projet solide techniquement meurt là si personne n'a compté les mois."
+        },
+        {
+          "id": "q3",
+          "text": "Votre projet tient techniquement, mais vous n'avez identifié aucun acheteur. Où en êtes-vous ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Au stade de la production : la vente se réglera au moment venu"
+            },
+            {
+              "id": "b",
+              "text": "Face à une faisabilité commerciale non traitée, c'est-à-dire un projet incomplet"
+            },
+            {
+              "id": "c",
+              "text": "En bonne position : la qualité trouve toujours preneur"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Produire sans débouché identifié, c'est accepter le prix qu'on vous imposera le jour de la récolte, souvent le plus bas de l'année parce que tout le monde vend en même temps. La face commerciale se traite avant de semer ou d'acheter les bêtes, pas après."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "J'ai examiné les quatre faces de mon projet",
+        "Je sais combien de mois je dois tenir sans recette",
+        "J'ai nommé la condition sans laquelle rien ne marche"
+      ],
+      "confidencePrompt": "Après cet examen, votre projet vous paraît-il plus solide ou plus fragile qu'hier ?",
+      "dossierPreview": true
+    }
+  },
+  "nextTeaser": "Demain : le budget. Pas celui de l'IA — le vôtre, avec les prix que vous aurez relevés vous-même."
+}

@@ -8,7 +8,7 @@ import { ProjectForm } from '@/components/ProjectForm';
 import { wilayaName } from '@/content/catalog';
 import { usePreferences } from '@/store/preferences';
 import { useCourse } from '@/store/course';
-import { projectTypeLabel, scaleLabel } from '@/domain/prompt';
+import { monthLabel, projectTypeLabel, scaleLabel } from '@/domain/prompt';
 import { formatDA } from '@/lib/format';
 
 export function ProjectPage() {
@@ -51,6 +51,7 @@ export function ProjectPage() {
                 ? { budgetCeilingDA: input.budgetCeilingDA }
                 : {}),
               ...(input.waterSource ? { waterSource: input.waterSource } : {}),
+              ...(input.startMonth !== undefined ? { startMonth: input.startMonth } : {}),
             });
             setEditing(false);
             setSaved(true);
@@ -87,6 +88,12 @@ export function ProjectPage() {
     rows.push({
       label: t('project:summary.water'),
       value: t(`project:water.${project.waterSource}`),
+    });
+  }
+  if (project.startMonth !== undefined) {
+    rows.push({
+      label: t('project:summary.startMonth'),
+      value: monthLabel(project.startMonth, lang),
     });
   }
 

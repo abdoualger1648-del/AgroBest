@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from './Button';
 import { Field, inputClass } from './Field';
 import { listWilayas } from '@/content/catalog';
+import { monthLabel } from '@/domain/prompt';
 import { usePreferences } from '@/store/preferences';
 import {
   DEFAULT_UNIT,
@@ -47,6 +48,7 @@ export function ProjectForm({ initial, submitLabel, onSubmit }: ProjectFormProps
     initial?.budgetCeilingDA === undefined ? '' : String(initial.budgetCeilingDA),
   );
   const [waterSource, setWaterSource] = useState<WaterSource>(initial?.waterSource ?? 'inconnu');
+  const [startMonth, setStartMonth] = useState(String(initial?.startMonth ?? ''));
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState(false);
 
@@ -86,6 +88,7 @@ export function ProjectForm({ initial, submitLabel, onSubmit }: ProjectFormProps
         waterSource,
       };
       if (type === 'autre' && typeOther.trim()) input.typeOther = typeOther;
+      if (startMonth) input.startMonth = Number(startMonth);
       if (commune.trim()) input.commune = commune;
       if (budget.trim() && Number(budget) > 0) input.budgetCeilingDA = Number(budget);
 
@@ -263,6 +266,22 @@ export function ProjectForm({ initial, submitLabel, onSubmit }: ProjectFormProps
           </Field>
         </div>
       </div>
+
+      <Field id="startMonth" label={t('project:fields.startMonth.label')}>
+        <select
+          id="startMonth"
+          className={inputClass}
+          value={startMonth}
+          onChange={(event) => setStartMonth(event.target.value)}
+        >
+          <option value="">{t('project:fields.startMonth.any')}</option>
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((month) => (
+            <option key={month} value={month}>
+              {monthLabel(month, lang)}
+            </option>
+          ))}
+        </select>
+      </Field>
 
       <Field id="waterSource" label={t('project:fields.water.label')}>
         <select

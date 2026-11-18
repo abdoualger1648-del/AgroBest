@@ -1,0 +1,183 @@
+{
+  "schema": 1,
+  "id": "day-10",
+  "day": 10,
+  "week": 2,
+  "lang": "fr",
+  "title": "Un business plan de deux pages",
+  "subtitle": "Vous assemblez ce que vous avez déjà produit en un document court, puis vous le faites attaquer par un banquier sceptique.",
+  "durationMin": 15,
+  "objectives": [
+    "Assembler mes briques en un document que quelqu'un peut lire en dix minutes",
+    "Anticiper les objections avant de les entendre en face",
+    "Savoir ce qu'un business plan ne doit pas contenir"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "libre",
+    "label": "Business plan (résumé)"
+  },
+  "guardrails": ["ai_not_accountant", "ai_not_lawyer", "verify_prices"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "p",
+          "text": "Personne ne lit trente pages. Un banquier, un partenaire ou un acheteur cherchent sept réponses, dans cet ordre : **qui vous êtes, ce que vous produisez, à qui vous le vendez, ce que cela coûte, ce que cela rapporte, quand, et ce qui peut mal tourner.**"
+        },
+        {
+          "type": "p",
+          "text": "Vous avez déjà presque tout : votre fiche projet (jour 1), votre objectif vérifiable (jour 7), votre faisabilité (jour 8), votre budget (jour 9). Aujourd'hui, vous **assemblez** — vous ne repartez pas de zéro."
+        },
+        {
+          "type": "note",
+          "variant": "warning",
+          "text": "Ce qu'un business plan ne doit **pas** contenir : des chiffres que vous ne pouvez pas justifier, des promesses de rendement, et des références réglementaires que vous n'avez pas lues. Un chiffre invérifiable repéré par votre interlocuteur discrédite toute la page."
+        },
+        {
+          "type": "p",
+          "text": "Le vrai test n'est pas d'écrire le document : c'est de **le faire attaquer**. Un plan qui n'a pas encaissé cinq objections n'est pas prêt."
+        }
+      ],
+      "keyPoints": [
+        "Sept réponses, deux pages",
+        "On assemble ce qui existe, on ne réécrit pas",
+        "Aucun chiffre que vous ne pouvez pas justifier",
+        "Un plan se teste en se faisant contredire"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "Ouvrez votre Dossier de projet en parallèle : vous allez coller vos propres éléments dans le prompt. Plus vous en mettez, moins l'IA improvise."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Collez vos éléments des jours précédents à l'endroit indiqué, puis envoyez.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "Assembler mon business plan",
+            "template": "Tu rédiges un dossier de présentation pour un exploitant agricole en Algérie. Le lecteur est un banquier ou un partenaire pressé.\n\nMon projet : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}. Démarrage : {{project.startMonth}}. Horizon : {{project.horizonMonths}} mois.\nMon objectif : {{project.objective}}\n\nMes éléments, à utiliser tels quels :\n- Faisabilité et point de rupture : [COLLEZ ICI]\n- Postes de dépense et prix relevés : [COLLEZ ICI]\n\nTâche : rédige un document de DEUX PAGES maximum avec ces sept parties, une par titre court :\n1. Qui je suis et ce que j'exploite\n2. Ce que je produis\n3. À qui je vends et quand\n4. Ce que cela coûte (reprends MES chiffres, sans en ajouter)\n5. Ce que j'attends comme recettes, en disant clairement sur quoi repose cette attente\n6. Le calendrier des douze prochains mois, en grandes étapes\n7. Les risques, et ce que je fais pour les limiter\n\nRègles strictes : n'invente aucun chiffre. Là où une donnée me manque, écris [À COMPLÉTER] au lieu de combler. Ne cite aucun texte réglementaire. Pas de promesse de rentabilité.",
+            "hint": "Les mentions [À COMPLÉTER] qui restent sont votre liste de travail pour la semaine."
+          },
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "Mon business plan en résumé (collez-le, puis corrigez ce qui n'est pas vrai)",
+            "required": true,
+            "dossier": {
+              "kind": "libre",
+              "block": "paragraph"
+            }
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Maintenant, faites-le attaquer. C'est bien plus utile que de le faire féliciter.",
+          "prompt": {
+            "id": "p2",
+            "tool": "claude",
+            "title": "Le banquier sceptique",
+            "template": "Relis le document que tu viens d'écrire, mais change de rôle : tu es maintenant un banquier algérien qui a financé beaucoup de projets agricoles et qui en a vu beaucoup échouer.\n\nTâche : formule les 5 objections les plus dures que tu ferais à ce dossier. Pour chacune : l'objection en une phrase, ce qui la motive, et ce que je devrais apporter comme preuve pour y répondre.\n\nSois franc et précis. Ne m'épargne pas. Classe les objections de la plus grave à la moins grave."
+          },
+          "capture": {
+            "id": "c2",
+            "type": "textarea",
+            "label": "Les objections que je dois traiter, et ce que je vais apporter comme preuve",
+            "required": true,
+            "dossier": {
+              "kind": "risques",
+              "block": "list"
+            }
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "L'IA remplit une recette prévisionnelle que vous n'avez jamais estimée. Que faites-vous ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Je la garde : il faut bien un chiffre dans un business plan"
+            },
+            {
+              "id": "b",
+              "text": "Je la remplace par [À COMPLÉTER] et je vais chercher la donnée"
+            },
+            {
+              "id": "c",
+              "text": "Je la divise par deux pour être prudent"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Un trou assumé est défendable devant un banquier ; un chiffre inventé ne l'est pas, et il suffit qu'il en démonte un pour douter de tous les autres. Diviser par deux ne corrige rien : cela fabrique un second chiffre sans fondement."
+        },
+        {
+          "id": "q2",
+          "text": "Pourquoi demander à l'IA de jouer le banquier sceptique ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Pour entendre les objections pendant qu'il est encore temps de les traiter"
+            },
+            {
+              "id": "b",
+              "text": "Pour que le document paraisse plus sérieux"
+            },
+            {
+              "id": "c",
+              "text": "Parce que l'IA connaît les critères exacts des banques algériennes"
+            }
+          ],
+          "answer": "a",
+          "explanation": "L'exercice sert à vous, pas au document. Attention toutefois : l'IA ne connaît pas les critères réels d'une banque donnée, et ne doit pas être crue sur ce point. Elle produit des objections de bon sens, et c'est déjà beaucoup."
+        },
+        {
+          "id": "q3",
+          "text": "Quelle longueur vise-t-on pour ce document ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Le plus long possible, pour montrer le sérieux du travail"
+            },
+            {
+              "id": "b",
+              "text": "Deux pages, lues en dix minutes"
+            },
+            {
+              "id": "c",
+              "text": "Une demi-page, le reste à l'oral"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Un dossier long se fait survoler, et c'est alors le lecteur qui choisit ce qu'il retient. Une demi-page, à l'inverse, oblige à tout expliquer de vive voix et ne laisse aucune trace une fois que vous avez quitté le bureau."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "Mon business plan tient en deux pages et répond aux sept questions",
+        "Chaque chiffre qu'il contient vient de moi",
+        "J'ai la liste des objections à traiter"
+      ],
+      "confidencePrompt": "Seriez-vous prêt à présenter ce document à un banquier la semaine prochaine ?",
+      "dossierPreview": true
+    }
+  },
+  "verifyLocally": [
+    "Les pièces exigées pour un financement et les conditions d'octroi varient d'une banque et d'un dispositif à l'autre : renseignez-vous à l'agence et auprès de la Chambre d'agriculture avant de monter le dossier."
+  ],
+  "nextTeaser": "Demain : le calendrier. Douze mois, vos travaux, vos pics de charge — et ce que l'IA ne peut pas savoir de votre région."
+}

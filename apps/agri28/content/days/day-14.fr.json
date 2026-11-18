@@ -1,0 +1,191 @@
+{
+  "schema": 1,
+  "id": "day-14",
+  "day": 14,
+  "week": 2,
+  "lang": "fr",
+  "title": "Le tableau qui se remplit en deux minutes",
+  "subtitle": "Vous faites générer un tableau de suivi prêt à coller dans un tableur, et vous décidez du rendez-vous hebdomadaire qui le fera vivre.",
+  "durationMin": 15,
+  "objectives": [
+    "Obtenir un tableau de suivi adapté à mon activité, avec ses formules",
+    "Me limiter à cinq colonnes pour que le tableau soit réellement tenu",
+    "Fixer le moment de la semaine où je regarde mes chiffres"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "suivi",
+    "label": "Tableau de suivi"
+  },
+  "guardrails": ["ai_not_accountant", "verify_prices", "data_privacy_basic"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "example",
+          "label": "Sur le terrain",
+          "text": "Beaucoup d'exploitants tiennent un cahier pendant trois semaines, puis arrêtent. Non par paresse : parce que le cahier demandait quinze colonnes et vingt minutes par jour. Un suivi abandonné ne vaut rien ; un suivi pauvre mais tenu toute l'année vaut de l'or."
+        },
+        {
+          "type": "p",
+          "text": "Règle de survie : **cinq colonnes au maximum, deux minutes par jour.** Pour presque toutes les activités, cela donne : la date, la nature (dépense ou recette), le poste, le montant, et une case pour une remarque."
+        },
+        {
+          "type": "p",
+          "text": "À côté de l'argent, une seule donnée technique suffit, celle qui pilote votre métier : le nombre d'animaux vivants, les litres de lait, les caisses récoltées, les kilos vendus. Une seule — choisissez bien."
+        },
+        {
+          "type": "p",
+          "text": "L'IA sert ici à deux choses : **produire la structure** (colonnes, formules de totaux, exemple de lignes) et **relire vos chiffres** une fois par mois. Elle ne remplit pas le tableau à votre place, et elle ne remplace pas un comptable au moment des déclarations."
+        },
+        {
+          "type": "note",
+          "variant": "info",
+          "text": "Tableur ou cahier ? Les deux marchent. Un tableur calcule les totaux tout seul et se partage ; un cahier ne tombe jamais en panne de batterie. Le tableau d'aujourd'hui se recopie à l'identique sur une page de cahier."
+        }
+      ],
+      "keyPoints": [
+        "Cinq colonnes, deux minutes par jour",
+        "Un suivi tenu vaut mieux qu'un suivi complet",
+        "Une seule donnée technique, celle qui pilote le métier",
+        "Le rendez-vous hebdomadaire fait vivre le tableau"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "Le prompt demande un résultat collable directement dans un tableur. Si vous préférez le papier, recopiez simplement l'en-tête des colonnes."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Générez le tableau. Collez ensuite le résultat dans votre tableur, ou recopiez l'en-tête sur une page de cahier.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "Mon tableau de suivi, prêt à coller",
+            "template": "Tu construis un outil de suivi simple pour un exploitant agricole en Algérie, qui travaille surtout depuis son téléphone.\n\nMon exploitation : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}.\nMon objectif : {{project.objective}}\n\nTâche :\n1. Propose-moi un tableau de suivi de CINQ colonnes maximum, tenable en deux minutes par jour, avec la seule donnée technique qui compte vraiment pour mon activité.\n2. Donne le résultat en lignes séparées par des points-virgules, que je puisse coller dans un tableur : d'abord l'en-tête, puis trois lignes d'exemple réalistes mais clairement marquées « exemple », sans montant inventé (laisse les montants vides).\n3. Donne ensuite les formules de total à mettre en bas : total des dépenses, total des recettes, solde. Explique en une phrase où les placer.\n4. Termine par les 3 indicateurs que je pourrai calculer à partir de ce tableau au bout d'un mois.\n\nRègles : aucune formule compliquée, aucun montant inventé, pas plus de cinq colonnes.",
+            "hint": "Si la réponse propose huit colonnes, redemandez-en cinq : c'est le nombre qui décide si vous tiendrez le tableau en novembre."
+          },
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "Les colonnes que je retiens, et la donnée technique que je suivrai",
+            "required": true,
+            "dossier": {
+              "kind": "suivi",
+              "block": "list"
+            }
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Décidez du rendez-vous. Un jour, une heure, dix minutes : c'est ce qui sépare un tableau vivant d'un fichier mort.",
+          "prompt": {
+            "id": "p2",
+            "tool": "claude",
+            "title": "Ma revue de la semaine, en dix minutes",
+            "template": "À partir d'un tableau de suivi à cinq colonnes (date, nature, poste, montant, remarque) tenu pour une exploitation de type {{project.type}} :\n\nTâche : donne-moi la liste des 5 questions à me poser chaque semaine en regardant ce tableau, dans l'ordre où je dois les poser, et ce que je dois faire si la réponse est mauvaise.\n\nFormat : 5 lignes, chacune en deux parties — la question, puis « si la réponse est mauvaise : … ».\n\nRègle : des questions que je peux trancher avec mes seules lignes du tableau, sans calcul compliqué."
+          },
+          "capture": {
+            "id": "c2",
+            "type": "text",
+            "label": "Mon rendez-vous hebdomadaire : quel jour, à quelle heure",
+            "placeholder": "Exemple : vendredi matin, après le thé, dix minutes.",
+            "required": true,
+            "dossier": {
+              "kind": "suivi",
+              "block": "kv",
+              "key": "Revue hebdomadaire"
+            }
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Pourquoi se limiter à cinq colonnes ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Parce qu'au-delà, le tableau n'est plus tenu au bout de quelques semaines"
+            },
+            {
+              "id": "b",
+              "text": "Parce que les tableurs n'en acceptent pas plus sur téléphone"
+            },
+            {
+              "id": "c",
+              "text": "Parce que cinq suffit pour la comptabilité officielle"
+            }
+          ],
+          "answer": "a",
+          "explanation": "La contrainte n'est ni technique ni comptable : elle est humaine. Un relevé qui prend deux minutes se fait le soir même ; un relevé qui en prend quinze attend le lendemain, puis la semaine suivante, puis plus jamais."
+        },
+        {
+          "id": "q2",
+          "text": "Au bout d'un mois, l'IA relit votre tableau et calcule un coût de revient. Que vaut ce chiffre ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Il vaut ce que valent mes lignes : si je les ai bien tenues, il est juste"
+            },
+            {
+              "id": "b",
+              "text": "Il est approximatif, comme toujours avec une IA"
+            },
+            {
+              "id": "c",
+              "text": "Il remplace le calcul d'un comptable"
+            }
+          ],
+          "answer": "a",
+          "explanation": "C'est la différence entre les jours précédents et celui-ci : ici, les chiffres viennent de vous. L'IA ne fait qu'additionner, et une addition se vérifie. Attention cependant : un coût de revient de gestion n'est pas une comptabilité officielle, et ne vaut pas pour une déclaration."
+        },
+        {
+          "id": "q3",
+          "text": "Quelle donnée technique suivre si vous ne pouvez en suivre qu'une ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Celle qui pilote mon métier : animaux vivants, litres, caisses, kilos vendus"
+            },
+            {
+              "id": "b",
+              "text": "La température, elle influence tout"
+            },
+            {
+              "id": "c",
+              "text": "Le nombre d'heures travaillées"
+            }
+          ],
+          "answer": "a",
+          "explanation": "La bonne donnée est celle qui bouge quand votre résultat bouge. La météo s'observe sans être notée, et les heures de travail renseignent sur l'effort, pas sur la production. Une seule donnée bien choisie, relevée toute l'année, vaut dix indicateurs abandonnés en mars."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "Mon tableau de suivi tient en cinq colonnes",
+        "Je sais quelle donnée technique je relève",
+        "Mon rendez-vous hebdomadaire est fixé",
+        "Semaine 2 terminée : budget, calendrier, équipe, risques et suivi sont dans mon Dossier"
+      ],
+      "confidencePrompt": "Après cette semaine de planification, vous sentez-vous capable de piloter votre projet avec des chiffres ?",
+      "dossierPreview": true
+    }
+  },
+  "verifyLocally": [
+    "Un suivi de gestion n'est pas une comptabilité officielle : pour vos déclarations et vos obligations fiscales, adressez-vous à un comptable."
+  ],
+  "nextTeaser": "Semaine 3 : le terrain. Veille sanitaire, photo de diagnostic, météo et irrigation, achats, stocks et dossiers administratifs."
+}
