@@ -36,7 +36,9 @@ const serveur = createServer((requete, reponse) => {
   const fichier = join(racine, chemin === '/' ? 'index.html' : chemin.replace(/^\//, ''));
   readFile(fichier)
     .then((contenu) => {
-      reponse.writeHead(200, { 'content-type': TYPES[extname(fichier)] ?? 'application/octet-stream' });
+      reponse.writeHead(200, {
+        'content-type': TYPES[extname(fichier)] ?? 'application/octet-stream',
+      });
       reponse.end(contenu);
     })
     .catch(() => {
@@ -74,7 +76,9 @@ try {
   // 1. L'application démarre, et le verrou de compte s'applique (édition APK).
   const titre = await onglet.getByRole('heading', { level: 1 }).first().textContent();
   if (titre?.trim() !== 'Votre compte') {
-    echecs.push(`l'écran d'entrée devrait être « Votre compte », c'est « ${titre?.trim() ?? '—'} »`);
+    echecs.push(
+      `l'écran d'entrée devrait être « Votre compte », c'est « ${titre?.trim() ?? '—'} »`,
+    );
   }
 
   // 2. Aucun service worker : les fichiers sont déjà locaux.
@@ -103,7 +107,9 @@ try {
   if (problemes.length > 0) echecs.push(`erreurs de console : ${problemes.join(' | ')}`);
 
   await onglet.goto(base, { waitUntil: 'networkidle' });
-  await onglet.screenshot({ path: resolve(import.meta.dirname, '../../../docs/images/apk-accueil.png') });
+  await onglet.screenshot({
+    path: resolve(import.meta.dirname, '../../../docs/images/apk-accueil.png'),
+  });
 } finally {
   await contexte?.close();
   await navigateur.close();

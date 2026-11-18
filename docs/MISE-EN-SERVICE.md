@@ -19,7 +19,7 @@ réussi — si vous ne le voyez pas, arrêtez-vous là plutôt que de continuer.
 | Règles de sécurité Firestore | **publiées et éprouvées** — voir plus bas |
 | GitHub Pages | **activé**, source « GitHub Actions » |
 | Dépôt renommé en `AgroBest` | fait |
-| Site public | **en ligne** : https://abdoualger1648-del.github.io/AgroBest/ |
+| Site public | **en ligne** : https://abdoualger1648-del.github.io/AgroBest/ (édition web complète) |
 | Premier APK | **construit** (3,8 Mo), signé en *debug* |
 
 Les règles ont été éprouvées contre la vraie base avec un compte jetable : s'inscrire et demander
@@ -136,8 +136,8 @@ Ouvrez **https://github.com/abdoualger1648-del/AgroBest/compare/master...claude/
 *Déploiement* dans **https://github.com/abdoualger1648-del/AgroBest/actions**, et le site à
 l'adresse **https://abdoualger1648-del.github.io/AgroBest/**
 
-Ce site est la **vitrine** : les trois premières leçons, sans compte. C'est voulu — publier les
-28 leçons dans un navigateur viderait de son sens l'activation.
+Ce site sert le **même produit que l'APK** : compte, essai de trois leçons, puis activation. Le
+parcours complet est donc accessible depuis un navigateur, pour qui n'a pas de téléphone Android.
 
 ### Si la publication échoue
 

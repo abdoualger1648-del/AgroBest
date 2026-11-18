@@ -5,7 +5,6 @@ import { PageHeader } from '@/components/PageHeader';
 import { ChevronEndIcon } from '@/components/Icon';
 import { computeDayStatuses } from '@/domain/course';
 import { useDernierJourAccessible } from '@/hooks/useAcces';
-import { plafondLecons } from '@/config';
 import { TOTAL_DAYS, weekOf, type DayStatus } from '@/domain/types';
 import { availableDays } from '@/content/loader';
 import { usePreferences } from '@/store/preferences';
@@ -19,7 +18,7 @@ const STATUS_STYLES: Record<DayStatus, string> = {
 };
 
 export function DayListPage() {
-  const { t } = useTranslation(['day', 'compte', 'vitrine']);
+  const { t } = useTranslation(['day', 'compte']);
   const lang = usePreferences((state) => state.lang);
   const progress = useCourse((state) => state.progress);
   const statuses = useMemo(() => computeDayStatuses(progress), [progress]);
@@ -28,14 +27,6 @@ export function DayListPage() {
   // Au-delà de cette leçon, c'est l'accès qui ferme, pas la progression : la
   // liste doit le dire, sinon la ligne paraît ouverte et se referme au clic.
   const dernierOuvert = useDernierJourAccessible();
-
-  // Le verrou n'a pas la même nature selon l'édition : activation à demander,
-  // ou parcours qui continue dans l'application.
-  const vitrine = plafondLecons() !== null;
-  const etiquetteVerrou = vitrine
-    ? t('vitrine:blocage.listeEtiquette')
-    : t('compte:essai.verrouListe');
-  const destinationVerrou = vitrine ? '/telecharger' : '/compte/activation';
 
   const weeks = [1, 2, 3, 4].map((week) => ({
     week,
@@ -67,7 +58,7 @@ export function DayListPage() {
                     {/* Pas d'opacité : elle ferait passer le contraste sous le seuil AA.
                         La couleur est héritée de l'état, dont le contraste est vérifié. */}
                     <span className="block text-sm">
-                      {verrouAcces ? etiquetteVerrou : t(`day:status.${status}`)}
+                      {verrouAcces ? t('compte:essai.verrouListe') : t(`day:status.${status}`)}
                       {hasContent ? '' : ` · ${t('day:missing.title')}`}
                     </span>
                   </span>
@@ -82,7 +73,7 @@ export function DayListPage() {
                   {ouvrable ? (
                     <Link to={`/jour/${String(day)}`}>{row}</Link>
                   ) : verrouAcces ? (
-                    <Link to={destinationVerrou}>{row}</Link>
+                    <Link to="/compte/activation">{row}</Link>
                   ) : (
                     row
                   )}

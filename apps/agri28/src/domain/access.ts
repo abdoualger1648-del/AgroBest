@@ -30,12 +30,7 @@ export type EtatCompte =
   | { statut: 'demande_envoyee'; email: string; demandeLe: number }
   | { statut: 'actif'; email: string; activeLe: number };
 
-export type MotifBlocage =
-  | 'compte_requis'
-  | 'email_a_confirmer'
-  | 'activation_requise'
-  /** Édition vitrine : la suite du parcours est dans l'application. */
-  | 'application_requise';
+export type MotifBlocage = 'compte_requis' | 'email_a_confirmer' | 'activation_requise';
 
 export type Acces = { ouvert: true } | { ouvert: false; motif: MotifBlocage };
 
@@ -109,15 +104,6 @@ export function leconsRestantes(
 ): number | null {
   if (etat.statut !== 'essai' && etat.statut !== 'demande_envoyee') return null;
   return Math.max(0, leconsOffertes - Math.max(0, joursValides));
-}
-
-/**
- * Accès en édition vitrine : pas de compte, un simple plafond. Fonction
- * distincte plutôt qu'un paramètre de plus sur `accesAuJour` — ce sont deux
- * règles sans rapport, et les mêler rendrait les deux plus difficiles à lire.
- */
-export function accesVitrine(jour: number, plafond: number): Acces {
-  return jour <= plafond ? OUVERT : { ouvert: false, motif: 'application_requise' };
 }
 
 /** Une demande d'activation a-t-elle un sens dans cet état ? */

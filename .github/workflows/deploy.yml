@@ -9,10 +9,10 @@ name: Déploiement
 # L'adresse publique est https://<compte>.github.io/AgroBest/ — c'est elle qui
 # impose `base = '/AgroBest/'` au build de production (décision D2).
 #
-# Le site est publié en édition VITRINE : les trois premières leçons, sans
-# compte, et une page de téléchargement de l'APK. Les leçons 4 à 28 n'y sont
-# pas seulement masquées, elles ne sont pas construites — `check:bundle` le
-# vérifie sur les fichiers produits.
+# Le site est publié en édition WEB : le même produit que l'APK — compte,
+# essai de trois leçons, activation — pour qui n'a pas de téléphone Android.
+# Il propose aussi l'APK au téléchargement, parce qu'une application installée
+# fonctionne sans réseau.
 #
 # Variable facultative (Settings → Secrets and variables → Actions → Variables) :
 #   URL_APK   adresse de téléchargement de l'APK. Sans elle, la page dit
@@ -55,15 +55,15 @@ jobs:
       - name: Vérifier
         run: npm run verify
 
-      - name: Build de production (édition vitrine)
+      - name: Build de production (édition web)
         env:
-          VITE_EDITION: vitrine
+          VITE_EDITION: web
           VITE_URL_APK: ${{ vars.URL_APK }}
         run: npm run build
 
-      - name: Budget de poids, et absence des leçons 4 à 28
+      - name: Budget de poids
         env:
-          VITE_EDITION: vitrine
+          VITE_EDITION: web
         run: npm run check:bundle
 
       - uses: actions/configure-pages@v5

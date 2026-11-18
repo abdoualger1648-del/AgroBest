@@ -6,27 +6,20 @@ import type { EtatCompte } from '@/domain/access';
  * - `complete` : développement et tests. Aucun compte, aucun plafond.
  * - `apk`      : l'application partagée en APK. Compte obligatoire, essai sur
  *                les trois premières leçons, puis activation (D46, D47).
- * - `vitrine`  : le site public, limité aux trois premières leçons, sans
- *                compte. Les leçons suivantes n'y sont pas seulement
- *                masquées : elles ne sont pas construites.
+ * - `web`      : le site public. Même produit que l'APK — compte, essai de
+ *                trois leçons, activation — servi depuis un navigateur, pour
+ *                qui n'a pas de téléphone Android.
  *
  * Choisie au build par `VITE_EDITION`, jamais devinée à l'exécution : une
  * édition qui changerait selon l'appareil serait impossible à tester.
  */
-export type Edition = 'complete' | 'apk' | 'vitrine';
+export type Edition = 'complete' | 'apk' | 'web';
 
-const EDITIONS: readonly Edition[] = ['complete', 'apk', 'vitrine'];
+const EDITIONS: readonly Edition[] = ['complete', 'apk', 'web'];
 
 export function edition(): Edition {
   const valeur = import.meta.env.VITE_EDITION;
   return EDITIONS.includes(valeur as Edition) ? (valeur as Edition) : 'complete';
-}
-
-/** Nombre de leçons offertes par la vitrine ; `null` quand il n'y a pas de plafond. */
-export const LECONS_VITRINE = 3;
-
-export function plafondLecons(): number | null {
-  return edition() === 'vitrine' ? LECONS_VITRINE : null;
 }
 
 /**
@@ -39,7 +32,13 @@ export function urlApk(): string {
 
 /** L'édition exige-t-elle un compte et une activation ? */
 export function compteRequis(): boolean {
-  return edition() === 'apk';
+  const courante = edition();
+  return courante === 'apk' || courante === 'web';
+}
+
+/** Faut-il proposer l'APK ? Inutile quand on EST déjà dans l'APK. */
+export function proposeApk(): boolean {
+  return edition() !== 'apk';
 }
 
 /**

@@ -100,11 +100,11 @@ L'application existe en trois **éditions**, choisies au build par `VITE_EDITION
 |---|---|---|
 | `complete` | aucun | développement et tests — rien n'est verrouillé |
 | `apk` | obligatoire | l'application partagée en APK : essai sur les 3 premières leçons, puis activation |
-| `vitrine` | aucun | le site public, limité aux 3 premières leçons |
+| `web` | obligatoire | le site public : le même produit, dans un navigateur |
 
-Dans l'édition `vitrine`, les leçons 4 à 28 ne sont pas seulement masquées : **elles ne sont pas
-construites**. Les masquer dans l'interface laisserait leurs fichiers téléchargeables par
-quiconque regarde le trafic réseau. `npm run check:bundle` le vérifie sur les fichiers produits.
+L'édition `web` sert exactement le même parcours que l'APK — compte, essai de 3 leçons,
+activation — pour qui n'a pas de téléphone Android. Elle propose en plus l'APK au téléchargement,
+parce qu'une application installée fonctionne sans réseau.
 
 En édition `apk`, Firebase sert **uniquement** au compte : adresse email, état d'activation, dates.
 Le projet, les réponses, les prompts et le Dossier ne quittent jamais le téléphone. Une fois le
@@ -119,7 +119,7 @@ L'APK Android, sa construction et sa signature : **[docs/APK.md](docs/APK.md)**.
 
 ## Déploiement
 
-L'application est publiée sur GitHub Pages **en édition vitrine** par le workflow
+L'application est publiée sur GitHub Pages **en édition web** par le workflow
 [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), à chaque poussée sur `master` ou
 à la demande. Le site sert de démonstration et de page de téléchargement de l'APK.
 

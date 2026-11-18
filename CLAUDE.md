@@ -40,9 +40,9 @@ Structure d'une journée : Concept 3 min · Pratique guidée 7 min · Quiz 3 min
 | Qualité | ESLint 10 (flat) + Prettier | garde-fou RTL par test, règle anti-import Dexie |
 | CI/Déploiement | GitHub Actions → GitHub Pages | `base = '/AgroBest/'` en production |
 
-**Aucune télémétrie, jamais.** Éditions `complete` et `vitrine` : aucun backend, aucune donnée ne quitte
-l'appareil. Édition `apk` : Firebase sert **uniquement** au compte et à son activation — adresse email,
-état, dates. Le projet, les réponses, les prompts et le Dossier restent sur le téléphone (D46, D48).
+**Aucune télémétrie, jamais.** Édition `complete` (développement et tests) : aucun backend. Éditions `apk`
+et `web` : Firebase sert **uniquement** au compte et à son activation — adresse email, état, dates. Le
+projet, les réponses, les prompts et le Dossier restent sur l'appareil (D46, D48).
 
 ---
 
@@ -67,7 +67,7 @@ Chemins ci-dessous relatifs à `apps/agri28/` :
 - `src/store/` : état d'interface Zustand, hydraté depuis IndexedDB.
 - `src/compte/` : port vers le service de comptes, implémentation Firebase et implémentation en mémoire ;
   seul endroit qui parle à Firebase. Mise en service : [`firebase/README.md`](firebase/README.md).
-- `src/config.ts` : édition du build (`complete`, `apk`, `vitrine`) et adresse de l'administrateur.
+- `src/config.ts` : édition du build (`complete`, `apk`, `web`) et adresse de l'administrateur.
 - `capacitor.config.ts` + `android/` : empaquetage Android engendré par Capacitor. Le code natif n'est
   ni formaté ni analysé : c'est une sortie de gabarit. Mode d'emploi : [`docs/APK.md`](docs/APK.md).
 
@@ -168,7 +168,7 @@ en FR, AR/RTL et thème sombre, clavier, cibles tactiles, hors ligne) : voir
 | D48 | **Seul le compte** (email, état d'activation, dates) va sur Firebase. Projet, réponses, prompts et Dossier restent à 100 % sur le téléphone | 2026-11-18 | choix de l'utilisateur du projet ; garde une promesse de confidentialité courte et vérifiable, et évite d'héberger les données d'exploitation d'autrui |
 | D49 | Notification des demandes d'activation **sans plan payant** : demande écrite dans Firestore, écran d'administration réservé au compte administrateur, plus un email prérempli côté utilisateur | 2026-11-18 | choix de l'utilisateur du projet. Un envoi d'email vraiment automatique exigerait Cloud Functions, donc le plan Blaze et une carte bancaire internationale |
 | D50 | Le **contrôle d'accès passe avant le verrou pédagogique** dans `DayPage` | 2026-11-18 | le verrou pédagogique offre un bouton « ouvrir quand même » (D3) : placé après, il aurait ouvert la leçon 28 sans activation. Un test vérifie que ce bouton est hors d'atteinte quand l'accès est fermé |
-| D51 | Trois **éditions** choisies au build par `VITE_EDITION` : `complete` (développement et tests), `apk`, `vitrine`. Hors `apk`, l'état de compte vaut « actif » | 2026-11-18 | un seul chemin de code dans l'interface, au lieu d'un « si le compte est requis » dans chaque écran ; et les 548 tests existants ne subissent aucun verrou. La valeur par défaut, et toute valeur inconnue, retombent sur `complete` : une faute de frappe n'enferme personne |
+| D51 | Trois **éditions** choisies au build par `VITE_EDITION` : `complete` (développement et tests), `apk`, `web` (`vitrine` jusqu'à D71). Hors `apk`, l'état de compte vaut « actif » | 2026-11-18 | un seul chemin de code dans l'interface, au lieu d'un « si le compte est requis » dans chaque écran ; et les 548 tests existants ne subissent aucun verrou. La valeur par défaut, et toute valeur inconnue, retombent sur `complete` : une faute de frappe n'enferme personne |
 | D52 | Le **cache local du compte fait foi au démarrage**, et un échec réseau ne retire jamais un accès | 2026-11-18 | un agriculteur activé qui perd le réseau garde ses 28 leçons. Deux tests le vérifient, dont un qui rouvre l'application hors ligne |
 | D53 | Le service de comptes est derrière un **port** (`src/compte/port.ts`) ; la 8a n'embarque qu'une implémentation **en mémoire** | 2026-11-18 | écrans et logique d'accès entièrement éprouvés avant que Firebase existe, et aucune donnée ne sort de l'appareil tant que la 8b n'est pas faite. La 8b ne remplace qu'une ligne |
 | D54 | **Pas de pluriels i18next** dans le nouvel espace de noms : « {{n}} leçon(s) » plutôt que `restantes_one` / `restantes_other` | 2026-11-18 | l'arabe a six formes plurielles et le français deux : les jeux de clés diffèreraient et le test de parité AR/FR échouerait |
@@ -188,6 +188,8 @@ en FR, AR/RTL et thème sombre, clavier, cibles tactiles, hors ligne) : voir
 | D68 | Dépôt renommé **AgroBest** ; le chemin de base devient `/AgroBest/` | 2026-11-18 | choix de l'utilisateur du projet, pour l'adresse publique `https://abdoualger1648-del.github.io/AgroBest/`. Le nom public de l'application (Agricole DZ 360) et les identifiants internes (`agri28`, `dz.agricole360.app`) ne changent pas |
 | D69 | Le serveur d'aperçu est lié explicitement à **`127.0.0.1`**, et sa sortie est capturée en CI | 2026-11-18 | la CI échouait depuis sa toute première exécution, et je ne l'avais jamais regardée : je vérifiais en local et je supposais la CI identique. Cause réelle : `vite preview` écoutait sur « localhost », que le runner GitHub résout en **IPv6 `::1`**, alors que Playwright interroge `127.0.0.1` — ici `localhost` résout en IPv4, d'où un échec invisible en local. C'est la sortie du serveur, que Playwright ignore par défaut, qui l'a montré ; elle reste capturée pour que la prochaine panne soit lisible du premier coup. En CI le serveur ne reconstruit plus non plus : l'étape précédente vient de le faire |
 | D70 | La liste des demandes d'activation **trie sur un seul champ** et filtre l'état côté application | 2026-11-18 | combiner `where('actif','==',false)` et `orderBy('demandeLe')` exige de Firestore un **index composite**, à créer à la main dans la console : sans lui la requête échoue et l'écran n'affiche qu'un « quelque chose n'a pas fonctionné » sans dire quoi. Un tri sur un seul champ utilise l'index automatique. Trouvé en relisant le code, avant que l'écran soit utilisé pour la première fois |
+| D71 | **L'édition `vitrine` est remplacée par l'édition `web`** : même produit que l'APK, compte et activation compris, servi depuis un navigateur | 2026-11-18 | choix de l'utilisateur du projet. Quelqu'un sans téléphone Android peut suivre les 28 jours, et l'activation protège le contenu de la même façon. D64, D65, D66 et D67 tombent avec elle : le plafond d'édition, la fonction `accesVitrine`, le motif `application_requise` et le glob conditionnel du chargeur sont supprimés — il ne reste qu'une seule règle d'accès, celle du compte. Contrepartie assumée : un visiteur doit créer un compte avant de voir la première leçon |
+| D72 | L'APK reste proposé **partout sauf dans l'APK** (`proposeApk()`) | 2026-11-18 | une application installée fonctionne sans réseau, ce que le web ne garantit pas ; mais se proposer à soi-même n'aurait aucun sens |
 
 ### Questions ouvertes
 *Aucune pour l'instant.*
@@ -214,8 +216,7 @@ npm run lint             # ESLint (analyse typée)
 npm run test             # Vitest
 npm run test:e2e         # Playwright, build + preview automatiques
 npm run validate:content # garde-fous ; schéma complet des leçons à la phase 3
-npm run check:bundle     # budget de poids, à lancer après `npm run build`
-                         # VITE_EDITION=vitrine vérifie en plus l'absence des leçons 4 à 28
+npm run check:bundle     # budget de poids et 56 fichiers de leçon, après `npm run build`
 npm run apk:web          # build en édition APK, puis copie dans le projet Android
 npm run verify           # typecheck + lint + format + contenu + tests, en une commande
 ```
@@ -246,7 +247,8 @@ L'APK lui-même est assemblé par le workflow **APK** de GitHub Actions : voir
 | 8a | Compte, essai de 3 leçons, verrouillage, écrans, service en mémoire | terminée |
 | 8b | Branchement de Firebase, règles de sécurité, écran d'administration | terminée |
 | 8c | Capacitor, APK signé construit par GitHub Actions | terminée |
-| 8d | Vitrine limitée aux 3 leçons, page de téléchargement, documentation | terminée |
+| 8d | ~~Vitrine limitée aux 3 leçons~~ — **remplacée** par l'édition web complète (D71) | terminée |
+| 8e | Édition web complète : compte et activation dans le navigateur | terminée |
 
 ### Méthode de travail imposée
 Une phase à la fois. À la fin de chaque phase : résumé, tests, commit, puis **arrêt et attente d'un GO explicite**.

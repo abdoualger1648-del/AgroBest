@@ -20,13 +20,8 @@ const BUDGETS = {
   precache: 400,
 };
 
-/**
- * L'édition construite, lue dans la même variable que le build. La vitrine
- * n'embarque que les trois premières leçons : c'est une promesse faite à
- * l'utilisateur du projet, donc elle se vérifie, elle ne se suppose pas.
- */
+/** L'édition construite, lue dans la même variable que le build. */
 const EDITION = process.env.VITE_EDITION ?? 'complete';
-const VITRINE = EDITION === 'vitrine';
 
 const fail = [];
 const lines = [];
@@ -54,7 +49,9 @@ for (const match of html.matchAll(/(?:src|href)="\/AgroBest\/([^"]+\.(?:js|css))
 
 let initial = 0;
 for (const file of initialFiles) initial += gzipKiB(file);
-lines.push(`chargement initial  ${initial.toFixed(1)} Ko gzip  (${initialFiles.size} fichiers, plafond ${BUDGETS.initial} Ko)`);
+lines.push(
+  `chargement initial  ${initial.toFixed(1)} Ko gzip  (${initialFiles.size} fichiers, plafond ${BUDGETS.initial} Ko)`,
+);
 if (initial > BUDGETS.initial) {
   fail.push(`chargement initial ${initial.toFixed(1)} Ko > ${BUDGETS.initial} Ko`);
 }
@@ -68,7 +65,9 @@ if (precached.length === 0) {
 
 let precache = 0;
 for (const url of precached) precache += gzipKiB(url.replace(/^\//, ''));
-lines.push(`pré-cache           ${precache.toFixed(1)} Ko gzip  (${precached.length} entrées, plafond ${BUDGETS.precache} Ko)`);
+lines.push(
+  `pré-cache           ${precache.toFixed(1)} Ko gzip  (${precached.length} entrées, plafond ${BUDGETS.precache} Ko)`,
+);
 if (precache > BUDGETS.precache) {
   fail.push(`pré-cache ${precache.toFixed(1)} Ko > ${BUDGETS.precache} Ko`);
 }
@@ -80,32 +79,22 @@ if (interdits.length > 0) {
   fail.push(`pré-caché alors que les décisions D32 et D57 l'excluent : ${interdits.join(', ')}`);
 }
 
-// Contre-épreuve : les leçons attendues doivent bien être pré-cachées, sinon
-// le test ci-dessus passerait aussi avec un pré-cache vide de toute leçon.
-const attendues = VITRINE ? 6 : 14;
-const libelle = VITRINE ? 'leçons 1 à 3' : 'semaine 1';
-const motif = VITRINE ? /day-0[1-3]\./ : /day-0[1-7]\./;
-const presentes = precached.filter((url) => motif.test(url));
-if (presentes.length !== attendues) {
-  fail.push(
-    `pré-cache, ${libelle} : ${attendues} fichiers attendus, trouvé ${presentes.length}`,
-  );
+// Contre-épreuve : la semaine 1 doit bien être pré-cachée, sinon le test
+// ci-dessus passerait aussi avec un pré-cache vide de toute leçon.
+const semaine1 = precached.filter((url) => /day-0[1-7]\./.test(url));
+if (semaine1.length !== 14) {
+  fail.push(`pré-cache, semaine 1 : 14 fichiers attendus, trouvé ${semaine1.length}`);
 }
-lines.push(`pré-cache, ${libelle}  ${presentes.length} / ${attendues} fichiers`);
+lines.push(`pré-cache, semaine 1  ${semaine1.length} / 14 fichiers`);
 
-// En vitrine, les leçons 4 à 28 ne doivent exister NULLE PART dans dist/ :
-// les masquer dans l'interface les laisserait téléchargeables.
-if (VITRINE) {
-  const fichiers = readdirSync(path.join(DIST, 'assets'));
-  const fuites = fichiers.filter((nom) => /day-(?:0[4-9]|1\d|2[0-8])\./.test(nom));
-  if (fuites.length > 0) {
-    fail.push(`leçons hors vitrine présentes dans dist/ : ${fuites.join(', ')}`);
-  }
-  const construites = new Set(
-    fichiers.flatMap((nom) => /day-(\d{2})\.(?:fr|ar)[.-]/.exec(nom)?.slice(1, 2) ?? []),
-  );
-  lines.push(`vitrine : jours construits ${[...construites].sort().join(', ')}`);
+// Les 28 jours doivent être construits, dans les deux langues.
+const lecons = readdirSync(path.join(DIST, 'assets')).filter((nom) =>
+  /day-\d{2}\.(?:fr|ar)[.-].*\.js$/.test(nom),
+);
+if (lecons.length !== 56) {
+  fail.push(`leçons construites : 56 attendues (28 jours × 2 langues), trouvé ${lecons.length}`);
 }
+lines.push(`leçons construites    ${lecons.length} / 56 fichiers`);
 
 console.log(`édition            ${EDITION}`);
 console.log(lines.join('\n'));

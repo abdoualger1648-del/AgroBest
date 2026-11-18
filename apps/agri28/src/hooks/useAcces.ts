@@ -1,12 +1,6 @@
 import { useMemo } from 'react';
-import {
-  accesAuJour,
-  accesVitrine,
-  dernierJourAccessible,
-  type Acces,
-  type EtatCompte,
-} from '@/domain/access';
-import { COMPTE_IMPLICITE, compteRequis, plafondLecons } from '@/config';
+import { accesAuJour, dernierJourAccessible, type Acces, type EtatCompte } from '@/domain/access';
+import { COMPTE_IMPLICITE, compteRequis } from '@/config';
 import { useCompte } from '@/store/compte';
 
 /**
@@ -24,16 +18,11 @@ export function useEtatCompte(): EtatCompte {
 /** Droit d'ouvrir une leçon, pour l'édition en cours. */
 export function useAccesJour(jour: number): Acces {
   const etat = useEtatCompte();
-  const plafond = plafondLecons();
-  return useMemo(
-    () => (plafond === null ? accesAuJour(jour, etat) : accesVitrine(jour, plafond)),
-    [jour, etat, plafond],
-  );
+  return useMemo(() => accesAuJour(jour, etat), [jour, etat]);
 }
 
 /** Dernière leçon ouverte, pour l'édition en cours. */
 export function useDernierJourAccessible(): number {
   const etat = useEtatCompte();
-  const plafond = plafondLecons();
-  return useMemo(() => (plafond === null ? dernierJourAccessible(etat) : plafond), [etat, plafond]);
+  return useMemo(() => dernierJourAccessible(etat), [etat]);
 }

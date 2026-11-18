@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import {
   LECONS_OFFERTES,
   accesAuJour,
-  accesVitrine,
   dernierJourAccessible,
   etatCompte,
   leconsRestantes,
@@ -139,20 +138,5 @@ describe('demande d’activation', () => {
     expect(peutDemanderActivation({ statut: 'anonyme' })).toBe(false);
     expect(peutDemanderActivation({ statut: 'non_verifie', email: 'a@b.dz' })).toBe(false);
     expect(peutDemanderActivation({ statut: 'actif', email: 'a@b.dz', activeLe: 1 })).toBe(false);
-  });
-});
-
-describe('accès en édition vitrine', () => {
-  it('ouvre jusqu’au plafond, puis renvoie vers l’application', () => {
-    expect(accesVitrine(1, 3)).toEqual({ ouvert: true });
-    expect(accesVitrine(3, 3)).toEqual({ ouvert: true });
-    expect(accesVitrine(4, 3)).toEqual({ ouvert: false, motif: 'application_requise' });
-    expect(accesVitrine(TOTAL_DAYS, 3)).toEqual({ ouvert: false, motif: 'application_requise' });
-  });
-
-  it('ne dépend d’aucun compte : c’est un plafond, pas un droit', () => {
-    // Même règle quel que soit l'état du compte — la vitrine n'en a pas.
-    expect(accesVitrine(4, 3)).toEqual(accesVitrine(4, 3));
-    expect(accesVitrine(7, 7)).toEqual({ ouvert: true });
   });
 });

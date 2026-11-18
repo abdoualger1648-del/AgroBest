@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { compteRequis, edition, emailAdmin } from './config';
+import { compteRequis, edition, emailAdmin, proposeApk } from './config';
 
 afterEach(() => {
   vi.unstubAllEnvs();
@@ -18,15 +18,18 @@ describe('édition', () => {
     expect(edition()).toBe('complete');
   });
 
-  it('en APK, le compte est requis', () => {
+  it('en APK, le compte est requis et l’application n’est pas proposée', () => {
     vi.stubEnv('VITE_EDITION', 'apk');
     expect(compteRequis()).toBe(true);
+    // On est déjà dedans : proposer de la télécharger n'aurait pas de sens.
+    expect(proposeApk()).toBe(false);
   });
 
-  it('la vitrine est reconnue, sans compte (son plafond arrive en 8d)', () => {
-    vi.stubEnv('VITE_EDITION', 'vitrine');
-    expect(edition()).toBe('vitrine');
-    expect(compteRequis()).toBe(false);
+  it('sur le web, le compte est requis aussi, et l’APK est proposé', () => {
+    vi.stubEnv('VITE_EDITION', 'web');
+    expect(edition()).toBe('web');
+    expect(compteRequis()).toBe(true);
+    expect(proposeApk()).toBe(true);
   });
 });
 

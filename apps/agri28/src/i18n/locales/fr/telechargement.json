@@ -1,0 +1,12 @@
+{
+  "titre": "Installer l'application",
+  "sousTitre": "Le parcours complet, sur votre téléphone, sans connexion.",
+  "pourquoiTitre": "Pourquoi une application",
+  "pourquoiTexte": "Une fois installée, elle fonctionne sans réseau : vous pouvez travailler dans un champ, un hangar ou une salle d'attente. Vos données restent sur votre téléphone.",
+  "telecharger": "Télécharger l'application",
+  "sansLien": "Aucune version n'est encore publiée. Revenez bientôt.",
+  "installationTitre": "À la première installation",
+  "installationTexte": "Android demande l'autorisation d'installer une application qui ne vient pas d'une boutique. L'autorisation ne concerne que le dossier ou la messagerie d'où vous ouvrez le fichier.",
+  "activationTitre": "Après les 3 premières leçons",
+  "activationTexte": "L'application demande une activation. Vous l'obtenez en écrivant à l'administrateur depuis l'application : un message prérempli s'ouvre, vous n'avez qu'à l'envoyer."
+}

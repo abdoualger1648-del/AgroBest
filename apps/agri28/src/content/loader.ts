@@ -6,19 +6,7 @@ import type { Lang } from '@/lib/lang';
  * dans un morceau de code séparé. Sur une connexion faible, on ne télécharge
  * que le jour qu'on ouvre.
  */
-/**
- * En édition vitrine, les leçons 4 à 28 ne sont pas seulement masquées : elles
- * ne sont pas construites. Les masquer dans l'interface laisserait leurs
- * fichiers téléchargeables par quiconque regarde le trafic réseau.
- *
- * `import.meta.env.VITE_EDITION` est remplacé par sa valeur au build : la
- * branche non retenue, et les imports qu'elle contient, disparaissent.
- * `scripts/check-bundle.mjs` vérifie le résultat plutôt que de le supposer.
- */
-const modules: Record<string, () => Promise<unknown>> =
-  import.meta.env.VITE_EDITION === 'vitrine'
-    ? import.meta.glob<unknown>('../../content/days/day-0[1-3].*.json')
-    : import.meta.glob<unknown>('../../content/days/day-*.json');
+const modules = import.meta.glob<unknown>('../../content/days/day-*.json');
 
 function keyFor(day: number, lang: Lang): string {
   return `../../content/days/day-${String(day).padStart(2, '0')}.${lang}.json`;
