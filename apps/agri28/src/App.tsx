@@ -9,6 +9,8 @@ import { watchSystemTheme } from '@/lib/appearance';
 import { showOpenReminder } from '@/pwa/reminder';
 import { currentDay } from '@/domain/course';
 import { toDayKey } from '@/domain/streak';
+import { useCompte } from '@/store/compte';
+import { GardeCompte } from '@/components/GardeCompte';
 
 /**
  * Seul l'accueil est dans le paquet initial. Les autres écrans arrivent à la
@@ -43,6 +45,15 @@ const TemplatesPage = lazy(() =>
 const NotFoundPage = lazy(() =>
   import('@/routes/NotFoundPage').then((m) => ({ default: m.NotFoundPage })),
 );
+const ComptePage = lazy(() =>
+  import('@/routes/compte/ComptePage').then((m) => ({ default: m.ComptePage })),
+);
+const ConfirmationPage = lazy(() =>
+  import('@/routes/compte/ConfirmationPage').then((m) => ({ default: m.ConfirmationPage })),
+);
+const ActivationPage = lazy(() =>
+  import('@/routes/compte/ActivationPage').then((m) => ({ default: m.ActivationPage })),
+);
 
 function RouteFallback() {
   const { t } = useTranslation('common');
@@ -59,8 +70,15 @@ export default function App() {
   const reminderEnabled = usePreferences((state) => state.reminderEnabled);
   const progress = useCourse((state) => state.progress);
   const loaded = useCourse((state) => state.loaded);
+  const chargerCompte = useCompte((state) => state.charger);
 
   useEffect(() => watchSystemTheme(syncSystemTheme), [syncSystemTheme]);
+
+  // Le compte est lu depuis le cache local dès le démarrage : l'application
+  // doit connaître son état d'accès avant de savoir s'il y a du réseau.
+  useEffect(() => {
+    void chargerCompte();
+  }, [chargerCompte]);
 
   // Rappel à l'ouverture : le web ne garantit pas mieux sans serveur (D8).
   useEffect(() => {
@@ -81,18 +99,25 @@ export default function App() {
     <Suspense fallback={<RouteFallback />}>
       <Routes>
         <Route element={<AppShell />}>
-          <Route index element={<HomePage />} />
-          <Route path="bienvenue" element={<OnboardingPage />} />
-          <Route path="projet" element={<ProjectPage />} />
-          <Route path="jour" element={<DayListPage />} />
-          <Route path="jour/:day" element={<DayPage />} />
-          <Route path="dossier" element={<DossierPage />} />
-          <Route path="carnet" element={<NotebookPage />} />
-          <Route path="modeles" element={<TemplatesPage />} />
-          <Route path="badges" element={<BadgesPage />} />
-          <Route path="plus" element={<MorePage />} />
-          <Route path="parametres" element={<SettingsPage />} />
-          <Route path="*" element={<NotFoundPage />} />
+          <Route path="compte" element={<ComptePage />} />
+          <Route path="compte/confirmation" element={<ConfirmationPage />} />
+          <Route path="compte/activation" element={<ActivationPage />} />
+        </Route>
+        <Route element={<GardeCompte />}>
+          <Route element={<AppShell />}>
+            <Route index element={<HomePage />} />
+            <Route path="bienvenue" element={<OnboardingPage />} />
+            <Route path="projet" element={<ProjectPage />} />
+            <Route path="jour" element={<DayListPage />} />
+            <Route path="jour/:day" element={<DayPage />} />
+            <Route path="dossier" element={<DossierPage />} />
+            <Route path="carnet" element={<NotebookPage />} />
+            <Route path="modeles" element={<TemplatesPage />} />
+            <Route path="badges" element={<BadgesPage />} />
+            <Route path="plus" element={<MorePage />} />
+            <Route path="parametres" element={<SettingsPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
         </Route>
       </Routes>
     </Suspense>

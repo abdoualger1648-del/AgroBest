@@ -1,0 +1,80 @@
+{
+  "titre": "Votre compte",
+  "sousTitre": "Une adresse email suffit. Elle sert uniquement à ouvrir votre accès.",
+  "onglets": {
+    "inscription": "Créer un compte",
+    "connexion": "J'ai déjà un compte"
+  },
+  "champs": {
+    "email": "Adresse email",
+    "emailAide": "C'est à cette adresse que vous recevrez le message de confirmation.",
+    "motDePasse": "Mot de passe",
+    "motDePasseAide": "Au moins {{min}} caractères. Notez-le quelque part."
+  },
+  "erreurs": {
+    "emailVide": "Indiquez votre adresse email.",
+    "emailFormat": "Cette adresse ne ressemble pas à une adresse email.",
+    "motDePasseVide": "Choisissez un mot de passe.",
+    "motDePasseTropCourt": "Le mot de passe doit faire au moins {{min}} caractères.",
+    "email_deja_utilise": "Un compte existe déjà avec cette adresse. Connectez-vous.",
+    "identifiants_invalides": "Adresse ou mot de passe incorrect.",
+    "email_invalide": "Cette adresse email a été refusée.",
+    "mot_de_passe_faible": "Ce mot de passe est trop simple. Allongez-le.",
+    "hors_ligne": "Pas de connexion. Rapprochez-vous du réseau et réessayez.",
+    "trop_de_tentatives": "Trop d'essais. Attendez quelques minutes.",
+    "non_connecte": "Votre session a expiré. Reconnectez-vous.",
+    "inconnue": "Quelque chose n'a pas fonctionné. Réessayez."
+  },
+  "actions": {
+    "creerCompte": "Créer mon compte",
+    "seConnecter": "Me connecter",
+    "seDeconnecter": "Me déconnecter",
+    "renvoyer": "Renvoyer le message",
+    "jaiConfirme": "J'ai confirmé, vérifier",
+    "demander": "Demander mon activation",
+    "verifier": "Vérifier maintenant",
+    "retour": "Revenir à l'accueil"
+  },
+  "confirmation": {
+    "titre": "Confirmez votre adresse",
+    "texte": "Nous avons envoyé un message à {{email}}. Ouvrez-le et cliquez sur le lien, puis revenez ici.",
+    "aide": "Le message peut mettre quelques minutes, et atterrir dans les indésirables.",
+    "renvoye": "Message renvoyé.",
+    "toujoursPas": "L'adresse n'est pas encore confirmée. Vérifiez votre boîte, puis réessayez."
+  },
+  "essai": {
+    "titre": "Accès d'essai",
+    "restantes": "Il vous reste {{n}} leçon(s) d'essai sur {{total}}.",
+    "epuise": "Vos leçons d'essai sont terminées.",
+    "verrouListe": "Activation requise"
+  },
+  "activation": {
+    "titre": "Demander l'activation",
+    "texte": "Les {{total}} premières leçons sont offertes. Pour la suite, demandez votre activation : votre demande est enregistrée, et vous pouvez aussi envoyer un message à l'administrateur.",
+    "boutonEmail": "Écrire à l'administrateur",
+    "sansAdresse": "Aucune adresse d'administrateur n'est configurée dans cette version.",
+    "envoyee": "Demande envoyée le {{date}}. Vous serez activé après prise de contact.",
+    "enAttenteTitre": "Demande en attente",
+    "enAttenteTexte": "Votre demande est enregistrée. Une fois votre compte activé, revenez ici en étant connecté à internet : les 28 leçons s'ouvriront.",
+    "mailSujet": "Agricole DZ 360 — demande d'activation",
+    "mailCorps": "Bonjour,\n\nJe souhaite activer mon compte Agricole DZ 360.\n\nAdresse du compte : {{email}}\nIdentifiant : {{uid}}\n\nMerci."
+  },
+  "blocage": {
+    "compteRequisTitre": "Créez votre compte",
+    "compteRequisTexte": "Un compte est nécessaire pour commencer le parcours.",
+    "emailAConfirmerTitre": "Adresse à confirmer",
+    "emailAConfirmerTexte": "Confirmez votre adresse email pour ouvrir les leçons.",
+    "activationRequiseTitre": "Leçon {{jour}} verrouillée",
+    "activationRequiseTexte": "Les {{total}} premières leçons sont offertes. Demandez votre activation pour continuer."
+  },
+  "confidentialite": {
+    "titre": "Ce qui quitte votre téléphone",
+    "texte": "Seuls votre adresse email et l'état de votre compte sont envoyés. Votre projet, vos réponses, vos prompts et votre Dossier restent sur votre téléphone, et ne sont transmis à personne."
+  },
+  "etat": {
+    "connecteComme": "Connecté : {{email}}",
+    "actif": "Compte activé",
+    "essai": "Compte en essai",
+    "horsLigneAvertissement": "Pas de connexion : votre accès reste celui de la dernière vérification."
+  }
+}

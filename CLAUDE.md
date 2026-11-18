@@ -40,7 +40,9 @@ Structure d'une journée : Concept 3 min · Pratique guidée 7 min · Quiz 3 min
 | Qualité | ESLint 10 (flat) + Prettier | garde-fou RTL par test, règle anti-import Dexie |
 | CI/Déploiement | GitHub Actions → GitHub Pages | `base = '/WinBest/'` en production |
 
-**Aucun backend en v1.** Aucune donnée ne quitte l'appareil. Aucune télémétrie.
+**Aucune télémétrie, jamais.** Éditions `complete` et `vitrine` : aucun backend, aucune donnée ne quitte
+l'appareil. Édition `apk` : Firebase sert **uniquement** au compte et à son activation — adresse email,
+état, dates. Le projet, les réponses, les prompts et le Dossier restent sur le téléphone (D46, D48).
 
 ---
 
@@ -63,6 +65,8 @@ Chemins ci-dessous relatifs à `apps/agri28/` :
 - `src/lib/` : langue, apparence (thème/direction), formatage `Intl`.
 - `src/hooks/` : minuteur de séance (la logique reste dans `src/domain/timer.ts`).
 - `src/store/` : état d'interface Zustand, hydraté depuis IndexedDB.
+- `src/compte/` : port vers le service de comptes et son implémentation ; seul endroit qui parlera à Firebase.
+- `src/config.ts` : édition du build (`complete`, `apk`, `vitrine`) et adresse de l'administrateur.
 
 Schéma d'une leçon : [`docs/lesson-schema.md`](docs/lesson-schema.md) · exemple : [`docs/examples/day-01.fr.sample.json`](docs/examples/day-01.fr.sample.json).
 Mettre à jour le contenu sans toucher au code : [`docs/CONTENU.md`](docs/CONTENU.md).
@@ -160,6 +164,12 @@ en FR, AR/RTL et thème sombre, clavier, cibles tactiles, hors ligne) : voir
 | D47 | L'essai gratuit porte sur les **3 premières leçons**, pas sur 3 jours de calendrier | 2026-11-18 | choix de l'utilisateur du projet ; cohérent avec le rythme libre (D3) — qui enchaîne les leçons le premier soir demande son activation tout de suite au lieu d'attendre 72 heures |
 | D48 | **Seul le compte** (email, état d'activation, dates) va sur Firebase. Projet, réponses, prompts et Dossier restent à 100 % sur le téléphone | 2026-11-18 | choix de l'utilisateur du projet ; garde une promesse de confidentialité courte et vérifiable, et évite d'héberger les données d'exploitation d'autrui |
 | D49 | Notification des demandes d'activation **sans plan payant** : demande écrite dans Firestore, écran d'administration réservé au compte administrateur, plus un email prérempli côté utilisateur | 2026-11-18 | choix de l'utilisateur du projet. Un envoi d'email vraiment automatique exigerait Cloud Functions, donc le plan Blaze et une carte bancaire internationale |
+| D50 | Le **contrôle d'accès passe avant le verrou pédagogique** dans `DayPage` | 2026-11-18 | le verrou pédagogique offre un bouton « ouvrir quand même » (D3) : placé après, il aurait ouvert la leçon 28 sans activation. Un test vérifie que ce bouton est hors d'atteinte quand l'accès est fermé |
+| D51 | Trois **éditions** choisies au build par `VITE_EDITION` : `complete` (développement et tests), `apk`, `vitrine`. Hors `apk`, l'état de compte vaut « actif » | 2026-11-18 | un seul chemin de code dans l'interface, au lieu d'un « si le compte est requis » dans chaque écran ; et les 548 tests existants ne subissent aucun verrou. La valeur par défaut, et toute valeur inconnue, retombent sur `complete` : une faute de frappe n'enferme personne |
+| D52 | Le **cache local du compte fait foi au démarrage**, et un échec réseau ne retire jamais un accès | 2026-11-18 | un agriculteur activé qui perd le réseau garde ses 28 leçons. Deux tests le vérifient, dont un qui rouvre l'application hors ligne |
+| D53 | Le service de comptes est derrière un **port** (`src/compte/port.ts`) ; la 8a n'embarque qu'une implémentation **en mémoire** | 2026-11-18 | écrans et logique d'accès entièrement éprouvés avant que Firebase existe, et aucune donnée ne sort de l'appareil tant que la 8b n'est pas faite. La 8b ne remplace qu'une ligne |
+| D54 | **Pas de pluriels i18next** dans le nouvel espace de noms : « {{n}} leçon(s) » plutôt que `restantes_one` / `restantes_other` | 2026-11-18 | l'arabe a six formes plurielles et le français deux : les jeux de clés diffèreraient et le test de parité AR/FR échouerait |
+| D55 | Projet Firebase **agricole360-4a470**, identifiant d'application Android **dz.agricole360.app** | 2026-11-18 | fournis par l'utilisateur du projet. L'adresse de l'administrateur n'est **pas** dans le dépôt : elle arrive au build par `VITE_EMAIL_ADMIN`, pour ne pas exposer une adresse personnelle dans un dépôt public |
 
 ### Questions ouvertes
 *Aucune pour l'instant.*
@@ -208,7 +218,10 @@ Dans `apps/agri28` uniquement : `npm run icons` (régénère les icônes PWA),
 | 5 | Dossier de projet, exports `.docx`/`.xlsx`, carnet, badges, certificat, rappels | **terminée — en attente de GO** |
 | 6 | Qualité : accessibilité, performance, hors ligne, relecture du contenu et des chiffres | **terminée — en attente de GO** |
 | 7 | Déploiement et documentation | **terminée — en attente de GO** |
-| 8 | Distribution APK : compte, essai de 3 leçons, activation Firebase, écran admin, vitrine limitée | **plan proposé — en attente de GO** |
+| 8a | Compte, essai de 3 leçons, verrouillage, écrans, service en mémoire | **terminée — en attente de GO** |
+| 8b | Branchement de Firebase, règles de sécurité, écran d'administration | à faire |
+| 8c | Capacitor, APK signé construit par GitHub Actions | à faire |
+| 8d | Vitrine limitée aux 3 leçons, page de téléchargement, documentation | à faire |
 
 ### Méthode de travail imposée
 Une phase à la fois. À la fin de chaque phase : résumé, tests, commit, puis **arrêt et attente d'un GO explicite**.

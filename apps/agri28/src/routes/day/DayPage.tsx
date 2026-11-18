@@ -12,6 +12,8 @@ import { ChevronEndIcon } from '@/components/Icon';
 import { useTimer } from '@/hooks/useTimer';
 import { SESSION_SECONDS } from '@/domain/timer';
 import { computeDayStatuses } from '@/domain/course';
+import { useAccesJour } from '@/hooks/useAcces';
+import { BlocageAcces } from '@/components/BlocageAcces';
 import { scoreQuiz } from '@/domain/quiz';
 import { usePreferences } from '@/store/preferences';
 import { selectDayProgress, useCourse } from '@/store/course';
@@ -38,6 +40,7 @@ export function DayPage() {
   const completeDay = useCourse((state) => state.completeDay);
 
   const dayProgress = useCourse((state) => selectDayProgress(state, day));
+  const acces = useAccesJour(day);
   const statuses = useMemo(() => computeDayStatuses(progress), [progress]);
   const status = statuses.get(day) ?? 'locked';
 
@@ -112,6 +115,13 @@ export function DayPage() {
         </Link>
       </>
     );
+  }
+
+  // L'accès passe AVANT le verrou pédagogique : sans cela, le bouton
+  // « ouvrir quand même » du verrou pédagogique ouvrirait n'importe quelle
+  // leçon sans activation.
+  if (!acces.ouvert) {
+    return <BlocageAcces motif={acces.motif} jour={day} />;
   }
 
   if (status === 'locked') {

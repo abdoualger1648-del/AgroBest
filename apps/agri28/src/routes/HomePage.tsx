@@ -9,6 +9,7 @@ import { useCourse } from '@/store/course';
 import { currentDay as computeCurrentDay, summarize } from '@/domain/course';
 import { formatNumber } from '@/lib/format';
 import { TOTAL_DAYS } from '@/domain/types';
+import { BandeauEssai } from '@/components/BandeauEssai';
 
 export function HomePage() {
   const { t } = useTranslation(['home', 'common', 'project']);
@@ -34,6 +35,8 @@ export function HomePage() {
         <h1 className="mt-1 text-2xl font-bold">{project?.name ?? t('common:appName')}</h1>
         <p className="mt-2 text-muted">{t('home:subtitle')}</p>
       </header>
+
+      <BandeauEssai />
 
       <Card className="mb-4">
         <div className="flex items-baseline justify-between gap-3">
