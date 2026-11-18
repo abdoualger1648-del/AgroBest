@@ -1,7 +1,9 @@
-# 28 jours pour gérer mon projet agricole avec l'IA — Cadrage (Phase 0)
+# Agricole DZ 360 — Architecture
 
-> Statut : **proposition**, en attente de votre GO. Aucun code applicatif n'est encore écrit.
-> Dernière mise à jour : 2026-11-17.
+> Document de cadrage écrit en phase 0, **tenu à jour à chaque phase**. Les sept phases sont
+> terminées ; les choix qui ont changé en chemin sont consignés dans le journal des décisions de
+> [`CLAUDE.md`](../CLAUDE.md) §5, qui fait foi en cas d'écart.
+> Dernière mise à jour : 2026-11-18.
 
 ---
 
@@ -383,8 +385,11 @@ Le plafond « un jour ≤ 25 Ko » est tenu avec une large marge : le plus gros 
 | 3 | Contenu jours 1 à 7, FR + AR, vérifié et sourcé | Vous validez le ton et la qualité avant la suite |
 | 4 | Contenu semaines 2, puis 3, puis 4 (un GO entre chaque) | |
 | 5 | Dossier de projet, exports `.docx`/`.xlsx`, carnet, badges, certificat, rappels | |
-| 6 | Qualité : accessibilité, performance, hors ligne, relecture complète du contenu et des chiffres | |
-| 7 | Déploiement GitHub Pages + README + guide de mise à jour du contenu | |
+| 6 | Qualité : accessibilité, performance, hors ligne, relecture complète du contenu et des chiffres | Mesures en CI, voir §9 |
+| 7 | Déploiement GitHub Pages + README + guide de mise à jour du contenu | `deploy.yml`, [`README.md`](../README.md), [`CONTENU.md`](CONTENU.md) |
+
+Les sept phases sont terminées. Ce découpage est conservé tel qu'il a été proposé, comme trace de
+ce qui était prévu avant d'être construit.
 
 ---
 

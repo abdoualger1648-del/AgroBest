@@ -65,6 +65,8 @@ Chemins ci-dessous relatifs à `apps/agri28/` :
 - `src/store/` : état d'interface Zustand, hydraté depuis IndexedDB.
 
 Schéma d'une leçon : [`docs/lesson-schema.md`](docs/lesson-schema.md) · exemple : [`docs/examples/day-01.fr.sample.json`](docs/examples/day-01.fr.sample.json).
+Mettre à jour le contenu sans toucher au code : [`docs/CONTENU.md`](docs/CONTENU.md).
+Présentation du projet et déploiement : [`README.md`](README.md).
 
 ---
 
@@ -148,6 +150,9 @@ en FR, AR/RTL et thème sombre, clavier, cibles tactiles, hors ligne) : voir
 | D37 | Pas d'`aria-label` sur un élément de rôle *paragraph* : le temps restant du minuteur passe par un texte `sr-only`, le chiffre visible devient `aria-hidden` | 2026-11-18 | ARIA interdit de nommer un rôle générique ; l'étiquette pouvait être ignorée, donc le minuteur annoncé comme un nombre nu |
 | D38 | Les helpers e2e **attendent la persistance** (progression visible à l'accueil) avant de rendre la main | 2026-11-18 | un rechargement enchaîné trop vite après « Valider ma journée » interrompait l'écriture IndexedDB et le Dossier arrivait vide — le test hors ligne échouait sur un faux défaut de l'application |
 | D39 | Le composant `ComingSoon` et les clés i18n `status.comingSoon` / `inPreparation` / `offlineReady` sont **supprimés** | 2026-11-18 | code mort depuis D34 ; la parité AR/FR reste assurée, les clés partent des deux langues |
+| D40 | Déploiement par `deploy.yml` sur poussée vers **`master`**, avec `npm run verify` **avant** le build | 2026-11-18 | la CI de branche peut être verte et `master` cassé après une fusion ; le déploiement refait la vérification au lieu de la supposer |
+| D41 | Les captures du README sont **produites par script** (`npm run screenshots`) sur le build de production, pas prises à la main | 2026-11-18 | elles montrent le vrai rendu, sur un projet de démonstration identique à celui des tests, et se régénèrent après un changement d'interface au lieu de vieillir en silence |
+| D42 | Le guide de mise à jour du contenu est **orienté tâches** (`docs/CONTENU.md`), distinct du schéma de référence (`docs/lesson-schema.md`) | 2026-11-18 | qui corrige une faute n'a pas à lire un schéma Zod ; chaque règle de validation y est donnée avec sa raison, pas seulement son libellé |
 
 ### Questions ouvertes
 - Chiffres occidentaux (`1 500 DA`) ou arabo-indiens (`١٥٠٠`) en arabe ? *(implémenté en occidentaux, décision D12 — à confirmer)*
@@ -180,10 +185,11 @@ npm run test             # Vitest
 npm run test:e2e         # Playwright, build + preview automatiques
 npm run validate:content # garde-fous ; schéma complet des leçons à la phase 3
 npm run check:bundle     # budget de poids, à lancer après `npm run build`
-npm run verify           # typecheck + lint + contenu + tests, en une commande
+npm run verify           # typecheck + lint + format + contenu + tests, en une commande
 ```
 
 Dans `apps/agri28` uniquement : `npm run icons` (régénère les icônes PWA),
+`npm run screenshots` (régénère les captures du README, `preview` devant tourner),
 `npm run format` / `npm run format:check`.
 
 ---
@@ -199,7 +205,7 @@ Dans `apps/agri28` uniquement : `npm run icons` (régénère les icônes PWA),
 | 4 | Contenu semaines 2, 3, 4 (un GO entre chaque) | **terminée — les 28 jours sont écrits, en attente de GO** |
 | 5 | Dossier de projet, exports `.docx`/`.xlsx`, carnet, badges, certificat, rappels | **terminée — en attente de GO** |
 | 6 | Qualité : accessibilité, performance, hors ligne, relecture du contenu et des chiffres | **terminée — en attente de GO** |
-| 7 | Déploiement et documentation | à faire |
+| 7 | Déploiement et documentation | **terminée — en attente de GO** |
 
 ### Méthode de travail imposée
 Une phase à la fois. À la fin de chaque phase : résumé, tests, commit, puis **arrêt et attente d'un GO explicite**.

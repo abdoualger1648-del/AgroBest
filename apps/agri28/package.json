@@ -18,8 +18,9 @@
     "test:e2e": "playwright test",
     "validate:content": "node --experimental-strip-types scripts/validate-content.ts",
     "icons": "node scripts/generate-icons.mjs",
+    "screenshots": "node scripts/screenshots.mjs",
     "check:bundle": "node scripts/check-bundle.mjs",
-    "verify": "npm run typecheck && npm run lint && npm run validate:content && npm run test"
+    "verify": "npm run typecheck && npm run lint && npm run format:check && npm run validate:content && npm run test"
   },
   "dependencies": {
     "dexie": "^4.4.7",

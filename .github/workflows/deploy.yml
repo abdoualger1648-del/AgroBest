@@ -1,0 +1,70 @@
+name: Déploiement
+
+# Publie l'application sur GitHub Pages.
+#
+# Prérequis, à faire une seule fois dans les réglages du dépôt :
+#   Settings → Pages → Build and deployment → Source = « GitHub Actions ».
+# Sans ce réglage, l'étape de déploiement échoue avec une erreur de permission.
+#
+# L'adresse publique est https://<compte>.github.io/WinBest/ — c'est elle qui
+# impose `base = '/WinBest/'` au build de production (décision D2).
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+# Un seul déploiement à la fois ; une nouvelle version attend la précédente
+# au lieu de l'annuler, pour ne jamais laisser Pages sur un build partiel.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  construire:
+    name: Construire
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Installer les dépendances
+        run: npm ci
+
+      # Le déploiement refait la vérification complète : rien ne part en
+      # production sans que les types, le lint, le contenu et les tests
+      # soient passés, même si la CI de la branche a déjà tourné.
+      - name: Vérifier
+        run: npm run verify
+
+      - name: Build de production
+        run: npm run build
+
+      - name: Budget de poids
+        run: npm run check:bundle
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/agri28/dist
+
+  deployer:
+    name: Déployer
+    needs: construire
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploiement.outputs.page_url }}
+    steps:
+      - id: deploiement
+        uses: actions/deploy-pages@v4

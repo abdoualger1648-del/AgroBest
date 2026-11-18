@@ -16,9 +16,7 @@ const SCREENS = [
 ];
 
 async function audit(page: Page) {
-  return new AxeBuilder({ page })
-    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-    .analyze();
+  return new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
 }
 
 function describeViolations(results: Awaited<ReturnType<typeof audit>>): string {

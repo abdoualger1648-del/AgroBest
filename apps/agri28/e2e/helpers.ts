@@ -17,9 +17,18 @@ export async function completeDayOne(page: Page): Promise<void> {
   await page.getByLabel(/qu'est-ce que vous voulez avoir réussi/).fill('Vendre 40 agneaux');
   await page.getByRole('button', { name: /Continuer/ }).click();
   const groups = page.getByRole('radiogroup');
-  await groups.nth(0).getByRole('radio', { name: /estimation, à confronter/ }).check();
-  await groups.nth(1).getByRole('radio', { name: /Rédiger la demande/ }).check();
-  await groups.nth(2).getByRole('radio', { name: /situation précise/ }).check();
+  await groups
+    .nth(0)
+    .getByRole('radio', { name: /estimation, à confronter/ })
+    .check();
+  await groups
+    .nth(1)
+    .getByRole('radio', { name: /Rédiger la demande/ })
+    .check();
+  await groups
+    .nth(2)
+    .getByRole('radio', { name: /situation précise/ })
+    .check();
   await page.getByRole('button', { name: /Continuer/ }).click();
   await page
     .getByRole('radiogroup', { name: 'Note de confiance' })
