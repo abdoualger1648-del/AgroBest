@@ -99,6 +99,9 @@
     "natureActivation": "الوصول إلى الدروس الثمانية والعشرين",
     "natureNiveau": "مستوى متعدّد الملفّات",
     "accorder": "منح المستوى",
-    "accorde": "مُنح المستوى."
+    "accorde": "مُنح المستوى.",
+    "notificationTitre": "طلبات قيد الانتظار",
+    "notificationCorps": "{{n}} طلبًا بانتظار ردّك.",
+    "enAttente": "{{n}} قيد الانتظار"
   }
 }

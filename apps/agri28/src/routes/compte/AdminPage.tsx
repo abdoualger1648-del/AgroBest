@@ -8,94 +8,85 @@ import { serviceCompte } from '@/compte';
 import { ErreurCompte, type DemandeEnAttente } from '@/compte/port';
 import { usePreferences } from '@/store/preferences';
 import { useCompte } from '@/store/compte';
+import { useAdministration } from '@/store/administration';
 import { useEtatCompte } from '@/hooks/useAcces';
 
-type Etat =
-  | { phase: 'chargement' }
-  | { phase: 'refuse' }
-  | { phase: 'pret'; demandes: DemandeEnAttente[] }
-  | { phase: 'erreur'; code: string };
-
 /**
- * Écran d'administration (D49) : la liste des demandes en attente, et un
- * bouton pour activer. Il n'est accessible qu'au compte désigné comme
- * administrateur dans Firestore — et les règles de sécurité refusent de
- * toute façon l'écriture à quiconque d'autre, l'écran n'étant qu'un confort.
+ * Écran d'administration (D49) : les demandes en attente, et un bouton pour
+ * y répondre. Les règles de sécurité Firestore refusent de toute façon
+ * l'écriture à quiconque d'autre — l'écran n'est qu'un confort.
  */
-/** Lit les droits puis les demandes. Ne touche à aucun état React. */
-async function lireEtat(): Promise<Etat> {
-  try {
-    if (!(await serviceCompte.estAdministrateur())) return { phase: 'refuse' };
-    return { phase: 'pret', demandes: await serviceCompte.listerDemandes() };
-  } catch (erreur) {
-    return { phase: 'erreur', code: erreur instanceof ErreurCompte ? erreur.code : 'inconnue' };
-  }
-}
-
 export function AdminPage() {
   const { t } = useTranslation('compte');
   const lang = usePreferences((state) => state.lang);
-  const [etat, setEtat] = useState<Etat>({ phase: 'chargement' });
-  const [activeRecemment, setActiveRecemment] = useState<DemandeEnAttente['nature'] | null>(null);
 
-  // L'administrateur est un compte comme les autres : il démarre en essai.
-  // Les règles l'autorisent à écrire le champ « actif » de n'importe quel
-  // compte, y compris le sien — lui imposer de se faire une demande à
-  // lui-même pour ensuite y répondre n'aurait servi à rien.
+  const phase = useAdministration((state) => state.phase);
+  const demandes = useAdministration((state) => state.demandes);
+  const code = useAdministration((state) => state.code);
+  const rafraichir = useAdministration((state) => state.rafraichir);
+  const marquerVu = useAdministration((state) => state.marquerVu);
+
+  const [accordeRecemment, setAccordeRecemment] = useState<DemandeEnAttente['nature'] | null>(null);
+
   const monEtat = useEtatCompte();
   const monUid = useCompte((state) => state.uid);
-  const rafraichir = useCompte((state) => state.rafraichir);
+  const rafraichirCompte = useCompte((state) => state.rafraichir);
   const jeSuisInactif = monEtat.statut !== 'actif' && monEtat.statut !== 'anonyme';
 
-  // L'effet n'écrit rien lui-même : il attend l'état calculé, et ne le pose
-  // que si l'écran est toujours affiché. Un écran quitté pendant la lecture
-  // ne provoque donc aucune écriture tardive.
+  // L'effet n'écrit aucun état lui-même : il déclenche la lecture, et le
+  // store s'en charge. Un écran quitté pendant la lecture ne provoque donc
+  // pas d'écriture tardive sur un composant démonté.
   useEffect(() => {
-    let affiche = true;
-    void lireEtat().then((prochain) => {
-      if (affiche) setEtat(prochain);
-    });
-    return () => {
-      affiche = false;
-    };
-  }, []);
+    void rafraichir();
+  }, [rafraichir]);
+
+  // Les demandes affichées cessent d'être « nouvelles » dès qu'on les voit.
+  useEffect(() => {
+    if (phase === 'pret') marquerVu();
+  }, [phase, demandes, marquerVu]);
 
   async function mActiver() {
     if (!monUid) return;
     try {
       await serviceCompte.activerCompte(monUid);
     } catch (erreur) {
-      setEtat({ phase: 'erreur', code: erreur instanceof ErreurCompte ? erreur.code : 'inconnue' });
+      useAdministration.setState({
+        phase: 'erreur',
+        code: erreur instanceof ErreurCompte ? erreur.code : 'inconnue',
+      });
       return;
     }
+    await rafraichirCompte();
     await rafraichir();
-    setEtat(await lireEtat());
   }
 
   async function accorder(demande: DemandeEnAttente) {
-    setActiveRecemment(demande.nature);
+    setAccordeRecemment(demande.nature);
     try {
       if (demande.nature === 'activation') await serviceCompte.activerCompte(demande.uid);
       else await serviceCompte.accorderNiveau(demande.uid);
     } catch (erreur) {
-      setEtat({ phase: 'erreur', code: erreur instanceof ErreurCompte ? erreur.code : 'inconnue' });
+      useAdministration.setState({
+        phase: 'erreur',
+        code: erreur instanceof ErreurCompte ? erreur.code : 'inconnue',
+      });
       return;
     }
-    setEtat(await lireEtat());
+    await rafraichir();
   }
 
-  if (etat.phase === 'chargement') {
+  if (phase === 'inconnu' || phase === 'chargement') {
     return <p className="text-muted">{t('admin.chargement')}</p>;
   }
-  if (etat.phase === 'refuse') {
+  if (phase === 'refuse') {
     return <PageHeader title={t('admin.titre')} description={t('admin.refus')} />;
   }
-  if (etat.phase === 'erreur') {
+  if (phase === 'erreur') {
     return (
       <>
         <PageHeader title={t('admin.titre')} />
         <p role="alert" className="text-sm font-medium text-danger">
-          {t(`erreurs.${etat.code}`)}
+          {t(`erreurs.${code ?? 'inconnue'}`)}
         </p>
       </>
     );
@@ -115,17 +106,17 @@ export function AdminPage() {
         </Card>
       ) : null}
 
-      {activeRecemment ? (
+      {accordeRecemment ? (
         <p role="status" className="mb-4 text-sm font-medium text-primary">
-          {activeRecemment === 'niveau' ? t('admin.accorde') : t('admin.active')}
+          {accordeRecemment === 'niveau' ? t('admin.accorde') : t('admin.active')}
         </p>
       ) : null}
 
-      {etat.demandes.length === 0 ? (
+      {demandes.length === 0 ? (
         <p className="text-muted">{t('admin.aucune')}</p>
       ) : (
         <ul className="flex flex-col gap-3">
-          {etat.demandes.map((demande) => (
+          {demandes.map((demande) => (
             <li key={`${demande.uid}-${demande.nature}`}>
               <Card>
                 <p className="font-semibold break-all">{demande.email}</p>

@@ -202,6 +202,10 @@ en FR, AR/RTL et thème sombre, clavier, cibles tactiles, hors ligne) : voir
 | D81 | Une variante **ne peut jamais réécrire le gabarit d'un prompt** — le schéma est `strict` et ne l'expose pas | 2026-11-18 | le gabarit porte les garde-fous (« ne donne aucune dose », « cite tes sources »). L'ouvrir aux variantes ouvrirait le seul endroit du contenu qui protège l'utilisateur. Un test vérifie qu'aucun gabarit ne bouge après application |
 | D82 | Une variante marquée `brouillon` **n'est pas affichée** ; l'application l'ignore | 2026-11-18 | la relecture humaine devient un verrou, pas un pense-bête : le contenu écrit par une IA ne peut pas atteindre un agriculteur avant qu'un humain ait retiré le drapeau. `validate:content` le signale en plus |
 | D83 | L'écriture assistée est un **script hors application** (`npm run variantes`), pas une fonction de l'application | 2026-11-18 | choix de l'utilisateur du projet. Aucune clé d'API dans l'APK — elle y serait extractible — aucun coût par utilisateur, et tous les garde-fous tiennent. Les deux langues sont demandées dans le même appel, ce qui garantit la parité AR/FR par construction, comme `emit.py`. Le cœur (instructions, analyse, cohérence) est éprouvé par 11 tests sans dépenser un centime |
+| D84 | Notifications des demandes **dans l'application seulement** : compteur dans le menu, notification à l'ouverture, liste relue à chaque visite | 2026-11-18 | choix de l'utilisateur du projet. Prévenir une application fermée exige un serveur — Cloud Functions pour un email, ou pour un envoi FCM — donc le plan Blaze et une carte bancaire. Mettre la clé d'envoi dans l'APK la rendrait extractible, et n'importe qui pourrait inonder l'administrateur |
+| D85 | Deux repères distincts : **« vu »** et **« déjà notifié »** | 2026-11-18 | la notification ne doit pas se répéter à chaque ouverture pour le même lot, mais le compteur doit rester tant que les demandes ne sont pas traitées. Un seul repère aurait forcé à choisir entre harceler et oublier |
+| D86 | Le repère « vu » retient la **date de la demande la plus récente**, jamais l'horloge | 2026-11-18 | prendre l'instant présent marquerait comme lues des demandes écrites pendant que l'écran chargeait |
+| D87 | `VITE_EMAIL_ADMIN` est câblé **aussi dans le déploiement web** | 2026-11-18 | il ne l'était que dans le workflow APK : sur le site, le bouton « Écrire à l'administrateur » ne pouvait donc jamais apparaître. C'est pourtant le seul chemin qui atteint une boîte mail sans plan payant |
 
 ### Questions ouvertes
 *Aucune pour l'instant.*
@@ -263,6 +267,7 @@ L'APK lui-même est assemblé par le workflow **APK** de GitHub Actions : voir
 | 8e | Édition web complète ; identifiant de compte lisible ; auto-activation de l'administrateur ; mot de passe oublié | terminée |
 | 9 | Plusieurs dossiers : niveau de compte, écran des dossiers, demande et octroi | terminée |
 | 10 | Parcours adapté au type d'activité ; écriture assistée des variantes | terminée |
+| 11 | Notifications des demandes pour l'administrateur | terminée |
 
 ### Méthode de travail imposée
 Une phase à la fois. À la fin de chaque phase : résumé, tests, commit, puis **arrêt et attente d'un GO explicite**.

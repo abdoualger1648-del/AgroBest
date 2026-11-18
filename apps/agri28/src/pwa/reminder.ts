@@ -80,3 +80,20 @@ export function showOpenReminder(input: OpenReminderInput): boolean {
   markNotified(now);
   return true;
 }
+
+/**
+ * Notification ponctuelle, sans la garde « une fois par jour » du rappel :
+ * l'appelant décide quand elle se justifie. Renvoie `true` si elle a
+ * réellement été montrée.
+ */
+export function afficherNotification(titre: string, corps: string, tag: string): boolean {
+  if (notificationSupport() !== 'granted') return false;
+  const api = notificationApi();
+  if (!api) return false;
+  try {
+    new api(titre, { body: corps, tag });
+  } catch {
+    return false;
+  }
+  return true;
+}

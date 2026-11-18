@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/PageHeader';
 import { ChevronEndIcon } from '@/components/Icon';
 import { useAdministrateur } from '@/hooks/useAdministrateur';
+import { useAdministration } from '@/store/administration';
 import { compteRequis, proposeApk } from '@/config';
 
 const LINKS = [
@@ -23,6 +24,7 @@ const LIEN_APK = { to: '/telecharger', labelKey: 'apk' } as const;
 export function MorePage() {
   const { t } = useTranslation(['nav', 'common', 'compte', 'telechargement', 'dossiers']);
   const administrateur = useAdministrateur();
+  const enAttente = useAdministration((state) => state.resume.total);
 
   const liens = [
     ...LINKS,
@@ -50,7 +52,16 @@ export function MorePage() {
                       ? t('dossiers:titre')
                       : t(`nav:${labelKey}`)}
               </span>
-              <ChevronEndIcon className="mirror shrink-0 text-muted" width="20" height="20" />
+              <span className="flex shrink-0 items-center gap-2">
+                {/* Le compteur n'est pas qu'une couleur : il porte son nombre,
+                    lisible par un lecteur d'écran comme à l'œil. */}
+                {labelKey === 'admin' && enAttente > 0 ? (
+                  <span className="rounded-full bg-primary px-2 py-0.5 text-sm font-semibold text-on-primary">
+                    {t('compte:admin.enAttente', { n: enAttente })}
+                  </span>
+                ) : null}
+                <ChevronEndIcon className="mirror text-muted" width="20" height="20" />
+              </span>
             </Link>
           </li>
         ))}

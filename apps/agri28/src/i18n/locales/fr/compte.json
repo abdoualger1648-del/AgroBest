@@ -99,6 +99,9 @@
     "natureActivation": "Accès aux 28 leçons",
     "natureNiveau": "Niveau multi-dossiers",
     "accorder": "Accorder le niveau",
-    "accorde": "Niveau accordé."
+    "accorde": "Niveau accordé.",
+    "notificationTitre": "Demandes en attente",
+    "notificationCorps": "{{n}} demande(s) attendent votre réponse.",
+    "enAttente": "{{n}} en attente"
   }
 }

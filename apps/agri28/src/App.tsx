@@ -11,6 +11,8 @@ import { currentDay } from '@/domain/course';
 import { toDayKey } from '@/domain/streak';
 import { useCompte } from '@/store/compte';
 import { GardeCompte } from '@/components/GardeCompte';
+import { useAdministration } from '@/store/administration';
+import { useAdministrateur } from '@/hooks/useAdministrateur';
 
 /**
  * Seul l'accueil est dans le paquet initial. Les autres écrans arrivent à la
@@ -77,12 +79,15 @@ function RouteFallback() {
 }
 
 export default function App() {
-  const { t } = useTranslation(['common', 'home']);
+  const { t } = useTranslation(['common', 'home', 'compte']);
   const syncSystemTheme = usePreferences((state) => state.syncSystemTheme);
   const reminderEnabled = usePreferences((state) => state.reminderEnabled);
   const progress = useCourse((state) => state.progress);
   const loaded = useCourse((state) => state.loaded);
   const chargerCompte = useCompte((state) => state.charger);
+  const administrateur = useAdministrateur();
+  const rafraichirDemandes = useAdministration((state) => state.rafraichir);
+  const notifierSiNouvelles = useAdministration((state) => state.notifierSiNouvelles);
 
   useEffect(() => watchSystemTheme(syncSystemTheme), [syncSystemTheme]);
 
@@ -91,6 +96,20 @@ export default function App() {
   useEffect(() => {
     void chargerCompte();
   }, [chargerCompte]);
+
+  // Demandes en attente, à l'ouverture, pour l'administrateur seul. Le web ne
+  // sait pas prévenir une application fermée sans serveur (D8) : on fait donc
+  // ce qui est honnête — on regarde à l'ouverture, et on ne prévient qu'une
+  // fois par lot de demandes nouvelles.
+  useEffect(() => {
+    if (!administrateur) return;
+    void (async () => {
+      await rafraichirDemandes();
+      notifierSiNouvelles(t('compte:admin.notificationTitre'), (nombre) =>
+        t('compte:admin.notificationCorps', { n: nombre }),
+      );
+    })();
+  }, [administrateur, rafraichirDemandes, notifierSiNouvelles, t]);
 
   // Rappel à l'ouverture : le web ne garantit pas mieux sans serveur (D8).
   useEffect(() => {

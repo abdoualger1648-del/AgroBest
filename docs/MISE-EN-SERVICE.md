@@ -242,6 +242,12 @@ dans les règles n'a pas pris.
 
 ## Ensuite, au quotidien
 
+**Être prévenu** : ouvrez l'application. L'entrée *Administration*, dans l'onglet *Plus*, affiche
+le nombre de demandes en attente, et une notification vous accueille quand il y en a de nouvelles
+depuis votre dernière visite. Rien ne peut vous atteindre application fermée sans un serveur
+(décision D84) — sauf l'email que l'utilisateur vous envoie depuis l'application, à condition que
+le secret `VITE_EMAIL_ADMIN` soit déposé.
+
 **Activer un utilisateur** : il vous écrit depuis l'application ; vous ouvrez *Plus →
 Administration*, vous le trouvez dans la liste, vous appuyez sur *Activer*. Il rouvre
 l'application connecté à internet, et ses 28 leçons s'ouvrent.

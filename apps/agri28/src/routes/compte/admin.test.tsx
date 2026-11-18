@@ -5,6 +5,7 @@ import { renderApp } from '@/test/renderApp';
 import { serviceEnMemoire } from '@/compte';
 import { oublierDroits } from '@/compte/droits';
 import { useCompte } from '@/store/compte';
+import { useAdministration } from '@/store/administration';
 import { db } from '@/db/db';
 import { clearProfile } from '@/db/repositories/profile';
 
@@ -40,6 +41,14 @@ beforeEach(async () => {
   service.reinitialiser();
   oublierDroits();
   await Promise.all([clearProfile(), db.compte.clear(), db.projects.clear()]);
+  localStorage.clear();
+  useAdministration.setState({
+    phase: 'inconnu',
+    demandes: [],
+    code: null,
+    vuJusquA: 0,
+    resume: { total: 0, activations: 0, niveaux: 0, nouvelles: 0 },
+  });
   useCompte.setState({
     etat: { statut: 'anonyme' },
     uid: null,
@@ -181,5 +190,83 @@ describe('écran d’administration', () => {
     await rouvrir('/compte/administration');
     await screen.findByText("Ce compte n'a pas les droits d'administration.");
     expect(screen.queryByRole('button', { name: 'Activer mon compte' })).not.toBeInTheDocument();
+  });
+});
+
+describe('notifications des demandes', () => {
+  /** Remplace l'API Notification de jsdom, qui ne la fournit pas. */
+  function poserNotification(permission: NotificationPermission) {
+    const montrees: { titre: string; corps?: string }[] = [];
+    class FausseNotification {
+      static permission = permission;
+      constructor(titre: string, options?: { body?: string }) {
+        montrees.push({ titre, corps: options?.body });
+      }
+    }
+    vi.stubGlobal('Notification', FausseNotification);
+    return montrees;
+  }
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('compte les demandes en attente dans le menu', async () => {
+    await demandeEnAttente();
+    await connecterAdmin();
+    await useAdministration.getState().rafraichir();
+
+    await rouvrir('/plus');
+    expect(await screen.findByText('1 en attente')).toBeInTheDocument();
+  });
+
+  it('ne montre aucun compteur quand il n’y a rien à traiter', async () => {
+    await connecterAdmin();
+    await useAdministration.getState().rafraichir();
+
+    await rouvrir('/plus');
+    expect(await screen.findByText('Administration')).toBeInTheDocument();
+    expect(screen.queryByText(/en attente/)).not.toBeInTheDocument();
+  });
+
+  it('prévient une fois par lot, pas à chaque ouverture', async () => {
+    const montrees = poserNotification('granted');
+    await demandeEnAttente();
+    await connecterAdmin();
+    await useAdministration.getState().rafraichir();
+
+    const titre = 'Demandes en attente';
+    const corps = (n: number) => `${String(n)} demande(s)`;
+    expect(useAdministration.getState().notifierSiNouvelles(titre, corps)).toBe(true);
+    // Deuxième ouverture, même lot : on ne harcèle pas.
+    expect(useAdministration.getState().notifierSiNouvelles(titre, corps)).toBe(false);
+    expect(montrees).toHaveLength(1);
+    expect(montrees[0]?.corps).toBe('1 demande(s)');
+  });
+
+  it('ne prévient pas sans permission accordée', async () => {
+    const montrees = poserNotification('default');
+    await demandeEnAttente();
+    await connecterAdmin();
+    await useAdministration.getState().rafraichir();
+
+    expect(useAdministration.getState().notifierSiNouvelles('t', () => 'c')).toBe(false);
+    expect(montrees).toHaveLength(0);
+  });
+
+  it('ouvrir l’écran fait retomber le compteur de nouveautés', async () => {
+    await demandeEnAttente();
+    await connecterAdmin();
+    await useAdministration.getState().rafraichir();
+    expect(useAdministration.getState().resume.nouvelles).toBe(1);
+
+    await rouvrir('/compte/administration');
+    await screen.findByText(UTILISATEUR);
+
+    await waitFor(() => {
+      expect(useAdministration.getState().resume.nouvelles).toBe(0);
+    });
+    // Le total, lui, reste : la demande n'est pas traitée pour autant.
+    expect(useAdministration.getState().resume.total).toBe(1);
   });
 });
