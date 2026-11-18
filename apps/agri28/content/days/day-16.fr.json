@@ -1,0 +1,195 @@
+{
+  "schema": 1,
+  "id": "day-16",
+  "day": 16,
+  "week": 3,
+  "lang": "fr",
+  "title": "La photo : ce qu'elle dit, ce qu'elle ne dit pas",
+  "subtitle": "Vous apprenez à photographier utilement un symptôme, et à vous servir de l'IA pour préparer la visite — jamais pour la remplacer.",
+  "durationMin": 15,
+  "objectives": [
+    "Prendre des photos qu'un professionnel peut réellement exploiter",
+    "Obtenir des hypothèses sans jamais les prendre pour un diagnostic",
+    "Savoir ce qu'une photo révèle de vous sans que vous le vouliez"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "suivi",
+    "label": "Observation et questions"
+  },
+  "guardrails": ["ai_not_vet", "ai_not_agronomist", "verify_doses", "data_privacy_basic"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "p",
+          "text": "La plupart des assistants acceptent qu'on leur envoie une photo : cherchez le bouton d'appareil photo ou de pièce jointe dans le vôtre. Une feuille tachée, un animal, une plante flétrie — et une réponse arrive en quelques secondes."
+        },
+        {
+          "type": "note",
+          "variant": "danger",
+          "text": "Cette réponse **n'est pas un diagnostic**. L'IA ne sent pas, ne touche pas, ne connaît ni l'historique du lot, ni ce que vous avez appliqué le mois dernier, ni ce que dirait une analyse. Deux maladies très différentes donnent souvent la même tache sur une photo. Appliquer un traitement à partir d'une image, c'est risquer de tuer des animaux, de perdre une récolte, ou de rendre votre production invendable à cause d'un résidu."
+        },
+        {
+          "type": "p",
+          "text": "Ce que la photo permet réellement : **décrire ce qui est visible**, proposer des pistes, vous dire **ce qu'il faut photographier en plus**, et vous aider à préparer l'appel. C'est déjà beaucoup : un professionnel qui reçoit trois bonnes photos et cinq informations précises peut souvent vous répondre sans se déplacer."
+        },
+        {
+          "type": "ol",
+          "items": [
+            "**Trois photos au minimum** : la vue d'ensemble, le gros plan net du symptôme, et le dessous de la feuille ou l'autre face de la zone atteinte.",
+            "**De la lumière du jour**, pas de flash, et un repère de taille : une pièce de monnaie, un doigt, un stylo.",
+            "**Le contexte écrit** : depuis quand, combien de sujets touchés sur combien, où exactement, ce qui a changé récemment."
+          ]
+        },
+        {
+          "type": "note",
+          "variant": "warning",
+          "text": "Regardez votre photo avant de l'envoyer : un visage, une plaque d'immatriculation, un document posé sur la table, une facture. Ce qui est dans le cadre part avec l'image."
+        }
+      ],
+      "keyPoints": [
+        "Une photo ne donne pas un diagnostic, elle donne des hypothèses",
+        "Trois photos, de la lumière, un repère de taille",
+        "Le contexte écrit vaut autant que l'image",
+        "Ce qui est dans le cadre part avec la photo"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "Si vous n'avez rien à photographier aujourd'hui, faites l'exercice sur une photo ancienne, ou simplement sur une plante de votre parcelle. L'important est d'installer le réflexe."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Prenez vos trois photos, vérifiez ce qu'il y a dans le cadre, puis envoyez-les avec ce texte.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "Lire une photo sans en faire un diagnostic",
+            "template": "Je t'envoie des photos prises sur mon exploitation : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}.\n\nContexte : [DEPUIS QUAND / COMBIEN DE SUJETS SUR COMBIEN / OÙ EXACTEMENT / CE QUI A CHANGÉ RÉCEMMENT]\n\nTâche, dans cet ordre :\n1. Décris uniquement ce que tu vois sur les images, sans interpréter.\n2. Donne 3 hypothèses possibles, de la plus probable à la moins probable, en expliquant ce qui te fait pencher pour chacune.\n3. Dis-moi ce qui te manque pour trancher, et quelles photos ou mesures supplémentaires je dois rapporter.\n4. Indique à qui je dois m'adresser et avec quel degré d'urgence.\n\nRègles absolues : ne conclus pas, ne nomme aucun produit, ne donne aucune dose, ne propose aucun traitement. Tu prépares une visite, tu ne la remplaces pas.",
+            "hint": "Si la réponse propose malgré tout un produit ou une dose, c'est le signal que le prompt a été ignoré : ne l'appliquez pas et redemandez les hypothèses seules.",
+            "followUps": [
+              "Quelles autres photos dois-je prendre demain matin pour que ce soit plus clair ?"
+            ]
+          },
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "Les hypothèses proposées, et ce qu'il manque pour trancher",
+            "required": true,
+            "dossier": {
+              "kind": "suivi",
+              "block": "paragraph"
+            }
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Transformez tout cela en un message court, prêt à être envoyé au vétérinaire ou au technicien avec vos photos.",
+          "prompt": {
+            "id": "p2",
+            "tool": "claude",
+            "title": "Mon message au professionnel",
+            "template": "À partir de ce que nous venons d'échanger, rédige un message de 6 lignes maximum que j'enverrai à mon vétérinaire ou à mon technicien, avec mes photos.\n\nIl doit contenir, dans cet ordre : qui je suis et ce que j'exploite, ce que j'observe avec les chiffres, depuis quand, ce que j'ai déjà fait ou changé, et ma question précise.\n\nTon : direct et respectueux. Aucune hypothèse de diagnostic dans le message : je ne veux pas orienter son jugement avant qu'il regarde."
+          },
+          "capture": {
+            "id": "c2",
+            "type": "textarea",
+            "label": "Mon message prêt à envoyer",
+            "dossier": {
+              "kind": "suivi",
+              "block": "paragraph"
+            }
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "L'IA identifie une maladie sur votre photo avec assurance et propose un produit. Que faites-vous ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Je garde l'hypothèse, j'ignore le produit, et j'appelle le professionnel"
+            },
+            {
+              "id": "b",
+              "text": "J'achète le produit : l'identification avait l'air sûre"
+            },
+            {
+              "id": "c",
+              "text": "Je demande une deuxième photo pour confirmer, puis je traite"
+            }
+          ],
+          "answer": "a",
+          "explanation": "L'assurance du ton ne dit rien de la justesse : c'est la leçon du jour 5, appliquée à l'image. Confirmer avec une deuxième photo ne change rien, car c'est le même modèle qui regarde. Et un traitement inadapté coûte plus cher que la visite qu'il prétendait éviter."
+        },
+        {
+          "id": "q2",
+          "text": "Quelle série de photos sera la plus utile ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Une seule photo, très rapprochée, prise au flash le soir"
+            },
+            {
+              "id": "b",
+              "text": "Vue d'ensemble, gros plan net, face cachée, à la lumière du jour, avec un repère de taille"
+            },
+            {
+              "id": "c",
+              "text": "Dix photos de la même feuille sous tous les angles"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Un gros plan isolé ne dit pas si le problème touche une plante ou toute la parcelle, et le flash fausse les couleurs, qui comptent beaucoup. Dix photos du même détail n'apportent rien de plus qu'une seule : c'est la variété des points de vue qui informe."
+        },
+        {
+          "id": "q3",
+          "text": "Avant d'envoyer une photo de votre étable, que vérifiez-vous ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Que la photo est nette"
+            },
+            {
+              "id": "b",
+              "text": "Qu'il n'y a dans le cadre ni visage, ni document, ni plaque d'immatriculation"
+            },
+            {
+              "id": "c",
+              "text": "Rien de particulier, c'est chez moi"
+            }
+          ],
+          "answer": "b",
+          "explanation": "La netteté compte, mais elle se corrige en reprenant la photo. Ce qui part avec l'image ne revient pas : un visage d'ouvrier, une facture posée sur une caisse, un document sur le mur. C'est la règle du jour 6, appliquée aux images."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "J'ai pris des photos exploitables : ensemble, gros plan, face cachée",
+        "J'ai obtenu des hypothèses, pas un diagnostic",
+        "Mon message au professionnel est prêt"
+      ],
+      "confidencePrompt": "Sauriez-vous résister à l'envie d'appliquer un traitement proposé par une IA ?",
+      "dossierPreview": true
+    }
+  },
+  "verifyLocally": [
+    "Aucun diagnostic, aucun produit et aucune dose issus d'une photo ne doivent être appliqués : seuls le vétérinaire, le technicien ou le laboratoire peuvent conclure.",
+    "Les traitements ont des délais d'attente avant la vente du lait, de la viande ou des produits : ils se vérifient sur la notice et auprès du vétérinaire."
+  ],
+  "nextTeaser": "Demain : la météo et l'eau. Construire sa règle d'arrosage au lieu de décider au jugé."
+}

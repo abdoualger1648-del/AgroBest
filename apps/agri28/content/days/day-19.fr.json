@@ -1,0 +1,192 @@
+{
+  "schema": 1,
+  "id": "day-19",
+  "day": 19,
+  "week": 3,
+  "lang": "fr",
+  "title": "Trois offres qui ne se comparent pas",
+  "subtitle": "Vous ramenez des offres disparates à une même grille, et vous écrivez la demande de prix qui obtient vraiment une réponse.",
+  "durationMin": 15,
+  "objectives": [
+    "Ramener des offres à la même unité et au même périmètre",
+    "Repérer les coûts cachés d'un achat",
+    "Écrire une demande de prix courte et précise"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "achats",
+    "label": "Achats et fournisseurs"
+  },
+  "guardrails": ["verify_prices", "ai_not_lawyer", "ai_not_accountant"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "example",
+          "label": "Sur le terrain",
+          "text": "Trois fournisseurs annoncent trois prix. Le premier est au quintal, départ magasin. Le deuxième à la tonne, livré. Le troisième au quintal aussi, mais payable à trente jours et en sacs de qualité différente. Comparer ces trois nombres entre eux n'a aucun sens."
+        },
+        {
+          "type": "p",
+          "text": "Comparer, c'est d'abord **ramener tout le monde à la même ligne** : même unité, même qualité, livraison comprise ou non, délai de paiement, date de disponibilité. C'est un travail d'écriture, et c'est exactement ce que l'IA fait le mieux."
+        },
+        {
+          "type": "ul",
+          "items": [
+            "**Les coûts cachés** : transport, chargement, sacs, pertes à la manipulation, déplacement pour aller chercher.",
+            "**Le délai** : un prix plus bas disponible dans trois semaines n'est pas une offre si vous en avez besoin jeudi.",
+            "**Le paiement** : payer à trente jours vaut quelque chose quand la trésorerie est tendue. Cela se compte."
+          ]
+        },
+        {
+          "type": "p",
+          "text": "Et avant de comparer, il faut **obtenir** les offres. Une demande de prix vague reçoit une réponse vague, ou pas de réponse. Une demande précise — quantité, qualité, lieu, date, mode de paiement — obtient un chiffre ferme, et vous place en position de négocier."
+        },
+        {
+          "type": "note",
+          "variant": "info",
+          "text": "L'IA ne connaît ni vos fournisseurs ni leurs prix. Elle met en forme, elle n'informe pas. Les prix, vous les demandez vous-même — et vous les datez, comme au jour 9."
+        }
+      ],
+      "keyPoints": [
+        "Même unité, même qualité, même périmètre : sinon on ne compare rien",
+        "Transport, pertes et délai de paiement font partie du prix",
+        "Une demande de prix précise obtient un chiffre ferme",
+        "L'IA met en forme ; les prix viennent de vos fournisseurs"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "On commence par la demande de prix, car c'est elle qui vous rapporte les offres. La grille de comparaison vient ensuite."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Rédigez votre demande de prix. Elle doit pouvoir être envoyée telle quelle par message.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "Ma demande de prix",
+            "template": "Tu écris pour un exploitant agricole en Algérie qui s'adresse à des fournisseurs locaux.\n\nMon exploitation : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}.\nCe que je veux acheter : [PRODUIT, QUANTITÉ, QUALITÉ SOUHAITÉE]\nQuand j'en ai besoin : [DATE]\n\nTâche : rédige un message court — 8 lignes maximum — à envoyer à trois fournisseurs, qui demande : le prix avec son unité, si la livraison est comprise et jusqu'où, le délai de disponibilité, les conditions de paiement, et la durée de validité de l'offre.\n\nTon : direct, poli, professionnel. Pas de formule longue.\n\nAjoute ensuite, séparément, les 3 questions à poser oralement que l'on oublie toujours.",
+            "hint": "Demander la durée de validité de l'offre change tout : cela vous donne le droit de réfléchir sans perdre le prix."
+          },
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "Ma demande de prix, prête à envoyer",
+            "required": true,
+            "dossier": {
+              "kind": "achats",
+              "block": "paragraph"
+            }
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Construisez la grille. Vous la remplirez au fur et à mesure des réponses.",
+          "prompt": {
+            "id": "p2",
+            "tool": "claude",
+            "title": "La grille qui rend les offres comparables",
+            "template": "Pour l'achat décrit plus haut, construis-moi une grille de comparaison de 3 offres.\n\nColonnes : critère, offre A, offre B, offre C.\n\nLignes, dans cet ordre : prix ramené à une unité commune, unité de référence choisie, qualité annoncée, livraison comprise jusqu'où, coût du transport s'il est à ma charge, pertes ou casse estimées, date de disponibilité, délai de paiement, durée de validité de l'offre, total ramené à la même base.\n\nAjoute en dessous : comment je calcule le « prix rendu ferme » à partir de ces lignes, en une phrase simple.\n\nRègles : aucune valeur chiffrée de ta part, toutes les cases restent vides. Et dis-moi quelle ligne est la plus souvent oubliée par les acheteurs."
+          },
+          "capture": {
+            "id": "c2",
+            "type": "textarea",
+            "label": "Ma grille de comparaison (critères retenus)",
+            "required": true,
+            "dossier": {
+              "kind": "achats",
+              "block": "list"
+            }
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Offre A : le quintal le moins cher, à retirer au magasin. Offre B : plus cher, livré chez vous. Laquelle est la moins chère ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "A, puisque le prix au quintal est plus bas"
+            },
+            {
+              "id": "b",
+              "text": "Impossible à dire tant que le transport, le temps passé et les pertes ne sont pas comptés"
+            },
+            {
+              "id": "c",
+              "text": "B, car la livraison coûte toujours plus que ce qu'on croit"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Le prix affiché n'est pas le prix payé. Aller chercher la marchandise, c'est du carburant, une demi-journée, parfois un véhicule loué et de la casse au chargement. Une fois tout ramené au « prix rendu ferme », le classement s'inverse plus souvent qu'on ne le croit."
+        },
+        {
+          "id": "q2",
+          "text": "Pourquoi demander la durée de validité d'une offre ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Pour pouvoir comparer et réfléchir sans que le prix change entre-temps"
+            },
+            {
+              "id": "b",
+              "text": "Par politesse commerciale"
+            },
+            {
+              "id": "c",
+              "text": "Pour obliger le fournisseur à baisser son prix"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Sans validité annoncée, l'offre peut changer le jour où vous décidez, et tout votre travail de comparaison tombe. C'est aussi un signal : un fournisseur qui refuse de s'engager même quelques jours vous apprend quelque chose sur la suite de la relation."
+        },
+        {
+          "id": "q3",
+          "text": "L'IA vous propose un prix de marché pour ce que vous achetez. Que faites-vous ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Je l'ignore et je m'en tiens aux offres que j'ai reçues"
+            },
+            {
+              "id": "b",
+              "text": "Je m'en sers comme référence pour négocier"
+            },
+            {
+              "id": "c",
+              "text": "Je refuse toute offre plus chère que ce prix"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Négocier avec un prix inventé vous affaiblit : le fournisseur sait, lui, ce que vaut sa marchandise cette semaine, et il verra tout de suite que votre référence ne tient pas. Votre vraie force de négociation, c'est la deuxième offre que vous avez en main."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "Ma demande de prix est écrite et prête à partir à trois fournisseurs",
+        "Ma grille de comparaison est prête à remplir",
+        "Je sais ce qu'est un prix rendu ferme"
+      ],
+      "confidencePrompt": "Vous sentez-vous mieux armé pour discuter un prix ?",
+      "dossierPreview": true
+    }
+  },
+  "verifyLocally": [
+    "Un engagement d'achat, un bon de commande ou un contrat de fourniture vous engagent juridiquement : en cas de montant important, faites relire par une personne compétente."
+  ],
+  "nextTeaser": "Demain : les stocks. Savoir ce qu'on a, où, depuis quand — et pouvoir le prouver."
+}

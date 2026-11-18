@@ -1,0 +1,196 @@
+{
+  "schema": 1,
+  "id": "day-21",
+  "day": 21,
+  "week": 3,
+  "lang": "fr",
+  "title": "Écrire à l'administration, en arabe et en français",
+  "subtitle": "Vous rédigez une demande administrative correcte dans les deux langues, et vous préparez la liste des pièces à faire confirmer au guichet.",
+  "durationMin": 15,
+  "objectives": [
+    "Connaître la structure d'une demande administrative qui aboutit",
+    "Obtenir la même lettre en arabe et en français sans en changer le fond",
+    "Savoir ce que l'IA ne peut pas me dire sur les pièces et les délais"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "libre",
+    "label": "Courriers et démarches"
+  },
+  "guardrails": ["data_privacy_basic", "verify_regulation", "ai_not_lawyer"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "p",
+          "text": "C'est peut-être le service le plus immédiat que l'IA rend à un exploitant : **écrire vite et correctement, dans les deux langues**. Une demande à la Chambre d'agriculture, un courrier à la subdivision agricole, une réclamation à un fournisseur, une lettre à l'APC."
+        },
+        {
+          "type": "p",
+          "text": "Une demande qui aboutit a toujours la même ossature :"
+        },
+        {
+          "type": "ol",
+          "items": [
+            "**Qui écrit** : nom, qualité d'exploitant, commune, et le numéro d'un dossier s'il en existe un.",
+            "**L'objet**, en une ligne : ce que vous demandez, pas votre histoire.",
+            "**Les faits**, courts et datés : ce qui s'est passé, quand.",
+            "**La demande précise** : une seule, clairement formulée.",
+            "**Les pièces jointes**, listées, et la formule de politesse."
+          ]
+        },
+        {
+          "type": "note",
+          "variant": "danger",
+          "text": "**L'IA ne connaît ni la liste exacte des pièces exigées, ni les délais, ni le guichet compétent.** Ces trois choses changent d'une wilaya à l'autre et d'une année à l'autre. Elle rédige ; c'est l'administration qui dit ce qu'elle attend. Et comme au jour 6 : aucun numéro de pièce d'identité, aucune photo de document dans la conversation."
+        },
+        {
+          "type": "p",
+          "text": "Sur le bilinguisme, un conseil pratique : faites rédiger dans la langue que vous maîtrisez le mieux, **puis demandez la traduction en précisant « sans rien ajouter ni retrancher »**. Vous gardez les deux versions : celle que vous déposez, et celle que vous comprenez."
+        }
+      ],
+      "keyPoints": [
+        "Qui écrit, objet, faits datés, demande unique, pièces jointes",
+        "L'IA rédige ; l'administration dit ce qu'elle exige",
+        "Traduire en demandant « sans rien ajouter ni retrancher »",
+        "Aucun numéro de pièce, aucune photo de document dans la conversation"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "Prenez une démarche réelle que vous repoussez depuis des semaines. C'est celle-là qu'on va écrire."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Faites rédiger votre demande. Laissez les crochets vides : vous les remplirez à la main.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "Ma demande administrative",
+            "template": "Tu rédiges des courriers administratifs pour un exploitant agricole en Algérie.\n\nMon exploitation : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}.\nDestinataire : [CHAMBRE D'AGRICULTURE / SUBDIVISION AGRICOLE / APC / AUTRE]\nCe que je demande : [DÉCRIVEZ EN UNE PHRASE]\nFaits utiles, avec leurs dates : [DÉCRIVEZ BRIÈVEMENT]\n\nTâche : rédige la lettre, une page maximum, avec : en-tête de l'expéditeur, objet en une ligne, exposé des faits daté, demande précise, liste des pièces jointes, formule de politesse.\n\nRègles strictes :\n- Mets [ENTRE CROCHETS] tout ce que je dois compléter moi-même : nom, adresse, numéros. N'invente aucune donnée personnelle.\n- Ne cite aucun article de loi, aucun décret, aucun délai réglementaire.\n- Pour la liste des pièces jointes, propose les pièces habituelles en écrivant clairement « à confirmer auprès du guichet ».\n- Ton respectueux, phrases courtes, aucune plainte, aucune menace.",
+            "hint": "Si la lettre cite un texte de loi, supprimez-le : vous n'avez pas à argumenter en droit pour une demande ordinaire."
+          },
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "Ma lettre (collez-la, puis complétez les crochets)",
+            "required": true,
+            "dossier": {
+              "kind": "libre",
+              "block": "paragraph"
+            }
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Demandez l'autre version linguistique, puis relisez les deux : elles doivent dire exactement la même chose.",
+          "prompt": {
+            "id": "p2",
+            "tool": "claude",
+            "title": "La même lettre dans l'autre langue",
+            "template": "Traduis la lettre que tu viens d'écrire dans l'autre langue (arabe administratif si elle est en français, français administratif si elle est en arabe).\n\nRègles :\n- Sans rien ajouter ni retrancher : même objet, mêmes faits, mêmes dates, même demande, mêmes pièces.\n- Garde les crochets [ ] aux mêmes endroits.\n- Emploie les formules administratives usuelles en Algérie, pas une traduction mot à mot.\n- Donne-moi ensuite, en trois lignes, les différences de ton entre les deux versions, pour que je sache ce que je dépose."
+          },
+          "capture": {
+            "id": "c2",
+            "type": "textarea",
+            "label": "Les pièces à faire confirmer au guichet, et la date où j'y vais",
+            "placeholder": "Exemple : passer mardi à la Chambre d'agriculture pour vérifier la liste exacte.",
+            "required": true,
+            "dossier": {
+              "kind": "libre",
+              "block": "list"
+            }
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "L'IA liste les pièces à joindre à votre dossier. Que valent ces listes ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Une liste de départ, à faire confirmer au guichet avant de se déplacer"
+            },
+            {
+              "id": "b",
+              "text": "La liste officielle : ces démarches sont standardisées"
+            },
+            {
+              "id": "c",
+              "text": "Une liste inutile"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Les pièces exigées varient d'une wilaya à l'autre, et évoluent. Partir avec la liste de l'IA, c'est risquer un second déplacement. L'appeler ou y passer une fois avant de constituer le dossier fait gagner une journée entière."
+        },
+        {
+          "id": "q2",
+          "text": "Pourquoi demander la traduction « sans rien ajouter ni retrancher » ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Parce qu'une IA a tendance à enrichir, reformuler, et parfois à ajouter une phrase que je n'ai pas écrite"
+            },
+            {
+              "id": "b",
+              "text": "Pour que la traduction aille plus vite"
+            },
+            {
+              "id": "c",
+              "text": "Ce n'est pas nécessaire"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Vous déposez un document au nom de votre exploitation : vous devez pouvoir répondre de chaque phrase. Une version enrichie peut vous engager sur un délai ou une promesse que vous n'aviez pas en tête, et vous ne le verrez pas si vous lisez moins bien cette langue."
+        },
+        {
+          "id": "q3",
+          "text": "Votre dossier exige une copie de votre pièce d'identité. Comment procédez-vous ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Je joins la copie au dossier papier, sans jamais la faire passer par l'IA"
+            },
+            {
+              "id": "b",
+              "text": "Je l'envoie à l'IA pour qu'elle recopie les informations"
+            },
+            {
+              "id": "c",
+              "text": "J'envoie seulement le numéro, pas la photo"
+            }
+          ],
+          "answer": "a",
+          "explanation": "La lettre n'a pas besoin de vos numéros pour être écrite : c'est tout l'intérêt des crochets, que vous remplissez à la main. Envoyer la photo ou le seul numéro revient au même : une donnée d'identité part sur un serveur, sans aucun gain."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "Ma lettre est écrite, avec les crochets à compléter",
+        "J'ai la version dans l'autre langue, identique sur le fond",
+        "Je sais quelles pièces faire confirmer, et quand j'y vais",
+        "Semaine 3 terminée : mon exploitation est suivie, pas seulement planifiée"
+      ],
+      "confidencePrompt": "Les démarches administratives vous paraissent-elles plus abordables qu'il y a une semaine ?",
+      "dossierPreview": true
+    }
+  },
+  "verifyLocally": [
+    "La liste des pièces, les délais et le guichet compétent se confirment auprès de la Chambre d'agriculture, de la subdivision agricole ou de l'APC de votre commune.",
+    "Pour un litige, un recours ou un engagement important, faites relire votre courrier par une personne compétente."
+  ],
+  "nextTeaser": "Semaine 4 : piloter. Comptabilité simplifiée, indicateurs, rapports, analyse de vos documents, et votre plan d'action à 90 jours."
+}

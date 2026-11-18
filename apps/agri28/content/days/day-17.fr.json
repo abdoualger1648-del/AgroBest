@@ -1,0 +1,194 @@
+{
+  "schema": 1,
+  "id": "day-17",
+  "day": 17,
+  "week": 3,
+  "lang": "fr",
+  "title": "Arroser ou attendre : se donner une règle",
+  "subtitle": "Vous écrivez votre règle de décision pour l'irrigation, celle que vous appliquerez sans hésiter quand vous serez pressé.",
+  "durationMin": 15,
+  "objectives": [
+    "Savoir où se prend la vraie information météo en Algérie",
+    "Écrire une règle « si… alors… » pour décider d'arroser",
+    "Distinguer ce qui se décide avec une règle de ce qui demande un technicien"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "calendrier",
+    "label": "Ma règle d'irrigation"
+  },
+  "guardrails": ["ai_not_agronomist", "verify_regulation", "verify_prices"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "p",
+          "text": "Première chose, nette : **une IA ne connaît pas la météo**. Elle n'a pas les relevés d'aujourd'hui, et quand elle en donne, elle les invente ou les tire d'un souvenir. En Algérie, l'information officielle vient de l'Office national de la météorologie, sur meteo.dz, qui publie aussi des bulletins spéciaux par wilaya quand un phénomène est attendu."
+        },
+        {
+          "type": "p",
+          "text": "Alors à quoi sert l'IA ici ? À quelque chose de plus durable qu'une prévision : **à écrire votre règle de décision**. Une règle, c'est une phrase du type « si… alors… » que vous appliquez sans réfléchir le jour où vous êtes fatigué."
+        },
+        {
+          "type": "example",
+          "label": "Une règle, ce n'est pas une prévision",
+          "text": "« Si le sol est sec sur la profondeur du doigt, qu'aucune pluie n'est annoncée dans les 48 heures et que la culture est à un stade sensible, alors j'arrose le soir. Sinon j'attends et je revérifie demain. » Cette phrase reste vraie toute la saison."
+        },
+        {
+          "type": "p",
+          "text": "Trois éléments entrent dans la décision : **l'état du sol** (ce que vous constatez), **le stade de la culture ou le besoin des animaux**, et **la prévision** (ce que dit l'ONM). L'IA assemble ces trois éléments en une règle lisible ; elle ne remplace aucun des trois."
+        },
+        {
+          "type": "note",
+          "variant": "warning",
+          "text": "Les volumes d'eau, les durées d'arrosage et les doses d'apport dépendent de votre sol, de votre matériel et de votre culture : ils se calent avec un technicien, pas avec une IA. Et le forage comme le prélèvement d'eau sont encadrés : renseignez-vous auprès des services compétents de votre wilaya."
+        }
+      ],
+      "keyPoints": [
+        "L'IA ne connaît pas la météo : la source officielle est l'ONM (meteo.dz)",
+        "Une règle « si… alors… » vaut mieux qu'une décision au jugé",
+        "Trois entrées : état du sol, stade de la culture, prévision",
+        "Volumes et durées se calent avec un technicien"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "Avant de commencer, ouvrez une fois le site de l'ONM ou l'application météo de votre téléphone : la règle que vous allez écrire s'appuiera dessus."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Faites écrire votre règle. Elle doit tenir en quelques lignes et ne contenir que des choses que vous pouvez constater vous-même.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "Ma règle d'irrigation",
+            "template": "Tu es un technicien en irrigation qui travaille avec de petites exploitations en Algérie.\n\nMon exploitation : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}.\nSource d'eau : {{project.waterSource}}. Nous sommes le {{today}}.\n\nTâche : écris-moi une règle de décision pour savoir si j'arrose ou si j'attends, sous la forme « si… et si… alors… sinon… ».\n\nContraintes :\n- La règle ne doit utiliser que des observations que je peux faire sans appareil : état du sol au doigt ou à la bêche, aspect des plantes ou comportement des animaux, et la prévision à 48 heures que je lis moi-même.\n- Donne-moi aussi les 3 situations où il ne faut PAS arroser, même si le sol paraît sec.\n- N'indique aucun volume d'eau, aucune durée d'arrosage, aucune dose : écris « à caler avec le technicien ».\n\nFormat : la règle en 5 lignes maximum, puis les 3 situations, puis une ligne sur ce qui change en période de forte chaleur.",
+            "followUps": [
+              "Et si je n'ai pas pu arroser pendant une semaine, par quoi je commence quand l'eau revient ?"
+            ]
+          },
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "Ma règle d'irrigation, écrite avec mes mots",
+            "required": true,
+            "dossier": {
+              "kind": "calendrier",
+              "block": "paragraph"
+            }
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Déterminez ce que vous relèverez chaque semaine pour appliquer la règle sans y repenser.",
+          "capture": {
+            "id": "c2",
+            "type": "text",
+            "label": "Ce que je relève chaque semaine, et le jour où je le fais",
+            "placeholder": "Exemple : état du sol au doigt sur 3 points, tous les lundis et jeudis matin.",
+            "required": true,
+            "dossier": {
+              "kind": "calendrier",
+              "block": "kv",
+              "key": "Relevé hebdomadaire"
+            }
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Vous demandez à l'IA le temps qu'il fera demain chez vous. Que vaut sa réponse ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Rien : la prévision se lit chez l'ONM ou dans une application météo"
+            },
+            {
+              "id": "b",
+              "text": "C'est fiable pour les grandes tendances"
+            },
+            {
+              "id": "c",
+              "text": "C'est fiable si elle annonce de la pluie"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Une prévision est une donnée du jour, produite par des modèles et des stations. Un assistant qui n'est pas connecté à ces données ne peut que produire une phrase plausible. Vous perdriez une irrigation sur une invention."
+        },
+        {
+          "id": "q2",
+          "text": "À quoi sert surtout une règle « si… alors… » ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "À décider vite et de la même façon, y compris les jours où l'on est fatigué ou pressé"
+            },
+            {
+              "id": "b",
+              "text": "À remplacer l'avis du technicien"
+            },
+            {
+              "id": "c",
+              "text": "À justifier mes choix auprès de l'acheteur"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Les mauvaises décisions d'irrigation se prennent rarement par ignorance : elles se prennent dans la précipitation, en fin de journée. Une règle écrite d'avance, à froid, vous évite de décider au jugé au moment où vous êtes le moins disponible."
+        },
+        {
+          "id": "q3",
+          "text": "L'IA vous donne un volume d'eau précis par arrosage. Comment le prenez-vous ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Comme une valeur à caler avec un technicien, selon mon sol et mon matériel"
+            },
+            {
+              "id": "b",
+              "text": "Je l'applique : c'est une donnée technique classique"
+            },
+            {
+              "id": "c",
+              "text": "Je l'applique en doublant, pour être sûr"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Le besoin en eau dépend du sol, du stade, du climat local et du système d'irrigation : quatre choses que l'IA ne connaît pas. Doubler par sécurité est encore pire : c'est de l'eau gaspillée, parfois une asphyxie des racines, et une facture ou un forage sollicité pour rien."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "Ma règle d'irrigation est écrite et tient en quelques lignes",
+        "Je sais où lire la prévision officielle",
+        "Je sais ce que je dois relever chaque semaine"
+      ],
+      "confidencePrompt": "Votre décision d'arroser vous paraît-elle plus sûre qu'avant ?",
+      "dossierPreview": true
+    }
+  },
+  "sources": [
+    {
+      "label": "Office national de la météorologie (ONM) — portail officiel des prévisions et des bulletins météorologiques spéciaux par wilaya. Portail cité par la presse algérienne ; non consulté depuis l'environnement de développement.",
+      "url": "https://www.meteo.dz/",
+      "checkedOn": "2026-11-18"
+    }
+  ],
+  "verifyLocally": [
+    "Volumes, durées et fréquences d'irrigation se calent avec un technicien, selon votre sol, votre matériel et votre culture.",
+    "Le forage et le prélèvement d'eau sont réglementés : renseignez-vous auprès des services compétents de votre wilaya avant tout aménagement."
+  ],
+  "nextTeaser": "Demain : l'énergie. Ce que le solaire change à une facture de pompage, et ce qu'il ne change pas."
+}

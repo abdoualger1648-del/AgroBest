@@ -48,6 +48,23 @@ const MONEY = /\d[\d\s.,\u00a0]*\s?(?:DA|DZD|دج|د\.ج)/u;
 const REGULATION =
   /\b(?:loi\s*n|décret|arrêté|journal\s+officiel|article\s+\d|قانون\s*رقم|مرسوم|الجريدة\s+الرسمية)/iu;
 
+/**
+ * Une phrase qui INTERDIT de citer un texte réglementaire ne l'affirme pas :
+ * « ne cite aucun décret » ne demande évidemment pas de source.
+ */
+const NEGATION =
+  /\b(?:aucun|aucune|ne\s+cite|n['’]invente|sans\s+citer|ne\s+mentionne|ne\s+donne)\b|لا\s+تذكر|لا\s+تخترع|دون\s+ذكر|بلا\s+ذكر/iu;
+
+/** Phrases d'un texte (découpage grossier, suffisant pour lever une négation). */
+function sentences(text: string): string[] {
+  return text.split(/(?<=[.!?؟।\n])\s+/u);
+}
+
+/** Vrai si le texte AFFIRME une référence réglementaire, négations exclues. */
+function assertsRegulation(text: string): boolean {
+  return sentences(text).some((sentence) => REGULATION.test(sentence) && !NEGATION.test(sentence));
+}
+
 const HTML_TAG = /<\/?[a-z][\s\S]*?>/i;
 const SHORTENERS = /(?:bit\.ly|tinyurl|t\.co|goo\.gl|lnkd\.in)/i;
 
@@ -173,7 +190,7 @@ for (const file of lessonFiles) {
       `${file} : un montant est cité sans entrée « sources » datée → « ${money.slice(0, 70)}… ».`,
     );
   }
-  const regulation = texts.find((text) => REGULATION.test(text));
+  const regulation = texts.find((text) => assertsRegulation(text));
   if (regulation && !hasSources) {
     fail(
       `${file} : un texte réglementaire est cité sans entrée « sources » datée → « ${regulation.slice(0, 70)}… ».`,

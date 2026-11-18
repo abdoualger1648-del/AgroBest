@@ -92,7 +92,7 @@ test.describe('parcours', () => {
 
   test('annonce un contenu encore absent pour un jour non écrit', async ({ page }) => {
     await createProject(page);
-    await page.goto('./jour/20');
+    await page.goto('./jour/26');
 
     await expect(async () => {
       await page.getByRole('button', { name: 'Ouvrir quand même' }).click();

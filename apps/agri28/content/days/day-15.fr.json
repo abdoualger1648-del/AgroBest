@@ -1,0 +1,188 @@
+{
+  "schema": 1,
+  "id": "day-15",
+  "day": 15,
+  "week": 3,
+  "lang": "fr",
+  "title": "Surveiller avant que ça arrive",
+  "subtitle": "Vous construisez votre liste de surveillance du mois, et vous apprenez à qui demander ce que l'IA ne peut pas savoir.",
+  "durationMin": 15,
+  "objectives": [
+    "Savoir ce qu'une IA peut apporter à une veille, et ce qu'elle ne peut pas",
+    "Établir ma liste de signes à surveiller ce mois-ci",
+    "Transformer une observation en question précise pour un professionnel"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "suivi",
+    "label": "Liste de surveillance"
+  },
+  "guardrails": ["ai_not_vet", "ai_not_agronomist", "verify_doses"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "p",
+          "text": "La veille, c'est savoir ce qui arrive **avant** que cela vous tombe dessus : une maladie qui circule dans la commune voisine, un ravageur qui apparaît avec la chaleur, un acheteur qui ferme."
+        },
+        {
+          "type": "note",
+          "variant": "danger",
+          "text": "Soyons nets : **une IA ne sait pas ce qui circule chez vous cette semaine.** Elle n'a ni les remontées des vétérinaires de votre wilaya, ni ce que votre voisin a vu hier dans son champ. Sur ce terrain-là, votre réseau humain lui est très supérieur."
+        },
+        {
+          "type": "p",
+          "text": "Votre vraie veille est faite de personnes : le technicien de la subdivision agricole, le vétérinaire, le vendeur d'intrants qui voit passer tout le monde, les exploitants voisins, la Chambre d'agriculture. Et d'un geste : **regarder, régulièrement, les bonnes choses**."
+        },
+        {
+          "type": "p",
+          "text": "L'IA sert à trois choses, et elles sont utiles : **dresser la liste de ce qu'il faut regarder** à cette saison, **expliquer un terme** que le technicien a employé, et **transformer votre observation en question précise** avant d'appeler."
+        },
+        {
+          "type": "example",
+          "label": "La différence",
+          "text": "« Mes brebis toussent, qu'est-ce que c'est ? » ne mène nulle part. « Depuis 4 jours, 6 brebis sur 60 toussent le matin, pas de fièvre apparente, même lot, même aliment depuis 3 semaines : quelles questions dois-je préparer pour le vétérinaire ? » vous fait gagner une visite."
+        }
+      ],
+      "keyPoints": [
+        "L'IA ne connaît pas l'actualité sanitaire de votre commune",
+        "Votre veille est d'abord humaine : technicien, vétérinaire, voisins",
+        "Surveiller, c'est regarder les mêmes choses à intervalles réguliers",
+        "Une observation chiffrée vaut dix inquiétudes"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "D'abord la liste de ce que vous regarderez ce mois-ci. Ensuite, l'exercice qui vous fera gagner du temps avec les professionnels."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Demandez votre liste de surveillance. Elle doit tenir sur un bout de papier, avec une fréquence pour chaque ligne.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "Ce que je dois regarder ce mois-ci",
+            "template": "Tu es un technicien agricole en Algérie.\n\nMon exploitation : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}.\nNous sommes le {{today}}.\n\nTâche : donne-moi ma liste de surveillance pour la période actuelle — ce que je dois regarder de mes propres yeux, et à quelle fréquence.\n\nFormat : un tableau à 4 colonnes — quoi regarder, où (parcelle, abreuvoir, bâtiment, stock…), à quelle fréquence, et le signe qui doit me faire appeler un professionnel immédiatement.\n\nRègles :\n- 8 lignes maximum, pour que la liste soit réellement tenue.\n- Aucun diagnostic, aucune dose, aucun produit : la dernière colonne dit « appeler le vétérinaire » ou « appeler le technicien », rien de plus.\n- Si la période de l'année change ce qu'il faut surveiller, dis-le.",
+            "followUps": ["Que devrai-je surveiller en plus le mois prochain ?"]
+          },
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "Ma liste de surveillance (une ligne par chose à regarder, avec sa fréquence)",
+            "required": true,
+            "dossier": {
+              "kind": "suivi",
+              "block": "list"
+            }
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Prenez une observation réelle, même banale, et faites-en une question précise. Remplacez l'exemple par votre situation.",
+          "prompt": {
+            "id": "p2",
+            "tool": "claude",
+            "title": "Préparer ma question au professionnel",
+            "template": "J'ai fait une observation sur mon exploitation ({{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}) :\n\n[DÉCRIVEZ ICI CE QUE VOUS AVEZ VU]\n\nTâche :\n1. Reformule mon observation de façon précise et chiffrée : depuis quand, combien de sujets ou de plants sur combien, où exactement, ce qui a changé récemment.\n2. Dis-moi quelles informations supplémentaires je devrais relever AVANT d'appeler, pour que l'appel soit utile.\n3. Rédige les 5 questions à poser au vétérinaire ou au technicien, dans l'ordre.\n\nRègles strictes : ne propose aucun diagnostic, aucun traitement, aucune dose. Ton rôle est de préparer l'échange, pas de le remplacer."
+          },
+          "capture": {
+            "id": "c2",
+            "type": "textarea",
+            "label": "Mes questions prêtes pour le vétérinaire ou le technicien",
+            "required": true,
+            "dossier": {
+              "kind": "suivi",
+              "block": "list"
+            }
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Vous demandez à l'IA s'il y a une maladie qui circule dans votre wilaya en ce moment. Que vaut sa réponse ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Rien sur l'actualité : elle n'a pas accès aux remontées sanitaires locales"
+            },
+            {
+              "id": "b",
+              "text": "C'est fiable si elle cite une source"
+            },
+            {
+              "id": "c",
+              "text": "C'est fiable pour les maladies connues"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Elle peut décrire une maladie connue en général, et c'est utile. Mais « ce qui circule maintenant, près de chez vous » est une information de terrain que seuls les vétérinaires, les services agricoles et vos voisins détiennent. Une réponse assurée sur ce point est une invention."
+        },
+        {
+          "id": "q2",
+          "text": "Quelle observation sera la plus utile au vétérinaire ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "« Mes bêtes ne vont pas bien depuis quelque temps »"
+            },
+            {
+              "id": "b",
+              "text": "« 6 sur 60, depuis 4 jours, le matin seulement, même lot, aliment inchangé »"
+            },
+            {
+              "id": "c",
+              "text": "« L'IA pense que c'est une maladie respiratoire »"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Des chiffres, une durée, une proportion : voilà ce qui oriente un professionnel. La première formulation ne dit rien. La troisième est pire que rien : elle installe une piste dans la tête du vétérinaire avant qu'il ait regardé, et peut lui faire perdre du temps."
+        },
+        {
+          "id": "q3",
+          "text": "Votre liste de surveillance compte vingt lignes à vérifier chaque jour. Que va-t-il se passer ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Une surveillance exemplaire"
+            },
+            {
+              "id": "b",
+              "text": "L'abandon en quelques jours, comme pour un tableau de suivi trop long"
+            },
+            {
+              "id": "c",
+              "text": "Rien, c'est le métier"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Même logique qu'au jour 14 : huit lignes regardées toute l'année valent mieux que vingt abandonnées en deux semaines. Mieux vaut surveiller peu de choses, mais aux bons moments et sans jamais sauter un tour."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "J'ai ma liste de surveillance du mois, avec une fréquence par ligne",
+        "Je sais ce que l'IA ne peut pas m'apprendre sur ma région",
+        "J'ai préparé des questions précises pour un professionnel"
+      ],
+      "confidencePrompt": "Vous sentez-vous capable de décrire une observation de façon utile à un professionnel ?",
+      "dossierPreview": true
+    }
+  },
+  "verifyLocally": [
+    "L'état sanitaire de votre région, les alertes en cours et les conduites à tenir s'obtiennent auprès du vétérinaire, de l'inspection vétérinaire et de la subdivision agricole de votre commune."
+  ],
+  "nextTeaser": "Demain : la photo. Ce qu'une image peut dire à l'IA, et surtout ce qu'elle ne peut pas."
+}

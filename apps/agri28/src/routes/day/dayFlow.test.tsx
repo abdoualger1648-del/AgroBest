@@ -163,7 +163,7 @@ describe('journée complète (jour 1)', () => {
 
   it('annonce clairement un contenu encore absent', async () => {
     const user = userEvent.setup();
-    await renderApp('fr', '/jour/20');
+    await renderApp('fr', '/jour/26');
 
     await user.click(screen.getByRole('button', { name: 'Ouvrir quand même' }));
 

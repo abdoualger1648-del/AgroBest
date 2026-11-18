@@ -10,7 +10,8 @@ import type { Lang } from '@/lib/lang';
 
 const WEEK_1 = [1, 2, 3, 4, 5, 6, 7];
 const WEEK_2 = [8, 9, 10, 11, 12, 13, 14];
-const WRITTEN = [...WEEK_1, ...WEEK_2];
+const WEEK_3 = [15, 16, 17, 18, 19, 20, 21];
+const WRITTEN = [...WEEK_1, ...WEEK_2, ...WEEK_3];
 const LANGS: Lang[] = ['fr', 'ar'];
 
 describe('contenu rédigé', () => {
@@ -183,6 +184,38 @@ describe('contenu rédigé', () => {
     for (const expected of ['budget', 'calendrier', 'equipe', 'risques', 'suivi']) {
       expect(kinds, expected).toContain(expected);
     }
+  });
+
+  it('couvre bien le programme de la semaine 3', async () => {
+    const titles = await Promise.all(
+      WEEK_3.map(async (day) => (await loadLesson(day, 'fr')).title.toLowerCase()),
+    );
+    const joined = titles.join(' | ');
+    expect(joined).toContain('surveiller'); // jour 15 : veille
+    expect(joined).toContain('photo'); // jour 16
+    expect(joined).toContain('arroser'); // jour 17 : météo et irrigation
+    expect(joined).toContain('solaire'); // jour 18 : énergie
+    expect(joined).toContain('offres'); // jour 19 : achats
+    expect(joined).toContain('prouver'); // jour 20 : stocks et traçabilité
+    expect(joined).toContain('administration'); // jour 21 : courriers
+  });
+
+  it('protège les sujets sensibles de la semaine 3', async () => {
+    // Photo : jamais de diagnostic ni de dose.
+    const photo = await loadLesson(16, 'fr');
+    expect(photo.guardrails).toContain('ai_not_vet');
+    expect(photo.guardrails).toContain('verify_doses');
+    expect(photo.guardrails).toContain('data_privacy_basic');
+    expect(photo.verifyLocally?.length).toBeGreaterThan(0);
+
+    // Veille sanitaire et traçabilité des traitements.
+    expect((await loadLesson(15, 'fr')).guardrails).toContain('ai_not_vet');
+    expect((await loadLesson(20, 'fr')).guardrails).toContain('verify_doses');
+
+    // Administratif : confidentialité et renvoi au droit.
+    const courrier = await loadLesson(21, 'fr');
+    expect(courrier.guardrails).toContain('data_privacy_basic');
+    expect(courrier.guardrails).toContain('ai_not_lawyer');
   });
 
   it('impose les garde-fous là où ils comptent', async () => {

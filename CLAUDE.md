@@ -129,6 +129,8 @@ tailles en `rem` · navigation clavier · jamais d'information portée par la se
 | D22 | **Ton** : français au **vouvoiement**, phrases courtes, vocabulaire de terrain, aucun anglicisme non expliqué. Arabe **standard simple**, avec les mots réellement employés en Algérie (مستثمرة, الغرفة الفلاحية, رزنامة), sans dialecte écrit | 2026-11-17 | l'utilisateur est débutant en IA, pas en agriculture : on ne lui explique jamais son métier, et on ne promet aucun miracle |
 | D23 | Nom public **Agricole DZ 360**. Les identifiants internes restent `agri28` (base IndexedDB, clés `localStorage`, nom du paquet) | 2026-11-17 | renommer la base effacerait les données des utilisateurs existants ; le nom public n'a pas à fuiter dans le stockage |
 | D25 | **Aucun prix n'est écrit dans le contenu.** L'IA dresse la liste des postes, l'utilisateur relève ses propres prix et les date | 2026-11-18 | aucune source publique fiable et à jour de prix agricoles algériens n'a pu être trouvée ; un prix écrit aujourd'hui serait faux dans six mois. Les circuits (CCLS pour l'orge subventionnée, ONAB pour le son) sont cités sans montant, avec source et avertissement |
+| D27 | La règle « texte réglementaire ⇒ source datée » ignore les **phrases négatives** (« ne cite aucun décret ») | 2026-11-18 | faux positif sur le jour 21, dont le prompt interdit justement de citer un texte. La contre-épreuve confirme qu'une affirmation (« le décret n° 23-15 fixe… ») est toujours refusée |
+| D28 | **Comptabilité simplifiée déplacée en semaine 4.** La semaine 3 compte 7 jours : veille, photo, météo/irrigation, énergie, achats, stocks, courriers | 2026-11-18 | le programme initial plaçait 8 sujets en semaine 3 ; la comptabilité précède naturellement les indicateurs et les rapports de la semaine 4 |
 | D26 | Champ **mois de démarrage** ajouté à la fiche projet | 2026-11-18 | le calendrier du jour 11 en dépend : sans lui, le prompt partait avec une variable vide |
 | D24 | Au démarrage, le **cache de peinture fait foi** s'il diffère du profil en base : il est appliqué puis réécrit dans IndexedDB | 2026-11-17 | corrige une perte réelle : le cache est écrit au clic, l'écriture IndexedDB arrive juste après ; fermer l'application entre les deux faisait perdre le choix de thème ou de langue |
 
@@ -172,7 +174,7 @@ Dans `apps/agri28` uniquement : `npm run icons` (régénère les icônes PWA),
 | 1 | Squelette : routage, i18n AR/FR + RTL, thème, PWA, écrans vides, tests de base | terminée |
 | 2 | Moteur de parcours : leçons, minuteur, validation, progression, série, verrouillage, profil projet | **terminée — en attente de GO** |
 | 3 | Contenu semaine 1 (jours 1-7), FR + AR | **terminée — en attente de GO** |
-| 4 | Contenu semaines 2, 3, 4 (un GO entre chaque) | **semaine 2 terminée — en attente de GO pour la semaine 3** |
+| 4 | Contenu semaines 2, 3, 4 (un GO entre chaque) | **semaines 2 et 3 terminées — en attente de GO pour la semaine 4** |
 | 5 | Dossier de projet, exports `.docx`/`.xlsx`, carnet, badges, certificat, rappels | à faire |
 | 6 | Qualité : accessibilité, performance, hors ligne, relecture du contenu et des chiffres | à faire |
 | 7 | Déploiement et documentation | à faire |

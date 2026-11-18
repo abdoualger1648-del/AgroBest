@@ -1,0 +1,179 @@
+{
+  "schema": 1,
+  "id": "day-18",
+  "day": 18,
+  "week": 3,
+  "lang": "fr",
+  "title": "L'énergie : ce que le solaire change vraiment",
+  "subtitle": "Vous réunissez les informations nécessaires pour comparer vos options de pompage, et vous calculez le retour avec vos propres chiffres.",
+  "durationMin": 15,
+  "objectives": [
+    "Savoir quelles informations réunir avant de comparer gasoil, solaire et réseau",
+    "Calculer un temps de retour à partir de mes propres dépenses",
+    "Reconnaître les promesses qu'on ne peut pas vérifier"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "libre",
+    "label": "Comparaison énergie"
+  },
+  "guardrails": ["ai_not_accountant", "verify_prices", "verify_regulation"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "p",
+          "text": "Dans beaucoup d'exploitations, **pomper l'eau est le premier poste d'énergie**. Trois voies existent : le groupe au gasoil, le raccordement au réseau électrique, le solaire. Chacune a sa logique de coût."
+        },
+        {
+          "type": "ul",
+          "items": [
+            "**Gasoil** : peu cher à installer, coûteux à faire tourner, et il faut aller chercher le carburant. Le coût est visible chaque semaine.",
+            "**Réseau** : dépend de la distance au branchement et des conditions de raccordement, qui se demandent au distributeur.",
+            "**Solaire** : cher à l'achat, presque rien à faire tourner, aucune course au carburant — mais il ne pompe pas la nuit, moins en hiver, et l'installation doit être dimensionnée pour votre profondeur et votre débit."
+          ]
+        },
+        {
+          "type": "note",
+          "variant": "warning",
+          "text": "Deux choses que l'IA **ne peut pas** faire ici : **dimensionner votre installation** — cela dépend de la profondeur du forage, du débit, de la hauteur de refoulement et de l'ensoleillement de votre site, et c'est le métier d'un installateur ou d'un bureau d'études — et **vous dire quelles aides existent aujourd'hui**. Les dispositifs de soutien changent ; la Direction des services agricoles, la Chambre d'agriculture et votre banque agricole sont les seuls interlocuteurs fiables sur ce point."
+        },
+        {
+          "type": "p",
+          "text": "Ce que l'IA fait très bien : **la liste des informations à réunir** avant de demander un devis, et **le calcul du temps de retour** une fois que vous avez vos chiffres. Le temps de retour, c'est le nombre de mois au bout duquel l'économie réalisée a remboursé l'investissement."
+        }
+      ],
+      "keyPoints": [
+        "Gasoil : peu cher à installer, cher à faire tourner. Solaire : l'inverse",
+        "Le dimensionnement est le métier d'un installateur, pas d'une IA",
+        "Les aides existantes se vérifient auprès de la DSA et de la banque",
+        "Le temps de retour se calcule avec vos factures, pas avec des moyennes"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "Même méthode qu'au jour 9 : d'abord la liste, ensuite vos chiffres, et seulement après le calcul."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Obtenez la liste de ce qu'il faut réunir. Elle vous servira telle quelle pour demander des devis sérieux.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "Ce que je dois réunir avant de comparer",
+            "template": "Tu es un conseiller en équipement agricole en Algérie.\n\nMon exploitation : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}. Source d'eau : {{project.waterSource}}.\n\nTâche : liste toutes les informations que je dois réunir pour comparer sérieusement trois options de pompage — groupe au gasoil, raccordement au réseau, pompage solaire.\n\nOrganise en trois blocs :\n1. Ce que je dois mesurer ou constater moi-même sur mon site.\n2. Ce que je dois demander à un installateur ou au distributeur d'électricité.\n3. Ce que je dois demander aux services agricoles ou à ma banque.\n\nRègles : n'écris aucun prix, aucune puissance, aucun rendement — seulement les questions à poser. Précise, pour chaque information, pourquoi elle change la comparaison.",
+            "hint": "Cette liste est votre meilleur outil de négociation : un installateur répond autrement à quelqu'un qui sait quoi demander."
+          },
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "Les informations qui me manquent, et à qui je vais les demander",
+            "required": true,
+            "dossier": {
+              "kind": "libre",
+              "block": "list"
+            }
+          }
+        },
+        {
+          "id": "s2",
+          "optional": true,
+          "instruction": "Quand vous aurez vos chiffres — votre dépense de carburant réelle et le devis d'une installation — revenez faire calculer le retour.",
+          "prompt": {
+            "id": "p2",
+            "tool": "claude",
+            "title": "Mon temps de retour, avec MES chiffres",
+            "template": "Voici MES chiffres relevés, avec leurs dates :\n\n- Ce que je dépense aujourd'hui pour pomper (carburant, entretien, déplacements), par mois : [À REMPLIR]\n- Nombre de mois d'utilisation dans l'année : [À REMPLIR]\n- Montant du devis de l'installation envisagée : [À REMPLIR]\n- Entretien annuel annoncé pour cette installation : [À REMPLIR]\n\nTâche :\n1. Calcule mon économie annuelle, puis le nombre de mois au bout desquels l'installation est remboursée.\n2. Refais le calcul dans deux cas défavorables : si mes dépenses actuelles sont en réalité 20 % plus basses, et si l'installation produit moins que prévu en hiver.\n3. Dis-moi quelle information, si elle est fausse, change le plus le résultat.\n\nRègle : n'ajoute aucun chiffre de ton côté. Si une donnée manque, demande-la."
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "L'IA vous indique la puissance de panneaux nécessaire pour votre forage. Que vaut cette indication ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Un ordre d'idée pour discuter, à faire confirmer par un installateur qui voit le site"
+            },
+            {
+              "id": "b",
+              "text": "Une base suffisante pour commander le matériel"
+            },
+            {
+              "id": "c",
+              "text": "Une valeur fiable si j'ai donné la profondeur"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Le dimensionnement dépend de la profondeur, du débit souhaité, de la hauteur de refoulement, du type de pompe et de l'ensoleillement réel du site — qu'aucune conversation ne peut constater. Une installation sous-dimensionnée ne monte pas l'eau ; surdimensionnée, elle coûte le double pour rien."
+        },
+        {
+          "id": "q2",
+          "text": "L'IA affirme qu'une aide publique couvre une partie de l'installation solaire. Que faites-vous ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Je le note comme une question à poser à la DSA, à la Chambre d'agriculture ou à ma banque"
+            },
+            {
+              "id": "b",
+              "text": "Je compte dessus dans mon calcul de retour"
+            },
+            {
+              "id": "c",
+              "text": "Je demande à l'IA le taux exact et les conditions"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Les dispositifs de soutien ouvrent, se modifient et se ferment : c'est exactement le type d'information qu'une IA cite de mémoire, parfois avec plusieurs années de retard. Bâtir un plan de financement sur une aide non confirmée est l'une des erreurs les plus coûteuses possibles."
+        },
+        {
+          "id": "q3",
+          "text": "Pourquoi refaire le calcul de retour dans des cas défavorables ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Pour savoir si la décision tient encore quand une hypothèse se révèle fausse"
+            },
+            {
+              "id": "b",
+              "text": "Pour obtenir un chiffre plus flatteur"
+            },
+            {
+              "id": "c",
+              "text": "Pour occuper le temps du calcul"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Un investissement qui n'est rentable que dans le meilleur des cas est un pari. S'il tient encore quand vos dépenses actuelles sont surestimées de 20 %, c'est une décision. C'est le même raisonnement que le registre des risques du jour 13."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "J'ai la liste des informations à réunir, et je sais à qui les demander",
+        "Je sais que le dimensionnement et les aides ne viennent pas de l'IA",
+        "Je sais comment calculer mon temps de retour quand j'aurai les chiffres"
+      ],
+      "confidencePrompt": "Vous sentez-vous prêt à discuter d'égal à égal avec un installateur ?",
+      "dossierPreview": true
+    }
+  },
+  "verifyLocally": [
+    "Le dimensionnement d'une installation de pompage relève d'un installateur ou d'un bureau d'études qui visite le site.",
+    "Les dispositifs d'aide à l'équipement changent : seules la Direction des services agricoles, la Chambre d'agriculture et votre banque font foi."
+  ],
+  "nextTeaser": "Demain : acheter. Comparer trois offres qui ne se comparent pas, et écrire une demande de prix qui obtient une réponse."
+}

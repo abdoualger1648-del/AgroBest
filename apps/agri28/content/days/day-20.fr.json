@@ -1,0 +1,186 @@
+{
+  "schema": 1,
+  "id": "day-20",
+  "day": 20,
+  "week": 3,
+  "lang": "fr",
+  "title": "Savoir ce qu'on a, et pouvoir le prouver",
+  "subtitle": "Vous mettez en place une fiche de stock tenable, et vous apprenez à identifier vos lots pour retrouver l'origine de ce que vous vendez.",
+  "durationMin": 15,
+  "objectives": [
+    "Tenir une fiche de stock qui ne demande pas plus d'une minute",
+    "Appliquer la règle du premier entré, premier sorti",
+    "Numéroter mes lots pour pouvoir remonter à l'origine"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "achats",
+    "label": "Stocks et lots"
+  },
+  "guardrails": ["verify_regulation", "ai_not_vet", "verify_doses"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "p",
+          "text": "Trois questions suffisent à définir un stock bien tenu : **qu'est-ce que j'ai, où, et depuis quand ?** La troisième est celle qu'on oublie, et c'est elle qui coûte : un aliment humide au fond du hangar, un produit périmé, des semences de l'an dernier mélangées aux nouvelles."
+        },
+        {
+          "type": "p",
+          "text": "La règle qui règle presque tout : **premier entré, premier sorti**. On consomme le plus ancien d'abord. Elle paraît évidente et elle est rarement appliquée, parce que le plus ancien est au fond et le plus récent devant la porte."
+        },
+        {
+          "type": "p",
+          "text": "La **traçabilité**, c'est la même idée appliquée à ce que vous vendez : savoir de quel lot vient ce que vous livrez. Un numéro de lot n'est rien d'autre qu'une étiquette : une date, une parcelle ou un bâtiment, un numéro d'ordre. Trois éléments, écrits au feutre sur le sac ou le registre."
+        },
+        {
+          "type": "note",
+          "variant": "warning",
+          "text": "Pour les produits vétérinaires et les traitements, la traçabilité n'est pas une option de confort : elle conditionne le respect des délais d'attente avant de vendre le lait, la viande ou la récolte. Ce que vous avez donné, à quel animal ou quelle parcelle, et quel jour : cela s'écrit, et cela se vérifie avec votre vétérinaire."
+        },
+        {
+          "type": "p",
+          "text": "L'IA sert ici à concevoir **la fiche la plus courte possible** et la règle de numérotation. Elle ne sait pas ce qu'il y a dans votre hangar : ce relevé-là, personne ne le fera à votre place."
+        }
+      ],
+      "keyPoints": [
+        "Qu'est-ce que j'ai, où, depuis quand",
+        "Premier entré, premier sorti : le plus ancien se consomme d'abord",
+        "Un numéro de lot : une date, un lieu, un numéro d'ordre",
+        "Traitements : ce qui est donné s'écrit, à cause des délais d'attente"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "Choisissez les trois produits dont la perte vous coûterait le plus : c'est sur eux qu'on met une fiche, pas sur tout le hangar."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Faites concevoir la fiche de stock. Exigez qu'elle tienne en une minute par mouvement.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "Ma fiche de stock minimale",
+            "template": "Tu conçois des outils simples pour un exploitant agricole en Algérie, qui travaille sur papier ou sur téléphone.\n\nMon exploitation : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}.\n\nTâche :\n1. Dis-moi quels sont, pour ce type d'exploitation, les 3 à 5 produits ou intrants dont le stock mérite vraiment une fiche, et pourquoi ceux-là.\n2. Propose une fiche de stock de 5 colonnes maximum, remplissable en moins d'une minute à chaque entrée ou sortie.\n3. Donne la règle en une phrase pour savoir quand commander avant d'être à court.\n4. Donne une règle simple de numérotation des lots, utilisable au feutre sur un sac.\n\nRègles : aucun chiffre inventé, aucune quantité, aucune durée de conservation précise — pour la conservation, renvoie-moi à l'étiquette du produit et au fournisseur.",
+            "followUps": [
+              "Comment adapter cette fiche si plusieurs personnes se servent dans le stock ?"
+            ]
+          },
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "Ma fiche de stock : produits suivis et colonnes retenues",
+            "required": true,
+            "dossier": {
+              "kind": "achats",
+              "block": "list"
+            }
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Fixez votre règle de lot, et notez-la. Elle ne vaut que si elle est toujours la même.",
+          "capture": {
+            "id": "c2",
+            "type": "text",
+            "label": "Ma règle de numérotation des lots",
+            "placeholder": "Exemple : date de récolte + lettre de la parcelle + numéro d'ordre du jour.",
+            "required": true,
+            "dossier": {
+              "kind": "achats",
+              "block": "kv",
+              "key": "Numérotation des lots"
+            }
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Vous recevez un nouveau lot d'aliment. Où le posez-vous ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Devant, c'est plus pratique pour servir"
+            },
+            {
+              "id": "b",
+              "text": "Derrière l'ancien, pour que l'ancien parte en premier"
+            },
+            {
+              "id": "c",
+              "text": "Peu importe, c'est le même produit"
+            }
+          ],
+          "answer": "b",
+          "explanation": "C'est tout l'enjeu du premier entré, premier sorti, et la raison pour laquelle on perd des sacs entiers : poser le neuf devant demande trente secondes de plus aujourd'hui et évite de jeter le vieux dans six mois. Même produit ne veut pas dire même âge."
+        },
+        {
+          "id": "q2",
+          "text": "À quoi sert un numéro de lot le jour où un problème apparaît ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "À retrouver d'où vient le produit, quand et où il a été produit, et ce qui a été fait dessus"
+            },
+            {
+              "id": "b",
+              "text": "À faire sérieux auprès de l'acheteur"
+            },
+            {
+              "id": "c",
+              "text": "À rien tant qu'il n'y a pas de contrôle"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Un lot, c'est une mémoire. Sans numéro, un problème sur une livraison oblige à suspecter toute la production ; avec un numéro, il se circonscrit à ce qui vient de cette parcelle, ce jour-là. Cela protège l'acheteur, et surtout cela vous protège."
+        },
+        {
+          "id": "q3",
+          "text": "Pour les traitements vétérinaires, pourquoi noter la date et l'animal concerné ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "À cause des délais d'attente avant de vendre le lait ou la viande"
+            },
+            {
+              "id": "b",
+              "text": "Pour calculer le coût du traitement"
+            },
+            {
+              "id": "c",
+              "text": "Ce n'est utile que pour les grands élevages"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Un délai d'attente mal respecté, c'est un résidu dans le lait ou la viande : un risque pour celui qui consomme, et un lot refusé ou retiré pour vous. Le coût du traitement est une raison secondaire, et la taille de l'élevage n'y change rien — une seule bête traitée suffit à poser le problème."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "J'ai choisi les produits dont je suivrai le stock",
+        "Ma fiche tient en cinq colonnes et une minute",
+        "Ma règle de numérotation des lots est écrite"
+      ],
+      "confidencePrompt": "Sauriez-vous dire aujourd'hui ce que vous avez en stock et depuis quand ?",
+      "dossierPreview": true
+    }
+  },
+  "verifyLocally": [
+    "Les obligations d'enregistrement et de traçabilité dépendent de votre activité et de vos circuits de vente : vérifiez auprès des services vétérinaires, de la Direction des services agricoles ou de votre acheteur.",
+    "Les délais d'attente après traitement figurent sur la notice du produit et se confirment avec le vétérinaire."
+  ],
+  "nextTeaser": "Demain, fin de la semaine : écrire à l'administration, en arabe et en français, sans y passer la soirée."
+}
