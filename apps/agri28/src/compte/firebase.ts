@@ -227,10 +227,18 @@ export class ServiceFirebase implements ServiceCompte {
   listerDemandes(): Promise<DemandeEnAttente[]> {
     return this.appel(async (modules) => {
       const { firestore, base } = modules;
+      // Un tri simple, et le tri de l'état côté application.
+      //
+      // Combiner `where('actif', '==', false)` et `orderBy('demandeLe')`
+      // obligerait Firestore à un index COMPOSITE, qu'il faudrait créer à la
+      // main dans la console : sans lui la requête échoue, et l'écran
+      // n'afficherait qu'un « quelque chose n'a pas fonctionné » sans dire
+      // quoi. Un tri sur un seul champ utilise l'index automatique, donc rien
+      // à créer. Le filtrage se fait ici, sur un nombre de comptes qui reste
+      // à l'échelle d'une distribution de la main à la main.
       const resultat = await firestore.getDocs(
         firestore.query(
           firestore.collection(base, COLLECTION_UTILISATEURS),
-          firestore.where('actif', '==', false),
           firestore.orderBy('demandeLe', 'asc'),
         ),
       );
@@ -241,9 +249,11 @@ export class ServiceFirebase implements ServiceCompte {
             uid: document.id,
             email: typeof donnees.email === 'string' ? donnees.email : '',
             demandeLe: enMillisecondes(donnees.demandeLe) ?? 0,
+            dejaActif: donnees.actif === true,
           };
         })
-        .filter((demande) => demande.demandeLe > 0);
+        .filter((demande) => demande.demandeLe > 0 && !demande.dejaActif)
+        .map(({ dejaActif: _ignore, ...demande }) => demande);
     });
   }
 

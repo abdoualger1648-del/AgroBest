@@ -15,11 +15,32 @@ réussi — si vous ne le voyez pas, arrêtez-vous là plutôt que de continuer.
 |---|---|
 | Projet Firebase `agricole360-4a470` | créé |
 | Authentication → E-mail/Mot de passe | **activé** (vérifié) |
-| Base Firestore | **créée**, et fermée aux visiteurs non connectés (vérifié) |
+| Base Firestore | **créée** |
+| Règles de sécurité Firestore | **publiées et éprouvées** — voir plus bas |
+| GitHub Pages | **activé**, source « GitHub Actions » |
+| Dépôt renommé en `AgroBest` | fait |
+| Site public | **en ligne** : https://abdoualger1648-del.github.io/AgroBest/ |
+| Premier APK | **construit** (3,8 Mo), signé en *debug* |
+
+Les règles ont été éprouvées contre la vraie base avec un compte jetable : s'inscrire et demander
+son activation sont **acceptés** ; se créer déjà actif, s'activer soi-même après coup et lister
+tous les comptes sont **refusés**. La protection tient.
+
+> **Un reliquat à effacer** : le document `utilisateurs/CfuXxhmWRcODMxb7qvcKhMIU3Wo1` est le
+> résidu de cette épreuve. Les règles interdisent la suppression depuis l'application, donc il
+> faut l'effacer dans la console : *Firestore → Données →* collection `utilisateurs` → ce
+> document → menu ⋮ → *Supprimer*.
 
 ---
 
-## Étape 1 — Autoriser GitHub Pages à publier (2 min)
+## Il reste quatre étapes
+
+Les étapes 1, 2 et 4 ci-dessous sont **faites**. Elles restent décrites pour mémoire, et pour le
+jour où il faudra tout refaire sur un autre compte.
+
+---
+
+## Étape 1 — Autoriser GitHub Pages à publier (2 min) — FAIT
 
 Ouvrez **https://github.com/abdoualger1648-del/AgroBest/settings/pages**
 
@@ -33,7 +54,7 @@ de permission.
 
 ---
 
-## Étape 2 — Publier les règles de sécurité Firestore (3 min)
+## Étape 2 — Publier les règles de sécurité Firestore (3 min) — FAIT
 
 **C'est l'étape la plus importante du document.** Sans elle, personne ne peut créer de compte,
 et en mode permissif n'importe qui pourrait s'activer soi-même.
@@ -100,7 +121,7 @@ avec *New repository secret*, ces cinq secrets :
 
 ---
 
-## Étape 4 — Fusionner dans `master` (5 min)
+## Étape 4 — Fusionner dans `master` (5 min) — FAIT
 
 C'est ce qui débloque le reste : le site se publie, et le bouton de construction de l'APK
 apparaît. GitHub ne propose ces deux choses que pour la branche par défaut.
@@ -125,7 +146,7 @@ Ce site est la **vitrine** : les trois premières leçons, sans compte. C'est vo
 
 ---
 
-## Étape 5 — Construire le premier APK (10 min)
+## Étape 5 — Construire l'APK (10 min) — fait une fois, à refaire après l'étape 3
 
 Ouvrez **https://github.com/abdoualger1648-del/AgroBest/actions/workflows/apk.yml**
 
@@ -138,8 +159,10 @@ abouti — ne distribuez pas ce fichier.
 Le fichier est en bas de la page, sous **Artifacts** : `agricole-dz-360-1.0.0.apk`. Il est dans
 une archive `.zip` ; ouvrez-la pour en sortir l'APK.
 
-> C'est le premier assemblage Android du projet. Si Gradle échoue, envoyez-moi l'étape en rouge :
-> c'est le seul morceau que je n'ai pas pu exécuter ici.
+Le premier assemblage a réussi : l'APK fait 3,8 Mo. Il est **signé en debug** tant que l'étape 3
+n'est pas faite — installable pour essayer, mais à ne pas distribuer.
+
+> L'artefact est un fichier `.zip` : ouvrez-le pour en sortir l'APK, Android n'installe pas un zip.
 
 ---
 

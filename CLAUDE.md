@@ -187,6 +187,7 @@ en FR, AR/RTL et thème sombre, clavier, cibles tactiles, hors ligne) : voir
 | D67 | Le site publié est l'édition **vitrine**, pas l'édition complète | 2026-11-18 | publier les 28 leçons librement dans un navigateur viderait de son sens l'activation construite en 8a et 8b |
 | D68 | Dépôt renommé **AgroBest** ; le chemin de base devient `/AgroBest/` | 2026-11-18 | choix de l'utilisateur du projet, pour l'adresse publique `https://abdoualger1648-del.github.io/AgroBest/`. Le nom public de l'application (Agricole DZ 360) et les identifiants internes (`agri28`, `dz.agricole360.app`) ne changent pas |
 | D69 | Le serveur d'aperçu est lié explicitement à **`127.0.0.1`**, et sa sortie est capturée en CI | 2026-11-18 | la CI échouait depuis sa toute première exécution, et je ne l'avais jamais regardée : je vérifiais en local et je supposais la CI identique. Cause réelle : `vite preview` écoutait sur « localhost », que le runner GitHub résout en **IPv6 `::1`**, alors que Playwright interroge `127.0.0.1` — ici `localhost` résout en IPv4, d'où un échec invisible en local. C'est la sortie du serveur, que Playwright ignore par défaut, qui l'a montré ; elle reste capturée pour que la prochaine panne soit lisible du premier coup. En CI le serveur ne reconstruit plus non plus : l'étape précédente vient de le faire |
+| D70 | La liste des demandes d'activation **trie sur un seul champ** et filtre l'état côté application | 2026-11-18 | combiner `where('actif','==',false)` et `orderBy('demandeLe')` exige de Firestore un **index composite**, à créer à la main dans la console : sans lui la requête échoue et l'écran n'affiche qu'un « quelque chose n'a pas fonctionné » sans dire quoi. Un tri sur un seul champ utilise l'index automatique. Trouvé en relisant le code, avant que l'écran soit utilisé pour la première fois |
 
 ### Questions ouvertes
 *Aucune pour l'instant.*
@@ -236,16 +237,16 @@ L'APK lui-même est assemblé par le workflow **APK** de GitHub Actions : voir
 |---|---|---|
 | 0 | Cadrage : architecture, modèle de données, arborescence, schéma de leçon, stratégie RTL/i18n | terminée |
 | 1 | Squelette : routage, i18n AR/FR + RTL, thème, PWA, écrans vides, tests de base | terminée |
-| 2 | Moteur de parcours : leçons, minuteur, validation, progression, série, verrouillage, profil projet | **terminée — en attente de GO** |
-| 3 | Contenu semaine 1 (jours 1-7), FR + AR | **terminée — en attente de GO** |
-| 4 | Contenu semaines 2, 3, 4 (un GO entre chaque) | **terminée — les 28 jours sont écrits, en attente de GO** |
-| 5 | Dossier de projet, exports `.docx`/`.xlsx`, carnet, badges, certificat, rappels | **terminée — en attente de GO** |
-| 6 | Qualité : accessibilité, performance, hors ligne, relecture du contenu et des chiffres | **terminée — en attente de GO** |
-| 7 | Déploiement et documentation | **terminée — en attente de GO** |
-| 8a | Compte, essai de 3 leçons, verrouillage, écrans, service en mémoire | **terminée — en attente de GO** |
-| 8b | Branchement de Firebase, règles de sécurité, écran d'administration | **terminée — en attente de GO** |
-| 8c | Capacitor, APK signé construit par GitHub Actions | **terminée — en attente de GO** |
-| 8d | Vitrine limitée aux 3 leçons, page de téléchargement, documentation | **terminée — en attente de GO** |
+| 2 | Moteur de parcours : leçons, minuteur, validation, progression, série, verrouillage, profil projet | terminée |
+| 3 | Contenu semaine 1 (jours 1-7), FR + AR | terminée |
+| 4 | Contenu semaines 2, 3, 4 (un GO entre chaque) | terminée |
+| 5 | Dossier de projet, exports `.docx`/`.xlsx`, carnet, badges, certificat, rappels | terminée |
+| 6 | Qualité : accessibilité, performance, hors ligne, relecture du contenu et des chiffres | terminée |
+| 7 | Déploiement et documentation | terminée |
+| 8a | Compte, essai de 3 leçons, verrouillage, écrans, service en mémoire | terminée |
+| 8b | Branchement de Firebase, règles de sécurité, écran d'administration | terminée |
+| 8c | Capacitor, APK signé construit par GitHub Actions | terminée |
+| 8d | Vitrine limitée aux 3 leçons, page de téléchargement, documentation | terminée |
 
 ### Méthode de travail imposée
 Une phase à la fois. À la fin de chaque phase : résumé, tests, commit, puis **arrêt et attente d'un GO explicite**.
