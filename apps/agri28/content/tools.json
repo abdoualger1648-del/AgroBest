@@ -46,16 +46,16 @@
     },
     {
       "id": "notebooklm",
-      "name": "NotebookLM",
+      "name": "NotebookLM (Gemini Notebook)",
       "vendor": "Google",
       "url": "https://notebooklm.google.com",
       "freeTier": true,
       "availabilityDZ": "a_verifier",
-      "checkedOn": "2026-11-17",
+      "checkedOn": "2026-11-18",
       "source": null,
       "note": {
-        "fr": "Utilisé en semaine 4 pour l'analyse de documents. Disponibilité en Algérie à confirmer avant publication.",
-        "ar": "يُستعمل في الأسبوع الرابع لتحليل الوثائق. يجب تأكيد توفّره في الجزائر قبل النشر."
+        "fr": "Outil d'analyse de documents. Plusieurs sources secondaires indiquent un renommage en « Gemini Notebook » à l'été 2026 et des limites d'usage modifiées ; aucune page officielle n'a pu être consultée. Disponibilité en Algérie à confirmer avant publication.",
+        "ar": "أداة لتحليل الوثائق. تشير عدّة مصادر ثانوية إلى إعادة تسميتها «Gemini Notebook» في صيف 2026 وإلى تعديل حدود الاستعمال؛ ولم يتسنَّ الاطّلاع على أي صفحة رسمية. يجب تأكيد توفّرها في الجزائر قبل النشر."
       }
     }
   ]

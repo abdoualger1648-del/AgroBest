@@ -46,6 +46,15 @@
       "usedFor": ["days/day-17"],
       "confidence": "moyenne",
       "caveat": "Portail cité par la presse algérienne comme source officielle ; non consulté directement depuis l'environnement de développement (domaine hors de la liste réseau autorisée)."
+    },
+    {
+      "id": "notebooklm-renommage",
+      "label": "Renommage annoncé de NotebookLM en « Gemini Notebook » (été 2026) et évolution des limites du plan gratuit — blogs spécialisés, aucune page officielle consultée",
+      "url": "https://dupple.com/learn/is-notebooklm-free",
+      "checkedOn": "2026-11-18",
+      "usedFor": ["tools.json", "days/day-25"],
+      "confidence": "faible",
+      "caveat": "Sources secondaires concordantes mais non officielles. Le contenu du jour 25 est écrit sans dépendre du nom ni des quotas de l'outil."
     }
   ]
 }

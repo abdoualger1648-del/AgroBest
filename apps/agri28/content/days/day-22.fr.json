@@ -1,0 +1,187 @@
+{
+  "schema": 1,
+  "id": "day-22",
+  "day": 22,
+  "week": 4,
+  "lang": "fr",
+  "title": "Du cahier au coût de revient",
+  "subtitle": "Vous calculez ce que vous coûte réellement une unité produite, et vous découvrez les dépenses que tout le monde oublie.",
+  "durationMin": 15,
+  "objectives": [
+    "Calculer mon coût de revient par unité à partir de mes propres lignes",
+    "Repérer les dépenses que j'oublie de compter",
+    "Savoir où s'arrête la gestion et où commence la comptabilité officielle"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "suivi",
+    "label": "Coût de revient"
+  },
+  "guardrails": ["ai_not_accountant", "verify_prices"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "p",
+          "text": "Tout ce qui suit repose sur le tableau du jour 14. Si vous l'avez tenu, même imparfaitement, vous avez de quoi travailler. Sinon, la leçon vous dira exactement quoi noter à partir de demain."
+        },
+        {
+          "type": "p",
+          "text": "Le **coût de revient**, c'est ce que vous coûte une unité : un kilo, un litre, une tête, une caisse. On l'obtient en divisant tout ce qui a été dépensé par tout ce qui a été produit, sur la même période. C'est le chiffre le plus utile de toute l'exploitation, parce qu'il répond à la seule question qui compte : **est-ce que je vends au-dessus ou en-dessous de ce que ça me coûte ?**"
+        },
+        {
+          "type": "p",
+          "text": "Trois dépenses sont oubliées presque systématiquement, et ce sont elles qui transforment une marge en perte :"
+        },
+        {
+          "type": "ul",
+          "items": [
+            "**Votre propre travail** et celui de la famille. Il est gratuit en trésorerie, jamais en réalité.",
+            "**L'usure du matériel** : un tracteur, une pompe, un bâtiment s'usent et devront être remplacés. Il faut en mettre une part sur chaque campagne.",
+            "**Le transport et les déplacements** : les allers-retours pour l'aliment, le vétérinaire, l'administration, le marché."
+          ]
+        },
+        {
+          "type": "note",
+          "variant": "warning",
+          "text": "Attention à la frontière : ce que vous faites ici est une **comptabilité de gestion**, pour décider. Ce n'est ni un bilan, ni une déclaration fiscale. Pour vos obligations, c'est un comptable, et lui seul."
+        }
+      ],
+      "keyPoints": [
+        "Coût de revient = tout ce qui est dépensé ÷ tout ce qui est produit",
+        "Votre travail, l'usure du matériel et les déplacements se comptent",
+        "Le but : savoir si je vends au-dessus ou en-dessous",
+        "Gestion pour décider, comptable pour déclarer"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "Le calcul se fait avec vos lignes. Si votre mois est incomplet, prenez ce que vous avez : un chiffre approximatif mais à vous vaut mieux qu'un chiffre exact mais étranger."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Collez vos lignes du mois et demandez le calcul détaillé, étape par étape, pour pouvoir le refaire seul le mois prochain.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "Mon coût de revient, étape par étape",
+            "template": "Tu aides un exploitant agricole en Algérie à faire sa comptabilité de gestion. Tu n'es pas son comptable.\n\nMon exploitation : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}.\n\nVoici MES lignes du mois écoulé (dépenses et production) :\n[COLLEZ ICI VOS LIGNES : date, nature, poste, montant, quantité produite]\n\nTâche :\n1. Classe mes dépenses en deux groupes : celles qui varient avec la production, et celles que je paie quoi qu'il arrive.\n2. Calcule mon coût de revient par unité produite, en montrant chaque étape du calcul pour que je puisse le refaire seul.\n3. Dis-moi quelles dépenses semblent absentes de mes lignes et que j'aurais dû compter.\n4. Termine par une phrase : à partir de quel prix de vente je gagne de l'argent, sur ce mois-là uniquement.\n\nRègles : n'ajoute aucun chiffre de ton côté, n'estime rien. Si une donnée manque, demande-la au lieu de l'inventer.",
+            "hint": "La liste des dépenses absentes est souvent la partie la plus rentable de l'exercice."
+          },
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "Mon coût de revient du mois, et comment je l'ai obtenu",
+            "required": true,
+            "dossier": {
+              "kind": "suivi",
+              "block": "paragraph"
+            }
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Confrontez maintenant ce chiffre à votre prix de vente réel. C'est le moment de vérité de tout le parcours.",
+          "capture": {
+            "id": "c2",
+            "type": "text",
+            "label": "Mon coût de revient face à mon prix de vente : ce que j'en conclus",
+            "placeholder": "Exemple : je vends au-dessus, mais la marge disparaît si l'aliment augmente.",
+            "required": true,
+            "dossier": {
+              "kind": "suivi",
+              "block": "kv",
+              "key": "Coût de revient / prix de vente"
+            }
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Faut-il compter votre propre travail dans le coût de revient ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Oui : sinon le coût paraît plus bas qu'il n'est, et la comparaison avec une autre option est faussée"
+            },
+            {
+              "id": "b",
+              "text": "Non : je ne me paie pas, cela ne sort pas de la caisse"
+            },
+            {
+              "id": "c",
+              "text": "Seulement si j'embauche quelqu'un"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Un coût de revient qui ignore votre travail vous fait croire que l'activité est plus rentable qu'elle ne l'est — et il devient impossible de comparer avec une solution où vous paieriez quelqu'un, ou avec une autre activité. Vous pouvez compter votre travail à un tarif modeste, mais comptez-le."
+        },
+        {
+          "id": "q2",
+          "text": "L'IA calcule votre coût de revient et obtient un chiffre. Que vaut-il ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Il vaut ce que valent mes lignes : si elles sont justes, il l'est aussi"
+            },
+            {
+              "id": "b",
+              "text": "Il est toujours approximatif"
+            },
+            {
+              "id": "c",
+              "text": "Il peut servir pour ma déclaration fiscale"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Ici l'IA ne fait qu'une division, et une division se vérifie. Toute l'incertitude est dans vos lignes, pas dans le calcul. En revanche, ce chiffre sert à décider, pas à déclarer : un bilan obéit à des règles comptables que cet exercice ne respecte pas."
+        },
+        {
+          "id": "q3",
+          "text": "Votre tracteur a coûté cher il y a trois ans. Comment entre-t-il dans le coût de revient de cette année ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Pas du tout, il est déjà payé"
+            },
+            {
+              "id": "b",
+              "text": "En totalité cette année"
+            },
+            {
+              "id": "c",
+              "text": "Pour une part seulement, répartie sur sa durée d'utilisation"
+            }
+          ],
+          "answer": "c",
+          "explanation": "L'ignorer donne un coût trop bas, et vous serez pris de court le jour du remplacement. Le compter en entier sur une seule année écrase le résultat de cette année-là et fausse tout autant. Une part chaque année, c'est ce qui permet d'anticiper le rachat."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "J'ai calculé mon coût de revient par unité",
+        "Je connais les dépenses que j'avais oubliées",
+        "Je sais si je vends au-dessus ou en-dessous de mon coût"
+      ],
+      "confidencePrompt": "Sauriez-vous refaire ce calcul seul le mois prochain ?",
+      "dossierPreview": true
+    }
+  },
+  "verifyLocally": [
+    "Cette comptabilité de gestion ne remplace ni un bilan, ni une déclaration fiscale : adressez-vous à un comptable pour vos obligations."
+  ],
+  "nextTeaser": "Demain : les quatre chiffres qui suffisent à piloter une exploitation, et le seuil qui doit vous faire réagir."
+}

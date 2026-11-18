@@ -1,0 +1,185 @@
+{
+  "schema": 1,
+  "id": "day-23",
+  "day": 23,
+  "week": 4,
+  "lang": "fr",
+  "title": "Quatre chiffres suffisent",
+  "subtitle": "Vous choisissez les quatre indicateurs qui pilotent votre exploitation, et vous fixez vous-même le seuil qui doit vous faire réagir.",
+  "durationMin": 15,
+  "objectives": [
+    "Choisir quatre indicateurs, pas davantage",
+    "Savoir calculer chacun à partir de mon tableau de suivi",
+    "Fixer un seuil d'alerte par indicateur"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "suivi",
+    "label": "Mes indicateurs"
+  },
+  "guardrails": ["ai_not_accountant", "ai_not_agronomist", "verify_prices"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "p",
+          "text": "Un tableau de bord n'est pas un mur de chiffres. C'est **le minimum qu'il faut regarder pour savoir si l'on dérive**. Quatre indicateurs suffisent, un par famille :"
+        },
+        {
+          "type": "ol",
+          "items": [
+            "**Un chiffre de coût** : votre coût de revient par unité, celui d'hier.",
+            "**Un chiffre de production** : ce que vous sortez — litres par bête, kilos par hectare, caisses par semaine.",
+            "**Un chiffre de perte** : mortalité, casse, invendus, refus. C'est celui qu'on évite de regarder, et c'est souvent le plus parlant.",
+            "**Un chiffre d'argent** : la marge, ou simplement le solde du mois."
+          ]
+        },
+        {
+          "type": "p",
+          "text": "Un indicateur n'a de valeur que s'il est **comparé**. Comparé à quoi ? À votre propre mois précédent, à la même période de l'an dernier, ou au seuil que vous avez fixé. Jamais à une moyenne nationale trouvée on ne sait où."
+        },
+        {
+          "type": "note",
+          "variant": "info",
+          "text": "**Le seuil, c'est vous qui le fixez.** Une IA peut proposer une méthode de calcul ; elle ne sait pas à partir de quel niveau de mortalité ou de quelle baisse de marge vous devez vous inquiéter dans votre région et avec vos moyens. Ce seuil se décide avec votre expérience, votre technicien ou votre vétérinaire."
+        }
+      ],
+      "keyPoints": [
+        "Quatre familles : coût, production, perte, argent",
+        "Un indicateur se compare à soi-même, pas à une moyenne",
+        "Le chiffre de perte est celui qu'on évite de regarder",
+        "Le seuil d'alerte se fixe avec votre expérience, pas avec l'IA"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "D'abord les quatre indicateurs et leur mode de calcul. Ensuite, vous fixez vos seuils — et c'est cette seconde partie qui rend le tableau de bord vivant."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Faites proposer vos quatre indicateurs, calculables à partir du tableau que vous tenez déjà.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "Mes quatre indicateurs",
+            "template": "Tu conçois un tableau de bord simple pour un exploitant agricole en Algérie.\n\nMon exploitation : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}.\nMon objectif : {{project.objective}}\nJe tiens déjà un tableau avec : date, nature (dépense ou recette), poste, montant, et une donnée technique.\n\nTâche : propose-moi EXACTEMENT quatre indicateurs, un par famille : coût, production, perte, argent.\n\nPour chacun : son nom en langage simple, la formule de calcul à partir de mes colonnes, la fréquence de calcul, et ce que signifie concrètement une hausse ou une baisse.\n\nRègles :\n- Pas plus de quatre. Si tu en vois cinq, choisis et explique pourquoi tu écartes le cinquième.\n- Ne me donne AUCUNE valeur cible ni aucun seuil chiffré : c'est moi qui les fixerai, avec mon technicien.\n- Les formules ne doivent utiliser que ce que je note déjà.",
+            "followUps": [
+              "Si je ne devais en garder qu'un seul pendant six mois, lequel et pourquoi ?"
+            ]
+          },
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "Mes quatre indicateurs et leur formule",
+            "required": true,
+            "dossier": {
+              "kind": "suivi",
+              "block": "list"
+            }
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Fixez vos seuils. Partez de ce que vous avez vécu les années passées : à partir de quel niveau vous aviez un problème ?",
+          "capture": {
+            "id": "c2",
+            "type": "textarea",
+            "label": "Mon seuil d'alerte pour chaque indicateur, et ce que je fais si je le franchis",
+            "placeholder": "Exemple : si la mortalité dépasse ce que j'ai connu l'an dernier à la même période, j'appelle le vétérinaire le jour même.",
+            "required": true,
+            "dossier": {
+              "kind": "suivi",
+              "block": "list"
+            }
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Pourquoi se limiter à quatre indicateurs ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Parce qu'un tableau qu'on ne regarde pas ne sert à rien, et qu'au-delà on ne regarde plus"
+            },
+            {
+              "id": "b",
+              "text": "Parce que quatre est le maximum calculable"
+            },
+            {
+              "id": "c",
+              "text": "Parce que les banques en demandent quatre"
+            }
+          ],
+          "answer": "a",
+          "explanation": "C'est la même logique que les cinq colonnes du jour 14 et les huit lignes de surveillance du jour 15 : la contrainte est votre temps, pas la technique. Quatre chiffres suivis douze mois valent mieux que douze chiffres suivis deux mois."
+        },
+        {
+          "id": "q2",
+          "text": "À quoi comparer votre rendement du mois ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "À une moyenne nationale donnée par l'IA"
+            },
+            {
+              "id": "b",
+              "text": "À mon mois précédent, à la même période de l'an dernier, et à mon seuil"
+            },
+            {
+              "id": "c",
+              "text": "À ce que raconte le voisin"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Une moyenne nationale mélange des exploitations qui n'ont ni votre sol, ni votre eau, ni vos moyens : s'y comparer décourage ou endort. Vos propres séries, elles, parlent de vous. Le voisin est utile pour comprendre une saison, pas pour mesurer la vôtre."
+        },
+        {
+          "id": "q3",
+          "text": "Qui doit fixer le seuil d'alerte de mortalité ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Moi, avec mon expérience et l'avis du vétérinaire"
+            },
+            {
+              "id": "b",
+              "text": "L'IA, qui connaît les normes du secteur"
+            },
+            {
+              "id": "c",
+              "text": "Personne : on réagit quand le problème est visible"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Un seuil dépend de votre race, de votre conduite, de votre région et de ce que vous pouvez absorber financièrement. Attendre que le problème devienne visible, c'est précisément ce qu'un seuil sert à éviter : quand on le voit sans compter, il est déjà installé."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "J'ai quatre indicateurs, pas plus",
+        "Je sais calculer chacun avec mes colonnes",
+        "Chaque indicateur a un seuil et une action associée"
+      ],
+      "confidencePrompt": "Ces quatre chiffres vous suffiraient-ils pour savoir si votre exploitation va bien ?",
+      "dossierPreview": true
+    }
+  },
+  "verifyLocally": [
+    "Les seuils techniques (mortalité, rendement, pertes acceptables) se fixent avec votre vétérinaire ou votre technicien, selon votre conduite et votre région."
+  ],
+  "nextTeaser": "Demain : transformer ces chiffres en un rapport mensuel écrit en dix minutes."
+}

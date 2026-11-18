@@ -1,0 +1,184 @@
+{
+  "schema": 1,
+  "id": "day-24",
+  "day": 24,
+  "week": 4,
+  "lang": "fr",
+  "title": "Le rapport mensuel en dix minutes",
+  "subtitle": "Vous fabriquez un modèle de rapport réutilisable, et vous le remplissez une première fois avec vos chiffres du mois.",
+  "durationMin": 15,
+  "objectives": [
+    "Savoir ce qu'un rapport mensuel doit contenir, et surtout ce qu'il ne doit pas",
+    "Obtenir un modèle que je réutiliserai chaque mois",
+    "Faire ressortir les anomalies plutôt que de décrire le mois"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "rapport",
+    "label": "Rapport mensuel"
+  },
+  "guardrails": ["ai_not_accountant", "verify_prices"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "p",
+          "text": "Un rapport mensuel n'est pas un récit du mois. C'est un document court qui répond à trois questions : **où j'en suis, ce qui a dévié, ce que je décide pour le mois suivant.**"
+        },
+        {
+          "type": "p",
+          "text": "Pour qui l'écrit-on ? D'abord pour soi : relire son propre mois oblige à voir ce qu'on a évité de regarder. Ensuite pour les autres, quand il le faut : un associé, un bailleur, un banquier, un partenaire. Le même document sert, à condition d'être factuel."
+        },
+        {
+          "type": "p",
+          "text": "Ce qu'un bon rapport contient : les quatre indicateurs d'hier, comparés au mois précédent ; les faits marquants, datés ; **ce qui a dévié et pourquoi** ; et trois décisions pour le mois qui vient. Une page."
+        },
+        {
+          "type": "note",
+          "variant": "warning",
+          "text": "Ce qu'il ne doit pas contenir : des chiffres que vous n'avez pas relevés, des explications inventées pour une baisse que vous ne comprenez pas, et des promesses. Écrire « je ne sais pas encore pourquoi la production a baissé » est beaucoup plus solide qu'une cause plausible choisie au hasard."
+        },
+        {
+          "type": "p",
+          "text": "Le vrai gain avec l'IA n'est pas la rédaction — c'est qu'elle **repère les écarts** dans vos lignes plus vite que vous, parce qu'elle ne se lasse pas de comparer des colonnes."
+        }
+      ],
+      "keyPoints": [
+        "Où j'en suis, ce qui a dévié, ce que je décide",
+        "Une page, factuelle, sans explication inventée",
+        "« Je ne sais pas encore pourquoi » est une réponse acceptable",
+        "L'IA repère les écarts ; vous décidez"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "Le modèle se fabrique une fois et resservira douze fois. Prenez le temps de le régler à votre façon de travailler."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Faites fabriquer votre modèle de rapport, vide, avec les titres de sections.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "Mon modèle de rapport mensuel",
+            "template": "Tu conçois un modèle de rapport mensuel pour un exploitant agricole en Algérie.\n\nMon exploitation : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}.\nMes quatre indicateurs : [COLLEZ ICI VOS QUATRE INDICATEURS DU JOUR 23]\n\nTâche : écris un modèle VIDE, d'une page, avec les sections suivantes et une consigne d'une ligne sous chaque titre expliquant ce que j'y mets :\n1. Le mois en un paragraphe\n2. Mes quatre indicateurs, comparés au mois précédent\n3. Faits marquants, avec leurs dates\n4. Ce qui a dévié, et ce que j'en comprends\n5. Mes trois décisions pour le mois prochain\n6. Ce que je dois vérifier ou demander à quelqu'un\n\nRègles : aucun chiffre, aucune phrase toute faite de résultat. Le modèle doit pouvoir être rempli en dix minutes."
+          },
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "Mon modèle de rapport (je le réutiliserai chaque mois)",
+            "required": true,
+            "dossier": {
+              "kind": "rapport",
+              "block": "paragraph"
+            }
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Remplissez-le une première fois. Si votre mois est incomplet, dites-le dans le rapport : c'est une information, pas une faute.",
+          "prompt": {
+            "id": "p2",
+            "tool": "claude",
+            "title": "Mon rapport du mois, et les anomalies",
+            "template": "Voici MES chiffres et MES faits du mois écoulé :\n\n[COLLEZ ICI VOS LIGNES ET VOS QUATRE INDICATEURS, CE MOIS-CI ET LE MOIS PRÉCÉDENT]\n\nTâche :\n1. Remplis le modèle de rapport que tu viens d'écrire, avec ces données uniquement.\n2. Signale les 3 écarts les plus importants entre ce mois et le précédent, en les quantifiant.\n3. Pour chaque écart, propose 2 explications POSSIBLES, clairement présentées comme des hypothèses à vérifier, et dis-moi comment je peux trancher entre elles.\n4. Termine par les questions auxquelles mes données ne permettent pas de répondre.\n\nRègles : n'invente aucune donnée manquante, n'arrondis pas mes chiffres, et n'affirme aucune cause.",
+            "hint": "La partie la plus utile est la dernière : ce que vos données ne disent pas vous indique quoi noter le mois prochain."
+          },
+          "capture": {
+            "id": "c2",
+            "type": "textarea",
+            "label": "Mes trois décisions pour le mois prochain",
+            "required": true,
+            "dossier": {
+              "kind": "rapport",
+              "block": "list"
+            }
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Votre production a baissé et vous ne savez pas pourquoi. Qu'écrivez-vous dans le rapport ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "La cause la plus probable proposée par l'IA"
+            },
+            {
+              "id": "b",
+              "text": "La baisse chiffrée, et que la cause reste à établir"
+            },
+            {
+              "id": "c",
+              "text": "Rien, j'attends de comprendre"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Écrire une cause plausible fige une explication fausse, et l'an prochain vous la relirez comme un fait. Ne rien écrire est pire encore : vous perdrez la trace de la baisse elle-même. Le rapport enregistre ce qui est constaté, et distingue ce qui est compris de ce qui ne l'est pas."
+        },
+        {
+          "id": "q2",
+          "text": "À quoi sert surtout le rapport si personne d'autre ne le lit ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "À m'obliger à regarder ce que j'évite de regarder, une fois par mois"
+            },
+            {
+              "id": "b",
+              "text": "À rien, c'est du temps perdu"
+            },
+            {
+              "id": "c",
+              "text": "À remplir mon Dossier de projet"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Le rapport n'est pas un document administratif, c'est un rendez-vous avec soi-même : il force à nommer ce qui a dévié, au lieu de le laisser se dissoudre dans la routine quotidienne. Qu'il serve ensuite à un banquier est un bénéfice secondaire."
+        },
+        {
+          "id": "q3",
+          "text": "Combien de décisions faut-il mettre dans le rapport ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Toutes celles qui me viennent"
+            },
+            {
+              "id": "b",
+              "text": "Trois au maximum, pour qu'elles soient réellement appliquées"
+            },
+            {
+              "id": "c",
+              "text": "Aucune, le rapport décrit seulement"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Un rapport sans décision n'est qu'un constat, et dix décisions ne s'appliquent jamais. Trois engagements concrets, relus au rapport suivant, créent une suite : c'est ce chaînage, mois après mois, qui fait progresser une exploitation."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "J'ai un modèle de rapport réutilisable",
+        "Je l'ai rempli une première fois avec mes chiffres",
+        "J'ai trois décisions écrites pour le mois prochain"
+      ],
+      "confidencePrompt": "Tiendrez-vous ce rendez-vous mensuel ?",
+      "dossierPreview": true
+    }
+  },
+  "nextTeaser": "Demain : faire lire vos documents par une IA — factures, fiches techniques, contrats — sans lui livrer ce qui ne la regarde pas."
+}

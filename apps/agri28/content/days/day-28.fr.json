@@ -1,0 +1,204 @@
+{
+  "schema": 1,
+  "id": "day-28",
+  "day": 28,
+  "week": 4,
+  "lang": "fr",
+  "title": "Vos 90 prochains jours",
+  "subtitle": "Vous relisez tout ce que vous avez produit, vous cherchez les trous, et vous écrivez trois objectifs datés pour le trimestre qui vient.",
+  "durationMin": 15,
+  "objectives": [
+    "Repérer les trous les plus graves de mon dossier",
+    "Écrire trois objectifs à 90 jours, avec une première étape datée",
+    "Savoir ce que je continuerai à faire avec l'IA, et ce que je ne lui confierai jamais"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "rapport",
+    "label": "Plan d'action à 90 jours"
+  },
+  "guardrails": ["ai_not_agronomist", "ai_not_accountant", "verify_prices"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "p",
+          "text": "En vingt-sept jours, vous avez construit quelque chose de réel : une fiche projet, un objectif vérifiable, une étude de faisabilité, un budget avec vos prix, un business plan, un calendrier, une organisation du travail, un registre des risques, un tableau de suivi, des indicateurs, un rapport mensuel, des courriers et des modèles."
+        },
+        {
+          "type": "p",
+          "text": "Ce dossier ne vaut que s'il est **relu et corrigé**. Un dossier qu'on n'ouvre plus devient faux en quelques mois : les prix bougent, les personnes changent, les objectifs se déplacent."
+        },
+        {
+          "type": "p",
+          "text": "Le plan des 90 jours tient en une règle : **trois objectifs, pas plus**. Chacun avec une première étape datée et une personne responsable — même si cette personne, c'est vous. Un objectif sans première étape datée reste un souhait, et vous le savez depuis le jour 7."
+        },
+        {
+          "type": "note",
+          "variant": "info",
+          "text": "Gardez une copie de votre dossier ailleurs que dans votre téléphone. Les données de cette application vivent dans la mémoire de l'appareil : effacer les données du navigateur les effacerait aussi."
+        },
+        {
+          "type": "p",
+          "text": "Et pour finir, la seule leçon qui compte vraiment : **l'IA écrit, organise, compare et explique. Elle ne constate pas, ne décide pas, et n'engage pas sa responsabilité.** Le vétérinaire, l'agronome, le juriste, le comptable et vous restez irremplaçables. Ce que vous avez gagné en 28 jours, ce n'est pas un outil : c'est une méthode pour vous en servir sans vous faire avoir."
+        }
+      ],
+      "keyPoints": [
+        "Un dossier qu'on ne relit pas devient faux en quelques mois",
+        "Trois objectifs à 90 jours, chacun avec une première étape datée",
+        "Gardez une copie de votre dossier hors du téléphone",
+        "L'IA écrit et organise ; elle ne constate ni ne décide"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "Ouvrez votre Dossier de projet à côté de vous. Le dernier exercice consiste à le prendre en défaut."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Collez les éléments principaux de votre dossier et demandez qu'on y cherche les trous. Soyez prêt à ne pas aimer la réponse.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "Chercher les trous de mon dossier",
+            "template": "Tu examines le dossier de projet d'un exploitant agricole en Algérie, comme le ferait un conseiller exigeant.\n\nMon exploitation : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}.\nObjectif : {{project.objective}}\n\nVoici mon dossier :\n- Objectif et faisabilité : [COLLEZ]\n- Budget et coût de revient : [COLLEZ]\n- Calendrier et organisation du travail : [COLLEZ]\n- Risques et parades : [COLLEZ]\n- Indicateurs et suivi : [COLLEZ]\n\nTâche :\n1. Signale les 3 trous les plus graves — une information absente, une incohérence entre deux parties, une hypothèse jamais vérifiée.\n2. Pour chacun : pourquoi c'est grave, et la seule action qui le comblerait.\n3. Dis-moi ce qui, dans ce dossier, repose encore sur des chiffres que je n'ai pas relevés moi-même.\n\nRègles : ne comble aucun trou à ma place, n'invente aucune donnée, ne me félicite pas.",
+            "hint": "Le point 3 est le vrai test de ces 28 jours : combien de votre dossier tient debout sur vos propres relevés ?"
+          },
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "Les trous de mon dossier, et ce que je fais pour chacun",
+            "required": true,
+            "dossier": {
+              "kind": "rapport",
+              "block": "list"
+            }
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Écrivez maintenant votre plan. Trois objectifs : pas deux, pas sept.",
+          "prompt": {
+            "id": "p2",
+            "tool": "claude",
+            "title": "Mon plan d'action à 90 jours",
+            "template": "À partir de mon dossier et des trous que tu viens d'identifier, aide-moi à écrire mon plan pour les 90 prochains jours.\n\nNous sommes le {{today}}. Mon objectif de l'année : {{project.objective}}\n\nTâche : propose EXACTEMENT trois objectifs pour ces 90 jours, pas davantage. Pour chacun :\n- l'objectif en une phrase vérifiable (quoi, combien, pour quand)\n- la toute première étape, avec une date précise dans les deux prochaines semaines\n- qui s'en charge\n- le signe qui me dira que ça avance\n- ce qui le fera échouer si je n'y prends pas garde\n\nEnsuite, dis-moi lequel des trois je dois commencer en premier, et pourquoi celui-là.\n\nRègles : trois, pas plus. Chaque objectif doit être réalisable avec mes moyens actuels. Aucun chiffre que je ne t'ai pas donné.",
+            "hint": "Notez la première date dans l'agenda de votre téléphone avant de fermer l'application. Sinon, rien de tout cela n'arrivera."
+          },
+          "capture": {
+            "id": "c2",
+            "type": "textarea",
+            "label": "Mes trois objectifs à 90 jours, avec leur première étape datée",
+            "required": true,
+            "dossier": {
+              "kind": "rapport",
+              "block": "list"
+            }
+          }
+        },
+        {
+          "id": "s3",
+          "optional": true,
+          "instruction": "Dernière ligne du parcours : ce que vous continuerez à faire avec l'IA, et ce que vous ne lui confierez jamais.",
+          "capture": {
+            "id": "c3",
+            "type": "textarea",
+            "label": "Ma règle personnelle, après 28 jours",
+            "placeholder": "Exemple : je lui fais écrire et calculer ; je ne lui demande jamais un prix, une dose ni une décision.",
+            "dossier": {
+              "kind": "rapport",
+              "block": "kv",
+              "key": "Ma règle personnelle"
+            }
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Pourquoi se limiter à trois objectifs pour 90 jours ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Parce qu'au-delà, aucun n'avance vraiment : le travail quotidien prend toute la place"
+            },
+            {
+              "id": "b",
+              "text": "Parce que trois est un chiffre pratique"
+            },
+            {
+              "id": "c",
+              "text": "Parce que l'IA ne peut pas en gérer plus"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Une exploitation consomme déjà toutes vos journées. Les objectifs de progrès se glissent dans les interstices, et il y en a peu. Trois objectifs avancés valent mieux que dix listés : c'est la même leçon que les parades du jour 13 et les décisions du jour 24."
+        },
+        {
+          "id": "q2",
+          "text": "Qu'est-ce qui transforme un objectif en action ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Une première étape avec une date dans les deux prochaines semaines"
+            },
+            {
+              "id": "b",
+              "text": "Une formulation motivante"
+            },
+            {
+              "id": "c",
+              "text": "L'accord de mon entourage"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Un objectif sans première étape datée est reporté indéfiniment, parce qu'il n'y a jamais de jour où il devient urgent. La date proche est ce qui l'ancre dans la semaine réelle, pas dans l'intention."
+        },
+        {
+          "id": "q3",
+          "text": "Après ces 28 jours, que ne confierez-vous jamais à une IA ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "La rédaction d'un courrier administratif"
+            },
+            {
+              "id": "b",
+              "text": "Un diagnostic, une dose, un prix du jour et une décision qui engage mon exploitation"
+            },
+            {
+              "id": "c",
+              "text": "La mise en forme d'un tableau"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Écrire et mettre en forme : c'est son terrain, et vous y gagnez des heures. Constater, décider et engager votre responsabilité : c'est le vôtre, et celui des professionnels. Cette frontière est le fil qui a traversé les 28 jours."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "J'ai relu mon dossier et identifié ses trous",
+        "J'ai trois objectifs à 90 jours, avec une première étape datée",
+        "La première date est notée dans mon agenda",
+        "Les 28 jours sont terminés : mon projet est écrit, chiffré et suivi"
+      ],
+      "confidencePrompt": "Au terme de ces 28 jours, à quel point vous sentez-vous à l'aise pour piloter votre projet avec l'IA ?",
+      "dossierPreview": true
+    }
+  },
+  "verifyLocally": [
+    "Votre plan des 90 jours engage de l'argent et du travail : faites valider les volets techniques par un technicien ou un vétérinaire, et les volets financiers par un comptable ou votre banque."
+  ]
+}

@@ -1,0 +1,178 @@
+{
+  "schema": 1,
+  "id": "day-26",
+  "day": 26,
+  "week": 4,
+  "lang": "fr",
+  "title": "Un assistant qui connaît votre exploitation",
+  "subtitle": "Vous écrivez une fois pour toutes le bloc de contexte qui décrit votre projet, et vous le réutilisez partout.",
+  "durationMin": 15,
+  "objectives": [
+    "Écrire un bloc de contexte réutilisable à partir de mon Dossier",
+    "Mesurer la différence entre une réponse avec et sans contexte",
+    "Savoir ce qu'il ne faut jamais mettre dans un contexte permanent"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "libre",
+    "label": "Mon contexte permanent"
+  },
+  "guardrails": ["data_privacy_basic", "data_privacy_people"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "p",
+          "text": "Depuis vingt-cinq jours, vous recommencez la même chose à chaque conversation : expliquer votre activité, votre taille, votre wilaya, votre objectif. C'est le moment d'en finir."
+        },
+        {
+          "type": "p",
+          "text": "Un **bloc de contexte**, c'est dix à quinze lignes qui décrivent votre exploitation, que vous collez au début de chaque conversation. Rien de technique : du texte, que vous gardez dans les notes de votre téléphone."
+        },
+        {
+          "type": "p",
+          "text": "Certains outils proposent d'enregistrer ce contexte une fois pour toutes — espaces de travail, projets, assistants personnalisés. Les noms, les conditions d'accès et la gratuité de ces fonctions varient d'un outil à l'autre et changent souvent : **regardez ce qui existe dans le vôtre**. Si rien n'est proposé, le copier-coller marche aussi bien."
+        },
+        {
+          "type": "note",
+          "variant": "warning",
+          "text": "Un contexte permanent est réutilisé des dizaines de fois : raison de plus pour n'y mettre **aucun nom de personne, aucun numéro, aucune donnée de vos ouvriers**. Décrivez votre exploitation, pas les gens qui y travaillent."
+        },
+        {
+          "type": "p",
+          "text": "Un bon bloc contient : l'activité et la taille, la wilaya et le type de sol ou de bâtiment, l'objectif de l'année, les contraintes réelles (eau, main-d'œuvre, trésorerie), et **la façon dont vous voulez qu'on vous réponde** — par exemple : « réponds court, en français simple, sans chiffre inventé, et dis-moi quand tu ne sais pas »."
+        }
+      ],
+      "keyPoints": [
+        "Dix à quinze lignes, gardées dans les notes du téléphone",
+        "Activité, lieu, objectif, contraintes, et la façon de répondre",
+        "Aucune donnée personnelle dans un texte réutilisé cent fois",
+        "Les fonctions d'enregistrement varient selon l'outil : vérifiez le vôtre"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "Vous avez déjà tout : votre fiche projet, votre objectif, votre budget, vos contraintes. Il s'agit de condenser."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Faites rédiger votre bloc, puis corrigez-le : c'est vous qui savez ce qui compte vraiment.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "Mon bloc de contexte permanent",
+            "template": "Tu m'aides à écrire un texte court que je collerai au début de toutes mes futures conversations avec une IA.\n\nVoici ma situation : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}.\nObjectif de l'année : {{project.objective}}\nHorizon : {{project.horizonMonths}} mois. Eau : {{project.waterSource}}. Démarrage du cycle : {{project.startMonth}}.\nMes contraintes principales : [MAIN-D'ŒUVRE / TRÉSORERIE / EAU / MATÉRIEL — COMPLÉTEZ]\n\nTâche : écris ce bloc en 12 lignes maximum, à la première personne, avec :\n- qui je suis et ce que j'exploite\n- où, et ce que cela implique (climat, accès, saison)\n- mon objectif de l'année\n- mes contraintes réelles\n- et pour finir, mes consignes de réponse : réponds court, en langage simple, n'invente aucun prix ni aucune dose, dis-moi quand tu ne sais pas, et demande-moi ce qui te manque.\n\nRègles : aucun nom de personne, aucun numéro, aucune donnée de mes ouvriers. Texte brut, prêt à copier.",
+            "hint": "Les consignes de réponse sont la partie la plus rentable : elles vous évitent les prix inventés dans toutes vos conversations à venir."
+          },
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "Mon bloc de contexte (gardez-le aussi dans les notes de votre téléphone)",
+            "required": true,
+            "dossier": {
+              "kind": "libre",
+              "block": "paragraph"
+            }
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Testez-le immédiatement. Ouvrez une conversation neuve, collez le bloc, puis posez une question que vous aviez déjà posée les jours précédents.",
+          "capture": {
+            "id": "c2",
+            "type": "textarea",
+            "label": "Avec le bloc, qu'est-ce qui change dans la réponse ?",
+            "placeholder": "Exemple : elle ne me redemande plus ma taille, et elle tient compte de l'eau.",
+            "dossier": {
+              "kind": "libre",
+              "block": "paragraph"
+            }
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Que ne met-on jamais dans un bloc de contexte réutilisé ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Les noms, numéros et données de mes ouvriers"
+            },
+            {
+              "id": "b",
+              "text": "Ma wilaya"
+            },
+            {
+              "id": "c",
+              "text": "Mon objectif de l'année"
+            }
+          ],
+          "answer": "a",
+          "explanation": "La wilaya et l'objectif sont exactement ce qui rend les réponses utiles : il faut les mettre. Les données de tiers, elles, ne vous appartiennent pas, et un bloc réutilisé cent fois les diffuse cent fois."
+        },
+        {
+          "id": "q2",
+          "text": "Pourquoi inclure des consignes de réponse dans le bloc ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Pour que chaque conversation reparte avec mes règles : pas de prix inventé, et l'aveu d'ignorance autorisé"
+            },
+            {
+              "id": "b",
+              "text": "Pour que l'IA soit plus polie"
+            },
+            {
+              "id": "c",
+              "text": "Cela ne sert à rien, l'IA fait ce qu'elle veut"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Vous avez passé la semaine 1 à apprendre à exiger des sources, à refuser les chiffres inventés et à autoriser le « je ne sais pas ». Ces exigences se perdent à chaque conversation neuve — sauf si elles sont dans le bloc que vous collez systématiquement."
+        },
+        {
+          "id": "q3",
+          "text": "Votre outil ne propose pas d'enregistrer un contexte permanent. Que faites-vous ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Je garde le bloc dans les notes de mon téléphone et je le colle à chaque fois"
+            },
+            {
+              "id": "b",
+              "text": "Je change d'outil"
+            },
+            {
+              "id": "c",
+              "text": "Je renonce : sans cette fonction, cela ne marche pas"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Le bénéfice vient du texte, pas de la fonction : coller douze lignes prend cinq secondes et produit exactement le même effet. Changer d'outil pour cela, c'est se compliquer la vie pour un confort."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "Mon bloc de contexte est écrit et gardé dans mon téléphone",
+        "Il ne contient aucune donnée personnelle",
+        "J'ai constaté la différence sur une vraie question"
+      ],
+      "confidencePrompt": "Vos conversations avec l'IA vous paraissent-elles plus efficaces qu'au premier jour ?",
+      "dossierPreview": true
+    }
+  },
+  "nextTeaser": "Demain : automatiser sans coder — ce qui mérite d'être automatisé, et ce qui n'en vaut pas la peine."
+}

@@ -11,7 +11,8 @@ import type { Lang } from '@/lib/lang';
 const WEEK_1 = [1, 2, 3, 4, 5, 6, 7];
 const WEEK_2 = [8, 9, 10, 11, 12, 13, 14];
 const WEEK_3 = [15, 16, 17, 18, 19, 20, 21];
-const WRITTEN = [...WEEK_1, ...WEEK_2, ...WEEK_3];
+const WEEK_4 = [22, 23, 24, 25, 26, 27, 28];
+const WRITTEN = [...WEEK_1, ...WEEK_2, ...WEEK_3, ...WEEK_4];
 const LANGS: Lang[] = ['fr', 'ar'];
 
 describe('contenu rédigé', () => {
@@ -131,10 +132,18 @@ describe('contenu rédigé', () => {
     });
   }
 
-  it('enchaîne les jours : chaque leçon annonce la suivante', async () => {
-    for (const day of WRITTEN) {
+  it('enchaîne les jours : chaque leçon annonce la suivante, sauf la dernière', async () => {
+    for (const day of WRITTEN.filter((value) => value !== 28)) {
       const lesson = await loadLesson(day, 'fr');
       expect(lesson.nextTeaser, `jour ${day}`).toBeTruthy();
+    }
+    expect((await loadLesson(28, 'fr')).nextTeaser).toBeUndefined();
+  });
+
+  it('couvre les 28 jours du parcours, dans les deux langues', () => {
+    expect(WRITTEN).toHaveLength(28);
+    for (const lang of LANGS) {
+      expect(availableDays(lang)).toEqual(WRITTEN);
     }
   });
 
@@ -216,6 +225,52 @@ describe('contenu rédigé', () => {
     const courrier = await loadLesson(21, 'fr');
     expect(courrier.guardrails).toContain('data_privacy_basic');
     expect(courrier.guardrails).toContain('ai_not_lawyer');
+  });
+
+  it('couvre bien le programme de la semaine 4', async () => {
+    const titles = await Promise.all(
+      WEEK_4.map(async (day) => (await loadLesson(day, 'fr')).title.toLowerCase()),
+    );
+    const joined = titles.join(' | ');
+    expect(joined).toContain('coût de revient'); // jour 22 : comptabilité
+    expect(joined).toContain('quatre chiffres'); // jour 23 : indicateurs
+    expect(joined).toContain('rapport'); // jour 24
+    expect(joined).toContain('documents'); // jour 25
+    expect(joined).toContain('assistant'); // jour 26
+    expect(joined).toContain('automatiser'); // jour 27
+    expect(joined).toContain('90'); // jour 28 : plan d'action
+  });
+
+  it('boucle le parcours : le dernier jour produit le plan d’action', async () => {
+    const last = await loadLesson(28, 'fr');
+    expect(last.produces?.dossierKind).toBe('rapport');
+    expect(last.sections.review.checklist.length).toBeGreaterThanOrEqual(3);
+    const lastAr = await loadLesson(28, 'ar');
+    expect(lastAr.produces?.dossierKind).toBe('rapport');
+  });
+
+  it('alimente toutes les familles du Dossier sur l’ensemble du parcours', async () => {
+    const kinds = new Set<string>();
+    for (const day of WRITTEN) {
+      const lesson = await loadLesson(day, 'fr');
+      for (const step of lesson.sections.practice.steps) {
+        if (step.capture?.dossier) kinds.add(step.capture.dossier.kind);
+      }
+    }
+    for (const expected of [
+      'fiche_projet',
+      'objectifs',
+      'budget',
+      'calendrier',
+      'risques',
+      'equipe',
+      'achats',
+      'suivi',
+      'rapport',
+      'libre',
+    ]) {
+      expect(kinds, expected).toContain(expected);
+    }
   });
 
   it('impose les garde-fous là où ils comptent', async () => {

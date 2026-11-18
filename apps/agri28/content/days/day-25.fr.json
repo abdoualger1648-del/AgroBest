@@ -1,0 +1,182 @@
+{
+  "schema": 1,
+  "id": "day-25",
+  "day": 25,
+  "week": 4,
+  "lang": "fr",
+  "title": "Faire lire ses documents par une IA",
+  "subtitle": "Vous apprenez à interroger un contrat, une fiche technique ou un relevé — et à vérifier chaque chiffre contre l'original.",
+  "durationMin": 15,
+  "objectives": [
+    "Poser les bonnes questions à un document long",
+    "Vérifier systématiquement les chiffres extraits",
+    "Décider ce qui peut être envoyé et ce qui ne le peut pas"
+  ],
+  "tools": ["claude", "chatgpt", "gemini", "notebooklm"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "libre",
+    "label": "Lecture de documents"
+  },
+  "guardrails": ["data_privacy_basic", "data_privacy_people", "verify_regulation", "ai_not_lawyer"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "p",
+          "text": "La plupart des assistants acceptent qu'on leur dépose un document : une fiche technique de dix pages, un contrat de livraison, un relevé, une notice. Il existe aussi des outils spécialisés dans la lecture de documents — leurs noms et leurs conditions d'accès changent souvent, vérifiez ce qui fonctionne chez vous."
+        },
+        {
+          "type": "p",
+          "text": "Ce que cela change concrètement : au lieu de lire dix pages pour trouver une clause, vous demandez. **« Que dit ce contrat sur les retards de livraison ? »**, **« Résume-moi cette fiche en dix lignes »**, **« Compare ces deux offres ligne par ligne »**."
+        },
+        {
+          "type": "note",
+          "variant": "danger",
+          "text": "Deux pièges, et ils sont sérieux. **Le premier** : un document mal scanné, une colonne de tableau décalée, une écriture à la main, et le chiffre lu n'est pas le chiffre écrit. **Vérifiez toujours contre l'original** tout nombre que vous allez utiliser. **Le second** : un contrat porte des noms, des adresses, parfois des montants et des numéros. Ce que vous déposez part sur un serveur."
+        },
+        {
+          "type": "p",
+          "text": "La règle pratique du jour 6 s'applique telle quelle : **masquez ce qui identifie**. Un contrat se photographie en cachant les noms et les numéros, ou se retape sans eux. Une fiche technique de produit, elle, ne contient rien de personnel : déposez-la sans hésiter."
+        },
+        {
+          "type": "note",
+          "variant": "warning",
+          "text": "Et pour un contrat qui vous engage, l'IA aide à **comprendre** et à **préparer vos questions**. Elle ne dit pas ce qui est légal, ni ce que vous risquez. Un engagement important se fait relire par une personne compétente."
+        }
+      ],
+      "keyPoints": [
+        "Interroger un document au lieu de le lire en entier",
+        "Tout chiffre extrait se vérifie contre l'original",
+        "Masquer noms, adresses et numéros avant de déposer",
+        "Comprendre un contrat n'est pas obtenir un avis juridique"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "Prenez un vrai document que vous n'avez jamais lu en entier : une notice, une fiche d'aliment, un contrat d'achat, un relevé. Masquez d'abord ce qui identifie."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Déposez le document et posez-lui les questions utiles — pas « résume », mais ce que vous voulez vraiment savoir.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "Interroger mon document",
+            "template": "Je te dépose un document qui concerne mon exploitation ({{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}). J'ai masqué les noms et les numéros.\n\nType de document : [CONTRAT / FICHE TECHNIQUE / RELEVÉ / NOTICE / AUTRE]\n\nTâche, dans cet ordre :\n1. Résume-le en 10 lignes maximum, en langage simple.\n2. Relève les points qui m'engagent ou qui peuvent me coûter : délais, pénalités, conditions, exclusions.\n3. Liste les chiffres importants que tu as lus, un par ligne, en indiquant à quelle page ou à quel endroit tu les as trouvés — je les vérifierai moi-même sur l'original.\n4. Dis-moi ce que ce document NE dit pas et que je devrais demander.\n\nRègles : si un passage est illisible ou ambigu, dis-le au lieu de deviner. N'affirme rien sur ce qui est légal ou non.",
+            "hint": "Le point 3 est le plus important : sans indication d'emplacement, vous ne pourrez pas vérifier, et un chiffre non vérifié ne doit pas entrer dans votre budget."
+          },
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "Ce que j'ai appris du document, et les chiffres que j'ai vérifiés sur l'original",
+            "required": true,
+            "dossier": {
+              "kind": "libre",
+              "block": "paragraph"
+            }
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Retournez la question : que faudrait-il savoir que le document ne dit pas ? C'est ce qui fera la différence lors de la négociation ou de l'achat.",
+          "capture": {
+            "id": "c2",
+            "type": "textarea",
+            "label": "Les questions que je vais poser à celui qui m'a remis ce document",
+            "required": true,
+            "dossier": {
+              "kind": "libre",
+              "block": "list"
+            }
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "L'IA extrait un montant d'un tableau scanné. Que faites-vous avant de l'utiliser ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Je le vérifie à l'œil sur l'original, à l'endroit indiqué"
+            },
+            {
+              "id": "b",
+              "text": "Je l'utilise : lire un tableau est une tâche simple"
+            },
+            {
+              "id": "c",
+              "text": "Je demande une deuxième lecture à l'IA"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Les colonnes décalées, les virgules prises pour des points et les chiffres manuscrits sont des erreurs fréquentes et invisibles dans la réponse. Une deuxième lecture par le même outil reproduit souvent la même erreur. Dix secondes de vérification protègent tout un budget."
+        },
+        {
+          "id": "q2",
+          "text": "Quel document pouvez-vous déposer sans précaution particulière ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Un contrat signé avec un fournisseur"
+            },
+            {
+              "id": "b",
+              "text": "Une fiche technique publique de produit, qui ne contient aucune donnée personnelle"
+            },
+            {
+              "id": "c",
+              "text": "Un relevé bancaire"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Une fiche technique est un document public : elle ne vous expose à rien. Un contrat porte des noms et des engagements, un relevé bancaire des identifiants de compte — les deux se retapent ou se masquent avant d'être partagés, exactement comme au jour 6."
+        },
+        {
+          "id": "q3",
+          "text": "L'IA vous dit qu'une clause de votre contrat est abusive. Que concluez-vous ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "C'est un signal utile pour aller voir une personne compétente, pas un avis juridique"
+            },
+            {
+              "id": "b",
+              "text": "Je peux refuser d'appliquer cette clause"
+            },
+            {
+              "id": "c",
+              "text": "Je dois rompre le contrat"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Le caractère abusif d'une clause s'apprécie en droit, au regard d'un texte et d'une jurisprudence que l'IA ne maîtrise pas, surtout hors de son contexte habituel. Agir seul sur cette base — refuser d'exécuter ou rompre — peut vous mettre en tort. Le signal, lui, mérite une consultation."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "J'ai interrogé un document au lieu de le lire en entier",
+        "J'ai vérifié sur l'original les chiffres que je vais utiliser",
+        "J'ai masqué ce qui identifie avant de déposer"
+      ],
+      "confidencePrompt": "Vous sentez-vous capable de faire parler un document long sans le lire en entier ?",
+      "dossierPreview": true
+    }
+  },
+  "verifyLocally": [
+    "Un contrat, un engagement de livraison ou un acte qui vous lie doit être relu par une personne compétente avant signature."
+  ],
+  "nextTeaser": "Demain : cesser de tout réexpliquer. Construire le bloc de contexte qui décrit votre exploitation une fois pour toutes."
+}

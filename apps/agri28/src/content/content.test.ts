@@ -48,8 +48,9 @@ describe('chargement du contenu', () => {
   });
 
   it('signale clairement une leçon absente', async () => {
-    expect(hasLesson(27, 'fr')).toBe(false);
-    await expect(loadLesson(27, 'fr')).rejects.toBeInstanceOf(LessonNotFoundError);
+    // Les 28 jours existent : on vérifie le comportement hors parcours.
+    expect(hasLesson(99, 'fr')).toBe(false);
+    await expect(loadLesson(99, 'fr')).rejects.toBeInstanceOf(LessonNotFoundError);
   });
 
   it('met la leçon en cache après le premier chargement', async () => {

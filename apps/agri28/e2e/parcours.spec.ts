@@ -90,18 +90,6 @@ test.describe('parcours', () => {
     }).toPass({ timeout: 15_000 });
   });
 
-  test('annonce un contenu encore absent pour un jour non écrit', async ({ page }) => {
-    await createProject(page);
-    await page.goto('./jour/26');
-
-    await expect(async () => {
-      await page.getByRole('button', { name: 'Ouvrir quand même' }).click();
-      await expect(
-        page.getByRole('heading', { level: 1, name: 'Contenu indisponible' }),
-      ).toBeVisible({ timeout: 2000 });
-    }).toPass({ timeout: 15_000 });
-  });
-
   test('affiche le jour 1 en arabe, en RTL, sans débordement', async ({ page }) => {
     await createProject(page);
     await page.goto('./parametres');

@@ -161,17 +161,6 @@ describe('journée complète (jour 1)', () => {
     ).toBeInTheDocument();
   });
 
-  it('annonce clairement un contenu encore absent', async () => {
-    const user = userEvent.setup();
-    await renderApp('fr', '/jour/26');
-
-    await user.click(screen.getByRole('button', { name: 'Ouvrir quand même' }));
-
-    expect(
-      await screen.findByRole('heading', { level: 1, name: 'Contenu indisponible' }),
-    ).toBeInTheDocument();
-  });
-
   it('affiche la leçon en arabe avec la même ossature', async () => {
     await renderApp('ar', '/jour/1');
 

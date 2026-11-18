@@ -1,0 +1,189 @@
+{
+  "schema": 1,
+  "id": "day-27",
+  "day": 27,
+  "week": 4,
+  "lang": "fr",
+  "title": "Automatiser sans coder, et sans se compliquer la vie",
+  "subtitle": "Vous triez vos tâches répétitives, vous en automatisez trois avec des moyens simples, et vous laissez le reste tranquille.",
+  "durationMin": 15,
+  "objectives": [
+    "Distinguer ce qui mérite d'être automatisé de ce qui n'en vaut pas la peine",
+    "Automatiser trois choses sans aucun outil nouveau",
+    "Reconnaître une automatisation qui coûte plus qu'elle ne rapporte"
+  ],
+  "tools": ["claude", "chatgpt", "gemini"],
+  "requiresProject": true,
+  "produces": {
+    "dossierKind": "libre",
+    "label": "Mes automatisations"
+  },
+  "guardrails": ["data_privacy_basic", "verify_prices"],
+  "sections": {
+    "concept": {
+      "durationMin": 3,
+      "body": [
+        {
+          "type": "p",
+          "text": "Automatiser, ce n'est pas installer un logiciel. C'est **faire en sorte qu'une tâche répétitive demande moins de décisions et moins de temps**. Dans une exploitation, les meilleures automatisations ne coûtent rien."
+        },
+        {
+          "type": "ul",
+          "items": [
+            "**Un modèle de message** réutilisable : demande de prix, relance d'un acheteur, message au vétérinaire. Écrit une fois, adapté en trente secondes.",
+            "**Un rappel répétitif dans l'agenda du téléphone** : le relevé du lundi, la revue du vendredi, la commande d'aliment tous les quinze jours.",
+            "**Une formule dans le tableur** : le total se calcule seul, vous ne faites plus que saisir.",
+            "**Une règle de nommage** : les photos et les lots portent toujours la même forme de nom, et se retrouvent six mois après."
+          ]
+        },
+        {
+          "type": "p",
+          "text": "La règle de tri est simple : **automatisez ce que vous faites au moins une fois par semaine et qui vous coûte du temps ou des erreurs.** Le reste ne vaut pas l'effort."
+        },
+        {
+          "type": "note",
+          "variant": "warning",
+          "text": "Méfiez-vous des outils qui promettent de tout relier automatiquement. Ils ajoutent un abonnement, une dépendance et un point de panne de plus. Une automatisation qui tombe en panne pendant un pic de travail coûte plus cher que la tâche manuelle qu'elle remplaçait."
+        },
+        {
+          "type": "p",
+          "text": "Dernier point, le plus important : **n'automatisez jamais une décision**. Un rappel qui dit « vérifier l'eau » est utile ; un système qui déciderait d'arroser à votre place ne l'est pas. Les automatisations exécutent ; vous décidez."
+        }
+      ],
+      "keyPoints": [
+        "Les meilleures automatisations ici ne coûtent rien",
+        "Au moins une fois par semaine, sinon ça n'en vaut pas la peine",
+        "Un outil de plus, c'est un abonnement et une panne de plus",
+        "On automatise une tâche, jamais une décision"
+      ]
+    },
+    "practice": {
+      "durationMin": 7,
+      "intro": [
+        {
+          "type": "p",
+          "text": "Le tri d'abord : il montre souvent qu'une partie des tâches répétitives doivent surtout être supprimées, pas automatisées."
+        }
+      ],
+      "steps": [
+        {
+          "id": "s1",
+          "instruction": "Listez ce que vous refaites sans cesse, puis faites-le trier. Soyez honnête sur la fréquence réelle.",
+          "prompt": {
+            "id": "p1",
+            "tool": "claude",
+            "title": "Trier mes tâches répétitives",
+            "template": "Tu aides un exploitant agricole en Algérie à simplifier son organisation.\n\nMon exploitation : {{project.type}}, {{project.scale}}, wilaya de {{project.wilaya}}.\n\nVoici les tâches que je refais régulièrement :\n[LISTEZ-LES AVEC LEUR FRÉQUENCE RÉELLE : chaque jour, chaque semaine, chaque mois]\n\nTâche : classe-les en quatre groupes et explique chaque classement en une ligne :\n1. À SUPPRIMER — elles n'apportent rien, je les fais par habitude.\n2. À SIMPLIFIER — un modèle de message, une formule de tableur, une règle de nommage suffisent.\n3. À RAPPELER — ce n'est pas la tâche qui prend du temps, c'est d'y penser : un rappel d'agenda règle le problème.\n4. À GARDER MANUEL — elles demandent une décision ou un coup d'œil, et doivent le rester.\n\nRègles : ne me propose aucun logiciel ni aucun abonnement. N'utilise que ce que j'ai déjà : téléphone, agenda, tableur, modèles de texte.",
+            "hint": "Le groupe « à supprimer » est souvent le plus instructif : on gagne plus en arrêtant qu'en accélérant."
+          },
+          "capture": {
+            "id": "c1",
+            "type": "textarea",
+            "label": "Mon tri : ce que je supprime, ce que je simplifie, ce que je garde manuel",
+            "required": true,
+            "dossier": {
+              "kind": "libre",
+              "block": "list"
+            }
+          }
+        },
+        {
+          "id": "s2",
+          "instruction": "Faites écrire vos modèles de messages réutilisables. C'est l'automatisation la plus rentable de toutes.",
+          "prompt": {
+            "id": "p2",
+            "tool": "claude",
+            "title": "Mes trois modèles de messages",
+            "template": "Écris-moi trois modèles de messages courts que je réutiliserai toute l'année, adaptés à mon activité ({{project.type}}, wilaya de {{project.wilaya}}) :\n\n1. Une demande de prix à un fournisseur.\n2. Une relance polie à un acheteur ou à un partenaire qui ne répond pas.\n3. Un message au vétérinaire ou au technicien pour signaler une observation.\n\nPour chacun : 6 lignes maximum, avec [ENTRE CROCHETS] tout ce que je dois changer à chaque usage.\n\nDonne-les en français et en arabe, sans rien ajouter d'une version à l'autre.\n\nRègles : ton direct et respectueux, aucune formule inutile, aucun nom de personne."
+          },
+          "capture": {
+            "id": "c2",
+            "type": "textarea",
+            "label": "Mes modèles, et les rappels que je mets dans mon agenda cette semaine",
+            "required": true,
+            "dossier": {
+              "kind": "libre",
+              "block": "list"
+            }
+          }
+        }
+      ]
+    },
+    "quiz": {
+      "durationMin": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Une tâche que vous faites deux fois par an mérite-t-elle d'être automatisée ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Non : le temps passé à l'automatiser ne sera jamais récupéré"
+            },
+            {
+              "id": "b",
+              "text": "Oui, toute automatisation est un gain"
+            },
+            {
+              "id": "c",
+              "text": "Oui, si l'outil est gratuit"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Automatiser prend du temps à la mise en place, et il faut ensuite s'en souvenir six mois plus tard. Pour deux fois par an, la note écrite dans le dossier suffit largement. La gratuité de l'outil ne change rien à ce calcul."
+        },
+        {
+          "id": "q2",
+          "text": "Quelle est la meilleure automatisation pour « penser à relever le compteur chaque lundi » ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "Un rappel répétitif dans l'agenda du téléphone"
+            },
+            {
+              "id": "b",
+              "text": "Un outil qui relie mon compteur à un tableur"
+            },
+            {
+              "id": "c",
+              "text": "Rien, je dois m'en souvenir"
+            }
+          ],
+          "answer": "a",
+          "explanation": "Le problème n'était pas de relever, c'était d'y penser : un rappel coûte trente secondes à créer et règle exactement cela. Un dispositif connecté résout un problème que vous n'avez pas, en ajoutant du matériel qui peut tomber en panne."
+        },
+        {
+          "id": "q3",
+          "text": "Qu'est-ce qu'on n'automatise jamais ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "L'envoi d'un message type"
+            },
+            {
+              "id": "b",
+              "text": "Une décision : arroser, traiter, vendre"
+            },
+            {
+              "id": "c",
+              "text": "Le calcul d'un total"
+            }
+          ],
+          "answer": "b",
+          "explanation": "Les totaux et les messages types sont des exécutions : les automatiser ne fait rien perdre. Une décision engage votre argent, vos bêtes ou votre récolte, et dépend de ce que vous voyez sur le terrain ce jour-là. L'automatisation peut vous rappeler de décider ; elle ne doit pas décider."
+        }
+      ]
+    },
+    "review": {
+      "durationMin": 2,
+      "checklist": [
+        "J'ai trié mes tâches répétitives en quatre groupes",
+        "J'ai trois modèles de messages réutilisables",
+        "J'ai créé au moins un rappel répétitif dans mon agenda"
+      ],
+      "confidencePrompt": "Votre semaine de travail vous paraît-elle moins encombrée de petites choses ?",
+      "dossierPreview": true
+    }
+  },
+  "nextTeaser": "Demain, dernier jour : relire tout votre dossier, repérer les trous, et écrire votre plan des 90 prochains jours."
+}
