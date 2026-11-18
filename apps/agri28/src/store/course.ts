@@ -19,11 +19,31 @@ import {
   type CompleteDayInput,
   type DayPatch,
 } from '@/db/repositories/progress';
-import { countDossierItems, saveDossierDrafts } from '@/db/repositories/dossier';
+import {
+  countDossierItems,
+  deleteDossierItem as dbDeleteDossierItem,
+  listDossier,
+  saveDossierDrafts,
+} from '@/db/repositories/dossier';
+import {
+  deletePrompt as dbDeletePrompt,
+  listPrompts,
+  recordPrompt as dbRecordPrompt,
+  updatePrompt as dbUpdatePrompt,
+  type PromptPatch,
+  type RecordPromptInput,
+} from '@/db/repositories/notebook';
+import { awardBadges, listBadges } from '@/db/repositories/badges';
+import type { BadgeId, BadgeRecord, DossierItem, PromptEntry } from '@/domain/types';
 
 interface CourseState {
   project: Project | null;
   progress: DayProgress[];
+  dossier: DossierItem[];
+  prompts: PromptEntry[];
+  badges: BadgeRecord[];
+  /** Badges obtenus à la dernière validation, à annoncer puis à acquitter. */
+  freshBadges: BadgeId[];
   dossierCount: number;
   /** Série recalculée à chaque écriture : jamais pendant le rendu (Date.now() n'est pas pur). */
   streak: Streak;
@@ -35,31 +55,56 @@ interface CourseState {
   saveDay: (day: number, patch: DayPatch) => Promise<void>;
   unlockDay: (day: number) => Promise<void>;
   completeDay: (day: number, lesson: Lesson, lang: Lang, input: CompleteDayInput) => Promise<void>;
+  acknowledgeBadges: () => void;
+  recordPrompt: (input: Omit<RecordPromptInput, 'projectId'>) => Promise<void>;
+  updatePrompt: (id: string, patch: PromptPatch) => Promise<void>;
+  deletePrompt: (id: string) => Promise<void>;
+  deleteDossierItem: (id: string) => Promise<void>;
 }
 
 async function readAll(
   projectId: string,
-): Promise<Pick<CourseState, 'progress' | 'dossierCount' | 'streak'>> {
-  const [progress, dossierCount] = await Promise.all([
+): Promise<
+  Pick<CourseState, 'progress' | 'dossier' | 'prompts' | 'badges' | 'dossierCount' | 'streak'>
+> {
+  const [progress, dossier, prompts, badges, dossierCount] = await Promise.all([
     listProgress(projectId),
+    listDossier(projectId),
+    listPrompts(projectId),
+    listBadges(projectId),
     countDossierItems(projectId),
   ]);
-  return { progress, dossierCount, streak: computeStreak(completionTimes(progress), Date.now()) };
+  return {
+    progress,
+    dossier,
+    prompts,
+    badges,
+    dossierCount,
+    streak: computeStreak(completionTimes(progress), Date.now()),
+  };
 }
+
+const EMPTY: Pick<CourseState, 'progress' | 'dossier' | 'prompts' | 'badges' | 'dossierCount'> = {
+  progress: [],
+  dossier: [],
+  prompts: [],
+  badges: [],
+  dossierCount: 0,
+};
 
 const EMPTY_STREAK: Streak = { current: 0, best: 0, lastActiveDay: null };
 
 export const useCourse = create<CourseState>((set, get) => ({
   project: null,
-  progress: [],
-  dossierCount: 0,
+  ...EMPTY,
+  freshBadges: [],
   streak: EMPTY_STREAK,
   loaded: false,
 
   load: async () => {
     const project = await getActiveProject();
     if (!project) {
-      set({ project: null, progress: [], dossierCount: 0, streak: EMPTY_STREAK, loaded: true });
+      set({ project: null, ...EMPTY, freshBadges: [], streak: EMPTY_STREAK, loaded: true });
       return;
     }
     set({ project, ...(await readAll(project.id)), loaded: true });
@@ -111,6 +156,44 @@ export const useCourse = create<CourseState>((set, get) => ({
       await saveDossierDrafts(project.id, day, lesson.id, lang, drafts);
     }
     await dbCompleteDay(project.id, day, input);
+
+    const state = await readAll(project.id);
+    const fresh = await awardBadges(project.id, state.progress);
+    set({
+      ...state,
+      ...(fresh.length > 0 ? { badges: await listBadges(project.id), freshBadges: fresh } : {}),
+    });
+  },
+
+  acknowledgeBadges: () => {
+    set({ freshBadges: [] });
+  },
+
+  recordPrompt: async (input) => {
+    const { project } = get();
+    if (!project) return;
+    await dbRecordPrompt({ ...input, projectId: project.id });
+    set({ prompts: await listPrompts(project.id) });
+  },
+
+  updatePrompt: async (id, patch) => {
+    const { project } = get();
+    if (!project) return;
+    await dbUpdatePrompt(id, patch);
+    set({ prompts: await listPrompts(project.id) });
+  },
+
+  deletePrompt: async (id) => {
+    const { project } = get();
+    if (!project) return;
+    await dbDeletePrompt(id);
+    set({ prompts: await listPrompts(project.id) });
+  },
+
+  deleteDossierItem: async (id) => {
+    const { project } = get();
+    if (!project) return;
+    await dbDeleteDossierItem(id);
     set(await readAll(project.id));
   },
 }));

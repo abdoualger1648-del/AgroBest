@@ -1,0 +1,29 @@
+{
+  "title": "Carnet de prompts",
+  "subtitle": "Les prompts que vous avez copiés, modifiables et réutilisables.",
+  "empty": "Aucun prompt pour l'instant. Chaque prompt copié pendant une journée vient s'enregistrer ici.",
+  "search": "Rechercher dans mes prompts",
+  "searchEmpty": "Aucun prompt ne correspond à cette recherche.",
+  "favoritesOnly": "Favoris seulement",
+  "favorite": "Mettre en favori",
+  "unfavorite": "Retirer des favoris",
+  "fromDay": "Jour {{day}}",
+  "tool": "Outil",
+  "modified": "modifié",
+  "edit": "Modifier",
+  "save": "Enregistrer",
+  "cancel": "Annuler",
+  "restore": "Revenir au texte d'origine",
+  "delete": "Supprimer",
+  "deleteConfirm": "Supprimer ce prompt du carnet ?",
+  "note": "Ce que j'en retiens",
+  "notePlaceholder": "Ce que la réponse m'a apporté, ce qu'il a fallu corriger…",
+  "copy": "Copier",
+  "copied": "Copié",
+  "export": {
+    "docx": "Exporter le carnet (.docx)",
+    "documentTitle": "Carnet de prompts",
+    "generatedOn": "Carnet produit le {{date}}.",
+    "note": "Ce que j'en retiens :"
+  }
+}

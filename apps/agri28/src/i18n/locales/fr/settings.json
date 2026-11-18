@@ -13,11 +13,28 @@
   },
   "reminder": {
     "label": "Rappel quotidien",
-    "help": "Le web ne garantit pas de notification à l'heure exacte sans serveur. Un rappel d'agenda sera proposé à la phase 5."
+    "help": "Le web ne garantit aucune notification à l'heure exacte sans serveur. Le rappel d'agenda, lui, sonne même application fermée.",
+    "time": "Heure du rappel",
+    "ics": "Ajouter le rappel à mon agenda",
+    "icsHelp": "Télécharge un rendez-vous quotidien de 15 minutes, pendant 28 jours.",
+    "notify": "Autoriser les notifications",
+    "notifyHelp": "L'application vous rappellera votre journée à l'ouverture, si elle n'est pas encore validée.",
+    "notifyGranted": "Notifications autorisées.",
+    "notifyDenied": "Notifications refusées par le navigateur. Le rappel d'agenda reste disponible.",
+    "notifyUnsupported": "Cet appareil ne propose pas de notifications web.",
+    "summary": "Agricole DZ 360 — mes 15 minutes",
+    "description": "15 minutes pour avancer sur mon projet agricole."
   },
   "data": {
     "label": "Mes données",
-    "help": "Tout reste sur votre téléphone : aucune donnée n'est envoyée sur Internet. Export, import et réinitialisation arrivent à la phase 5."
+    "help": "Tout reste sur votre téléphone. Pensez à exporter une sauvegarde : effacer les données du navigateur effacerait aussi votre Dossier.",
+    "export": "Exporter une sauvegarde (.json)",
+    "import": "Restaurer une sauvegarde",
+    "importDone": "Sauvegarde restaurée.",
+    "importError": "Ce fichier n'est pas une sauvegarde valide d'Agricole DZ 360.",
+    "reset": "Tout effacer",
+    "resetConfirm": "Effacer définitivement le projet, la progression, le Dossier et le carnet ? Cette action est irréversible.",
+    "resetDone": "Données effacées."
   },
   "about": {
     "label": "À propos",

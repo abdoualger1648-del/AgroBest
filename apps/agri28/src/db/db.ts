@@ -1,10 +1,10 @@
 import Dexie, { type EntityTable } from 'dexie';
 import type { Lang } from '@/lib/lang';
 import type { ThemePreference } from '@/lib/appearance';
-import type { DayProgress, DossierItem, Project } from '@/domain/types';
+import type { BadgeRecord, DayProgress, DossierItem, Project, PromptEntry } from '@/domain/types';
 
 export const DB_NAME = 'agri28';
-export const SCHEMA_VERSION = 2;
+export const SCHEMA_VERSION = 3;
 
 /** Préférences et état de l'utilisateur. Une seule ligne, id = 1. */
 export interface ProfileRecord {
@@ -32,6 +32,8 @@ export class Agri28Db extends Dexie {
   declare projects: EntityTable<Project, 'id'>;
   declare progress: EntityTable<DayProgress, 'id'>;
   declare dossierItems: EntityTable<DossierItem, 'id'>;
+  declare promptEntries: EntityTable<PromptEntry, 'id'>;
+  declare badges: EntityTable<BadgeRecord, 'id'>;
 
   constructor(name: string = DB_NAME) {
     super(name);
@@ -60,6 +62,17 @@ export class Agri28Db extends Dexie {
             profile.schemaVersion = SCHEMA_VERSION;
           });
       });
+
+    // Version 3 (phase 5) : carnet de prompts et badges.
+    this.version(3).stores({
+      profile: 'id',
+      kv: 'key',
+      projects: 'id, updatedAt',
+      progress: 'id, projectId, day, status, completedAt, [projectId+day]',
+      dossierItems: 'id, projectId, day, kind, updatedAt, [projectId+kind]',
+      promptEntries: 'id, projectId, day, favorite, updatedAt, *tags',
+      badges: 'id, projectId, earnedAt',
+    });
   }
 }
 

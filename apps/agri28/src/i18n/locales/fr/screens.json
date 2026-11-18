@@ -1,39 +1,4 @@
 {
-  "onboarding": {
-    "title": "Bienvenue",
-    "description": "Vous choisirez votre langue, puis vous créerez votre projet : type d'activité, superficie ou cheptel, wilaya et objectif.",
-    "phase": "Phase 2"
-  },
-  "project": {
-    "title": "Mon projet",
-    "description": "La fiche de votre exploitation. Elle pré-remplit automatiquement tous les prompts du parcours.",
-    "phase": "Phase 2"
-  },
-  "day": {
-    "title": "Ma journée",
-    "description": "15 minutes : concept (3 min), pratique guidée (7 min), quiz (3 min), bilan (2 min), avec minuteur visible.",
-    "phase": "Phases 2 et 3"
-  },
-  "dossier": {
-    "title": "Dossier de projet",
-    "description": "Chaque jour ajoute une brique : fiche projet, objectifs, budget, calendrier, risques, équipe, achats, suivi, rapports. Exportable en .docx et .xlsx.",
-    "phase": "Phase 5"
-  },
-  "notebook": {
-    "title": "Carnet de prompts",
-    "description": "Tous les prompts que vous avez utilisés : modifiables, cherchables, exportables.",
-    "phase": "Phase 5"
-  },
-  "templates": {
-    "title": "Bibliothèque de modèles",
-    "description": "Fiche projet, budget, calendrier cultural, registre des risques, rapport mensuel.",
-    "phase": "Phase 5"
-  },
-  "badges": {
-    "title": "Badges et certificat",
-    "description": "Un badge à la fin de chaque semaine, et un certificat en PDF au terme des 28 jours.",
-    "phase": "Phase 5"
-  },
   "notFound": {
     "title": "Page introuvable",
     "description": "Ce lien ne correspond à aucun écran de l'application.",

@@ -70,12 +70,20 @@ describe('application', () => {
     ).toBeInTheDocument();
   });
 
-  it('ouvre les écrans encore vides avec leur promesse', async () => {
+  it('ouvre la bibliothèque de modèles', async () => {
+    await renderApp('fr', '/modeles');
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: resources.fr.templates.title }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 2, name: 'Budget' })).toBeInTheDocument();
+  });
+
+  it('ouvre le Dossier de projet', async () => {
     await renderApp('fr', '/dossier');
 
     expect(
-      screen.getByRole('heading', { level: 1, name: resources.fr.screens.dossier.title }),
+      screen.getByRole('heading', { level: 1, name: resources.fr.dossier.title }),
     ).toBeInTheDocument();
-    expect(screen.getByText(resources.fr.screens.dossier.description)).toBeInTheDocument();
   });
 });

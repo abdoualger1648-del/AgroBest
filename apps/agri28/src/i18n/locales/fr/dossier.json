@@ -1,0 +1,46 @@
+{
+  "title": "Dossier de projet",
+  "subtitle": "Tout ce que vous avez produit pendant le parcours, rassemblé.",
+  "empty": "Votre Dossier est encore vide. Chaque journée validée y ajoute une brique.",
+  "noProject": "Créez votre projet pour commencer à remplir votre Dossier.",
+  "count": "Briques : {{count}} · Jours : {{days}}",
+  "fromDay": "Jour {{day}}",
+  "revised": "révisé {{count}} fois",
+  "delete": "Supprimer cette brique",
+  "deleteConfirm": "Supprimer définitivement cette brique du Dossier ?",
+  "export": {
+    "title": "Exporter",
+    "docx": "Document Word (.docx)",
+    "xlsx": "Tableur (.xlsx)",
+    "working": "Préparation du fichier…",
+    "error": "Le fichier n'a pas pu être produit.",
+    "documentTitle": "Dossier de projet",
+    "generatedOn": "Document produit le {{date}} avec Agricole DZ 360.",
+    "summarySheet": "Synthèse",
+    "columns": {
+      "section": "Section",
+      "day": "Jour",
+      "type": "Type",
+      "content": "Contenu"
+    }
+  },
+  "project": {
+    "name": "Projet",
+    "type": "Activité",
+    "scale": "Taille",
+    "wilaya": "Wilaya",
+    "objective": "Objectif"
+  },
+  "kinds": {
+    "fiche_projet": "Fiche projet",
+    "objectifs": "Objectifs",
+    "budget": "Budget",
+    "calendrier": "Calendrier",
+    "risques": "Risques",
+    "equipe": "Équipe",
+    "achats": "Achats et fournisseurs",
+    "suivi": "Suivi",
+    "rapport": "Rapports",
+    "libre": "Autres documents"
+  }
+}

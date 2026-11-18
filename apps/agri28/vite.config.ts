@@ -82,6 +82,38 @@ export default defineConfig(({ mode }) => ({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2,json}'],
+        // Les bibliothèques d'export pèsent plus de 2 Mo à elles seules :
+        // les pré-cacher imposerait ce téléchargement à la première visite,
+        // y compris à qui n'exportera jamais. Elles sont mises en cache au
+        // premier usage, et restent ensuite disponibles hors ligne.
+        // Et l'on ne pré-cache que la semaine 1 des leçons : les 21 autres
+        // journées sont mises en cache à la première ouverture, comme prévu
+        // au cadrage. Un utilisateur sur connexion faible télécharge donc la
+        // coque et sa première semaine, pas les 56 fichiers de contenu.
+        globIgnores: [
+          '**/export-*.js',
+          '**/day-0[89]*.js',
+          '**/day-1[0-9]*.js',
+          '**/day-2[0-8]*.js',
+        ],
+        runtimeCaching: [
+          {
+            urlPattern: /\/assets\/day-\d{2}\.[a-z]{2}-[^/]+\.js$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'lessons',
+              expiration: { maxEntries: 80, maxAgeSeconds: 60 * 60 * 24 * 365 },
+            },
+          },
+          {
+            urlPattern: /\/assets\/export-[^/]+\.js$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'export-libs',
+              expiration: { maxEntries: 8, maxAgeSeconds: 60 * 60 * 24 * 180 },
+            },
+          },
+        ],
         navigateFallback: 'index.html',
         cleanupOutdatedCaches: true,
         clientsClaim: false,
@@ -93,6 +125,18 @@ export default defineConfig(({ mode }) => ({
   build: {
     target: 'es2022',
     sourcemap: true,
+    rollupOptions: {
+      output: {
+        // Noms stables pour les bibliothèques d'export, afin de les exclure
+        // du pré-cache du service worker.
+        manualChunks: (id: string) => {
+          if (id.includes('node_modules/docx')) return 'export-docx';
+          if (id.includes('node_modules/exceljs')) return 'export-xlsx';
+          if (id.includes('node_modules/pdf-lib')) return 'export-pdf';
+          return undefined;
+        },
+      },
+    },
   },
   test: {
     environment: 'jsdom',

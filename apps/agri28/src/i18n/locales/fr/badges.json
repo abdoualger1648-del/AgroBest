@@ -1,0 +1,28 @@
+{
+  "title": "Badges et certificat",
+  "subtitle": "Un badge par semaine terminée, un certificat au bout des 28 jours.",
+  "week": "Semaine {{week}}",
+  "weekNames": {
+    "1": "Fondations",
+    "2": "Planification",
+    "3": "Terrain",
+    "4": "Pilotage"
+  },
+  "final": "Parcours terminé",
+  "earnedOn": "Obtenu le {{date}}",
+  "locked": "Validez les 7 jours de la semaine pour obtenir ce badge.",
+  "lockedFinal": "Validez les 28 jours pour obtenir ce badge.",
+  "progress": "{{done}} / {{total}} jours validés",
+  "justEarned": "Nouveau badge : {{list}}",
+  "certificate": {
+    "title": "Certificat de fin de parcours",
+    "locked": "Le certificat devient disponible une fois les 28 jours validés.",
+    "download": "Télécharger le certificat (PDF)",
+    "working": "Préparation du certificat…",
+    "error": "Le certificat n'a pas pu être produit sur cet appareil.",
+    "intro": "Ce certificat atteste que le projet",
+    "achievement": "a suivi les 28 jours du parcours Agricole DZ 360.",
+    "dateLine": "Parcours terminé le {{date}}",
+    "disclaimer": "Attestation de parcours. Ce n'est ni un diplôme, ni une qualification professionnelle, ni une validation technique du projet."
+  }
+}

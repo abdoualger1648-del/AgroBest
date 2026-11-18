@@ -264,6 +264,50 @@ export const wilayasFileSchema = z.object({
     .min(48),
 });
 
+const bilingual = z.object({ fr: z.string(), ar: z.string() });
+
+/** Bloc de modèle : même forme que DossierBlock, mais bilingue. */
+const templateBlockSchema = z.discriminatedUnion('type', [
+  z.object({
+    type: z.literal('heading'),
+    level: z.union([z.literal(1), z.literal(2), z.literal(3)]),
+    text: bilingual,
+  }),
+  z.object({ type: z.literal('paragraph'), text: bilingual }),
+  z.object({ type: z.literal('note'), variant: z.enum(['info', 'warning']), text: bilingual }),
+  z.object({ type: z.literal('list'), ordered: z.boolean(), items: z.array(bilingual) }),
+  z.object({
+    type: z.literal('kv'),
+    rows: z.array(z.object({ key: bilingual, value: bilingual })),
+  }),
+  z.object({
+    type: z.literal('table'),
+    columns: z.array(
+      z.object({ key: z.string(), label: bilingual, numeric: z.boolean().optional() }),
+    ),
+    rows: z.array(z.record(z.string(), z.union([z.string(), z.number()]))),
+  }),
+]);
+
+export const templatesFileSchema = z.object({
+  schema: z.literal(1),
+  note: z.string().optional(),
+  templates: z
+    .array(
+      z.object({
+        id: z.string().regex(/^[a-z0-9_]+$/),
+        kind: dossierKindSchema,
+        title: bilingual,
+        description: bilingual,
+        blocks: z.array(templateBlockSchema).min(1),
+      }),
+    )
+    .min(1),
+});
+
+export type TemplateDefinition = z.infer<typeof templatesFileSchema>['templates'][number];
+export type TemplateBlock = z.infer<typeof templateBlockSchema>;
+
 export type Guardrail = z.infer<typeof guardrailsFileSchema>['guardrails'][number];
 export type Tool = z.infer<typeof toolsFileSchema>['tools'][number];
 export type Wilaya = z.infer<typeof wilayasFileSchema>['wilayas'][number];

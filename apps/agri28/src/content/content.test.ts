@@ -7,7 +7,16 @@ import {
   LessonNotFoundError,
 } from './loader';
 import { lessonSchema } from './schema';
-import { getGuardrailText, getTool, listTools, listWilayas, wilayaName } from './catalog';
+import {
+  getGuardrailText,
+  getTemplate,
+  getTool,
+  listTemplates,
+  listTools,
+  listWilayas,
+  templateBlocks,
+  wilayaName,
+} from './catalog';
 
 describe('chargement du contenu', () => {
   beforeEach(() => {
@@ -161,6 +170,48 @@ describe('catalogues', () => {
     expect(getTool('claude')?.source).toContain('anthropic.com');
     for (const tool of listTools()) {
       expect(tool.checkedOn).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    }
+  });
+});
+
+describe('modèles exportables', () => {
+  it('fournit les cinq modèles annoncés', () => {
+    expect(listTemplates().map((template) => template.id)).toEqual([
+      'fiche_projet',
+      'budget',
+      'calendrier',
+      'risques',
+      'rapport',
+    ]);
+  });
+
+  it('les rend dans les deux langues, sans mélange', () => {
+    const budget = getTemplate('budget');
+    expect(budget?.title.fr).toBe('Budget');
+    expect(budget?.title.ar).toMatch(/[؀-ۿ]/);
+
+    const fr = templateBlocks(budget!, 'fr');
+    const ar = templateBlocks(budget!, 'ar');
+    expect(fr).toHaveLength(ar.length);
+    expect(JSON.stringify(fr)).not.toMatch(/[؀-ۿ]/);
+    expect(JSON.stringify(ar)).toMatch(/[؀-ۿ]/);
+  });
+
+  it('livre des tableaux vides : aucun chiffre pré-rempli', () => {
+    for (const template of listTemplates()) {
+      for (const block of templateBlocks(template, 'fr')) {
+        if (block.type === 'table') {
+          expect(block.rows, template.id).toEqual([]);
+          expect(block.columns.length).toBeGreaterThan(0);
+        }
+      }
+    }
+  });
+
+  it('ne contient aucun montant en dinars', () => {
+    const money = /\d[\d\s.,\u00a0]*\s?(?:DA|DZD|دج|د\.ج)/u;
+    for (const template of listTemplates()) {
+      expect(money.test(JSON.stringify(template)), template.id).toBe(false);
     }
   });
 });

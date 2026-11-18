@@ -63,6 +63,10 @@ export async function saveDossierDrafts(
   return saved;
 }
 
+export async function deleteDossierItem(id: string): Promise<void> {
+  await db.dossierItems.delete(id);
+}
+
 export async function clearDossier(projectId: string): Promise<void> {
   await db.dossierItems.where('projectId').equals(projectId).delete();
 }

@@ -1,0 +1,501 @@
+{
+  "schema": 1,
+  "note": "Modèles vierges, exportables en .docx et .xlsx. Aucun chiffre : ils se remplissent avec les relevés de l'utilisateur.",
+  "templates": [
+    {
+      "id": "fiche_projet",
+      "kind": "fiche_projet",
+      "title": {
+        "fr": "Fiche projet",
+        "ar": "بطاقة المشروع"
+      },
+      "description": {
+        "fr": "La carte d'identité de votre exploitation, à joindre à tout dossier.",
+        "ar": "بطاقة هوية مستثمرتك، تُرفق بأي ملف."
+      },
+      "blocks": [
+        {
+          "type": "kv",
+          "rows": [
+            {
+              "key": {
+                "fr": "Nom du projet",
+                "ar": "اسم المشروع"
+              },
+              "value": {
+                "fr": "",
+                "ar": ""
+              }
+            },
+            {
+              "key": {
+                "fr": "Type d'activité",
+                "ar": "نوع النشاط"
+              },
+              "value": {
+                "fr": "",
+                "ar": ""
+              }
+            },
+            {
+              "key": {
+                "fr": "Taille (superficie ou cheptel)",
+                "ar": "الحجم (المساحة أو عدد الرؤوس)"
+              },
+              "value": {
+                "fr": "",
+                "ar": ""
+              }
+            },
+            {
+              "key": {
+                "fr": "Wilaya et commune",
+                "ar": "الولاية والبلدية"
+              },
+              "value": {
+                "fr": "",
+                "ar": ""
+              }
+            },
+            {
+              "key": {
+                "fr": "Source d'eau",
+                "ar": "مصدر الماء"
+              },
+              "value": {
+                "fr": "",
+                "ar": ""
+              }
+            },
+            {
+              "key": {
+                "fr": "Objectif à 12 mois",
+                "ar": "الهدف بعد 12 شهرًا"
+              },
+              "value": {
+                "fr": "",
+                "ar": ""
+              }
+            },
+            {
+              "key": {
+                "fr": "Date de mise à jour",
+                "ar": "تاريخ التحديث"
+              },
+              "value": {
+                "fr": "",
+                "ar": ""
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "budget",
+      "kind": "budget",
+      "title": {
+        "fr": "Budget",
+        "ar": "الميزانية"
+      },
+      "description": {
+        "fr": "Investissement et fonctionnement séparés. Les prix se relèvent et se datent.",
+        "ar": "الاستثمار والتسيير منفصلان. والأسعار تُعاين وتُؤرَّخ."
+      },
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 3,
+          "text": {
+            "fr": "Investissement (payé une fois)",
+            "ar": "الاستثمار (يُدفع مرّة)"
+          }
+        },
+        {
+          "type": "table",
+          "columns": [
+            {
+              "key": "poste",
+              "label": {
+                "fr": "Poste",
+                "ar": "الباب"
+              }
+            },
+            {
+              "key": "unite",
+              "label": {
+                "fr": "Unité",
+                "ar": "الوحدة"
+              }
+            },
+            {
+              "key": "quantite",
+              "label": {
+                "fr": "Quantité",
+                "ar": "الكمّية"
+              },
+              "numeric": true
+            },
+            {
+              "key": "prix",
+              "label": {
+                "fr": "Prix unitaire",
+                "ar": "سعر الوحدة"
+              },
+              "numeric": true
+            },
+            {
+              "key": "total",
+              "label": {
+                "fr": "Total",
+                "ar": "المجموع"
+              },
+              "numeric": true
+            },
+            {
+              "key": "releve",
+              "label": {
+                "fr": "Relevé le / chez",
+                "ar": "معايَن في / عند"
+              }
+            }
+          ],
+          "rows": []
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": {
+            "fr": "Fonctionnement (qui revient)",
+            "ar": "التسيير (يتكرّر)"
+          }
+        },
+        {
+          "type": "table",
+          "columns": [
+            {
+              "key": "poste",
+              "label": {
+                "fr": "Poste",
+                "ar": "الباب"
+              }
+            },
+            {
+              "key": "unite",
+              "label": {
+                "fr": "Unité",
+                "ar": "الوحدة"
+              }
+            },
+            {
+              "key": "frequence",
+              "label": {
+                "fr": "Fréquence",
+                "ar": "الوتيرة"
+              }
+            },
+            {
+              "key": "prix",
+              "label": {
+                "fr": "Prix unitaire",
+                "ar": "سعر الوحدة"
+              },
+              "numeric": true
+            },
+            {
+              "key": "total",
+              "label": {
+                "fr": "Total par mois",
+                "ar": "المجموع الشهري"
+              },
+              "numeric": true
+            },
+            {
+              "key": "releve",
+              "label": {
+                "fr": "Relevé le / chez",
+                "ar": "معايَن في / عند"
+              }
+            }
+          ],
+          "rows": []
+        },
+        {
+          "type": "note",
+          "variant": "warning",
+          "text": {
+            "fr": "Aucun prix n'est pré-rempli : relevez-les vous-même et notez la date.",
+            "ar": "لا سعر مُعبّأ مسبقًا: عاينها بنفسك ودوّن التاريخ."
+          }
+        }
+      ]
+    },
+    {
+      "id": "calendrier",
+      "kind": "calendrier",
+      "title": {
+        "fr": "Calendrier des travaux",
+        "ar": "رزنامة الأشغال"
+      },
+      "description": {
+        "fr": "Douze mois, vos travaux, vos achats et vos pics de charge.",
+        "ar": "اثنا عشر شهرًا، وأشغالك ومشترياتك وذروات عملك."
+      },
+      "blocks": [
+        {
+          "type": "table",
+          "columns": [
+            {
+              "key": "mois",
+              "label": {
+                "fr": "Mois",
+                "ar": "الشهر"
+              }
+            },
+            {
+              "key": "travaux",
+              "label": {
+                "fr": "Travaux principaux",
+                "ar": "الأشغال الرئيسية"
+              }
+            },
+            {
+              "key": "achats",
+              "label": {
+                "fr": "Achats à passer",
+                "ar": "المشتريات الواجب تمريرها"
+              }
+            },
+            {
+              "key": "main",
+              "label": {
+                "fr": "Main-d'œuvre",
+                "ar": "اليد العاملة"
+              }
+            },
+            {
+              "key": "confirmer",
+              "label": {
+                "fr": "À confirmer localement",
+                "ar": "يُؤكَّد محليًّا"
+              }
+            }
+          ],
+          "rows": []
+        },
+        {
+          "type": "note",
+          "variant": "warning",
+          "text": {
+            "fr": "Les dates dépendent de votre région et de l'année : à confirmer auprès d'un technicien.",
+            "ar": "التواريخ تتوقّف على منطقتك وعلى السنة: تُؤكَّد لدى تقنيّ."
+          }
+        }
+      ]
+    },
+    {
+      "id": "risques",
+      "kind": "risques",
+      "title": {
+        "fr": "Registre des risques",
+        "ar": "سجلّ المخاطر"
+      },
+      "description": {
+        "fr": "Un risque, son signe avant-coureur et la parade mise en place avant.",
+        "ar": "خطر، وعلامته المنذرة، والاحتراز الموضوع قبلًا."
+      },
+      "blocks": [
+        {
+          "type": "table",
+          "columns": [
+            {
+              "key": "risque",
+              "label": {
+                "fr": "Risque (événement précis)",
+                "ar": "الخطر (حدث محدَّد)"
+              }
+            },
+            {
+              "key": "famille",
+              "label": {
+                "fr": "Famille",
+                "ar": "العائلة"
+              }
+            },
+            {
+              "key": "periode",
+              "label": {
+                "fr": "Période",
+                "ar": "الفترة"
+              }
+            },
+            {
+              "key": "gravite",
+              "label": {
+                "fr": "Gravité",
+                "ar": "الخطورة"
+              }
+            },
+            {
+              "key": "signe",
+              "label": {
+                "fr": "Signe avant-coureur",
+                "ar": "العلامة المنذرة"
+              }
+            },
+            {
+              "key": "parade",
+              "label": {
+                "fr": "Parade",
+                "ar": "الاحتراز"
+              }
+            }
+          ],
+          "rows": []
+        }
+      ]
+    },
+    {
+      "id": "rapport",
+      "kind": "rapport",
+      "title": {
+        "fr": "Rapport mensuel",
+        "ar": "التقرير الشهري"
+      },
+      "description": {
+        "fr": "Où j'en suis, ce qui a dévié, ce que je décide. Une page.",
+        "ar": "أين أنا، وما انحرف، وما أقرّره. صفحة واحدة."
+      },
+      "blocks": [
+        {
+          "type": "kv",
+          "rows": [
+            {
+              "key": {
+                "fr": "Mois",
+                "ar": "الشهر"
+              },
+              "value": {
+                "fr": "",
+                "ar": ""
+              }
+            },
+            {
+              "key": {
+                "fr": "Projet",
+                "ar": "المشروع"
+              },
+              "value": {
+                "fr": "",
+                "ar": ""
+              }
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": {
+            "fr": "Mes quatre indicateurs",
+            "ar": "مؤشّراتي الأربعة"
+          }
+        },
+        {
+          "type": "table",
+          "columns": [
+            {
+              "key": "indicateur",
+              "label": {
+                "fr": "Indicateur",
+                "ar": "المؤشّر"
+              }
+            },
+            {
+              "key": "mois",
+              "label": {
+                "fr": "Ce mois",
+                "ar": "هذا الشهر"
+              },
+              "numeric": true
+            },
+            {
+              "key": "precedent",
+              "label": {
+                "fr": "Mois précédent",
+                "ar": "الشهر السابق"
+              },
+              "numeric": true
+            },
+            {
+              "key": "seuil",
+              "label": {
+                "fr": "Mon seuil",
+                "ar": "عتبتي"
+              }
+            }
+          ],
+          "rows": []
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": {
+            "fr": "Ce qui a dévié",
+            "ar": "ما الذي انحرف"
+          }
+        },
+        {
+          "type": "paragraph",
+          "text": {
+            "fr": "",
+            "ar": ""
+          }
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": {
+            "fr": "Mes trois décisions",
+            "ar": "قراراتي الثلاثة"
+          }
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            {
+              "fr": "",
+              "ar": ""
+            },
+            {
+              "fr": "",
+              "ar": ""
+            },
+            {
+              "fr": "",
+              "ar": ""
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 3,
+          "text": {
+            "fr": "À vérifier ou à demander",
+            "ar": "ما يُتحقّق منه أو يُطلب"
+          }
+        },
+        {
+          "type": "list",
+          "ordered": false,
+          "items": [
+            {
+              "fr": "",
+              "ar": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

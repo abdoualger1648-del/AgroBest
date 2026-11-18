@@ -108,6 +108,38 @@ export interface DossierItem {
   version: number;
 }
 
+/** Une entrée du carnet de prompts : un prompt copié, puis éditable. */
+export interface PromptEntry {
+  id: string;
+  projectId: string;
+  day: number;
+  lessonId: string;
+  promptId: string;
+  title: string;
+  tool: string;
+  lang: Lang;
+  /** Texte final, variables déjà remplacées, modifiable par l'utilisateur. */
+  text: string;
+  /** Texte d'origine, pour pouvoir revenir en arrière. */
+  originalText: string;
+  tags: string[];
+  resultNote?: string;
+  favorite: boolean;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export const BADGE_IDS = ['week-1', 'week-2', 'week-3', 'week-4', 'final'] as const;
+export type BadgeId = (typeof BADGE_IDS)[number];
+
+export interface BadgeRecord {
+  /** `${projectId}:${badge}` — un badge appartient à un projet. */
+  id: string;
+  projectId: string;
+  badge: BadgeId;
+  earnedAt: number;
+}
+
 export function weekOf(day: number): number {
   return Math.min(WEEKS, Math.max(1, Math.ceil(day / 7)));
 }

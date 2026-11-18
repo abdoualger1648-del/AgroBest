@@ -12,6 +12,7 @@ import { fileURLToPath } from 'node:url';
 import {
   guardrailsFileSchema,
   lessonSchema,
+  templatesFileSchema,
   toolsFileSchema,
   wilayasFileSchema,
   type Lesson,
@@ -125,6 +126,27 @@ if (!wilayasParsed.success) {
   fail(
     `wilayas.json : count annoncé ${wilayasParsed.data.count}, ${wilayasParsed.data.wilayas.length} entrées réelles.`,
   );
+}
+
+const templatesRaw = await readJson(join('templates', 'templates.json'));
+const templatesParsed = templatesFileSchema.safeParse(templatesRaw);
+if (!templatesParsed.success) {
+  for (const issue of templatesParsed.error.issues) {
+    fail(`templates.json : ${issue.path.join('.')} — ${issue.message}`);
+  }
+} else {
+  for (const template of templatesParsed.data.templates) {
+    const texts = allStrings(template);
+    const money = texts.find((text) => MONEY.test(text));
+    if (money) {
+      fail(
+        `templates.json : le modèle « ${template.id} » contient un montant (${money.slice(0, 40)}…) ; les modèles doivent rester vierges.`,
+      );
+    }
+    if (!/[\u0600-\u06ff]/.test(template.title.ar)) {
+      fail(`templates.json : le modèle « ${template.id} » n'a pas de titre en arabe.`);
+    }
+  }
 }
 
 // ——— leçons ———
@@ -260,6 +282,7 @@ if (errors.length > 0) {
 
 console.log(
   `\nContenu valide : ${guardrailIds.size} garde-fous, ${toolIds.size} outils, ` +
+    `${templatesParsed.success ? templatesParsed.data.templates.length : 0} modèles, ` +
     `${wilayasParsed.success ? wilayasParsed.data.wilayas.length : 0} wilayas, ` +
     `${lessons.size} fichiers de leçon (${dayIds.length} jour(s), AR + FR).`,
 );

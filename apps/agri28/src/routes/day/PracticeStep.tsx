@@ -9,6 +9,8 @@ import { getTool } from '@/content/catalog';
 import { buildPromptContext, missingVariables, renderPrompt } from '@/domain/prompt';
 import type { Project } from '@/domain/types';
 import { usePreferences } from '@/store/preferences';
+import { useCourse } from '@/store/course';
+import { toPlainText } from '@/content/markdown';
 
 interface PracticeStepProps {
   lesson: Lesson;
@@ -17,9 +19,20 @@ interface PracticeStepProps {
   onCapture: (id: string, value: string) => void;
 }
 
-function PromptCard({ step, project }: { step: Step; project: Project | null }) {
+function PromptCard({
+  step,
+  project,
+  lessonId,
+  day,
+}: {
+  step: Step;
+  project: Project | null;
+  lessonId: string;
+  day: number;
+}) {
   const { t } = useTranslation('day');
   const lang = usePreferences((state) => state.lang);
+  const recordPrompt = useCourse((state) => state.recordPrompt);
   const prompt = step.prompt;
   if (!prompt) return null;
 
@@ -47,7 +60,23 @@ function PromptCard({ step, project }: { step: Step; project: Project | null }) 
         </p>
       ) : null}
 
-      <CopyButton text={text} label={t('practice.copy')} copiedLabel={t('practice.copied')} />
+      <CopyButton
+        text={text}
+        label={t('practice.copy')}
+        copiedLabel={t('practice.copied')}
+        onCopied={() => {
+          // Le prompt copié entre dans le carnet, avec ses variables déjà remplies.
+          void recordPrompt({
+            day,
+            lessonId,
+            promptId: prompt.id,
+            title: toPlainText(prompt.title),
+            tool: prompt.tool,
+            lang,
+            text,
+          });
+        }}
+      />
 
       {tool ? (
         <>
@@ -108,7 +137,7 @@ export function PracticeStep({ lesson, project, captures, onCapture }: PracticeS
               ) : null}
             </p>
 
-            <PromptCard step={step} project={project} />
+            <PromptCard step={step} project={project} lessonId={lesson.id} day={lesson.day} />
 
             {step.capture ? (
               <div className="mt-3">

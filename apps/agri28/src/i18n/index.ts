@@ -9,6 +9,10 @@ import frSettings from './locales/fr/settings.json';
 import frScreens from './locales/fr/screens.json';
 import frProject from './locales/fr/project.json';
 import frDay from './locales/fr/day.json';
+import frDossier from './locales/fr/dossier.json';
+import frNotebook from './locales/fr/notebook.json';
+import frBadges from './locales/fr/badges.json';
+import frTemplates from './locales/fr/templates.json';
 
 import arCommon from './locales/ar/common.json';
 import arNav from './locales/ar/nav.json';
@@ -17,6 +21,10 @@ import arSettings from './locales/ar/settings.json';
 import arScreens from './locales/ar/screens.json';
 import arProject from './locales/ar/project.json';
 import arDay from './locales/ar/day.json';
+import arDossier from './locales/ar/dossier.json';
+import arNotebook from './locales/ar/notebook.json';
+import arBadges from './locales/ar/badges.json';
+import arTemplates from './locales/ar/templates.json';
 
 export const NAMESPACES = [
   'common',
@@ -26,6 +34,10 @@ export const NAMESPACES = [
   'screens',
   'project',
   'day',
+  'dossier',
+  'notebook',
+  'badges',
+  'templates',
 ] as const;
 export type Namespace = (typeof NAMESPACES)[number];
 
@@ -43,6 +55,10 @@ export const resources = {
     screens: frScreens,
     project: frProject,
     day: frDay,
+    dossier: frDossier,
+    notebook: frNotebook,
+    badges: frBadges,
+    templates: frTemplates,
   },
   ar: {
     common: arCommon,
@@ -52,6 +68,10 @@ export const resources = {
     screens: arScreens,
     project: arProject,
     day: arDay,
+    dossier: arDossier,
+    notebook: arNotebook,
+    badges: arBadges,
+    templates: arTemplates,
   },
 } as const;
 

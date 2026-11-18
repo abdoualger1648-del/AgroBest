@@ -16,6 +16,8 @@ interface PreferencesState {
   theme: ThemePreference;
   resolvedTheme: ResolvedTheme;
   onboardingDone: boolean;
+  reminderEnabled: boolean;
+  reminderTime: string | null;
   hydrated: boolean;
   /** Renseigne l'état depuis le profil déjà lu au démarrage. */
   init: (profile: ProfileRecord) => void;
@@ -23,6 +25,7 @@ interface PreferencesState {
   hydrate: () => Promise<void>;
   setLang: (lang: Lang) => Promise<void>;
   setTheme: (theme: ThemePreference) => Promise<void>;
+  setReminder: (enabled: boolean, time: string) => Promise<void>;
   /** Appelé quand le thème du système change et que la préférence est « système ». */
   syncSystemTheme: (resolved: ResolvedTheme) => void;
 }
@@ -32,6 +35,8 @@ export const usePreferences = create<PreferencesState>((set, get) => ({
   theme: 'system',
   resolvedTheme: 'light',
   onboardingDone: false,
+  reminderEnabled: false,
+  reminderTime: null,
   hydrated: false,
 
   init: (profile) => {
@@ -40,6 +45,8 @@ export const usePreferences = create<PreferencesState>((set, get) => ({
       theme: profile.theme,
       resolvedTheme: resolveTheme(profile.theme),
       onboardingDone: profile.onboardingDone,
+      reminderEnabled: profile.reminderEnabled,
+      reminderTime: profile.reminderTime,
       hydrated: true,
     });
   },
@@ -64,6 +71,11 @@ export const usePreferences = create<PreferencesState>((set, get) => ({
     const resolvedTheme = applyTheme(theme);
     set({ theme, resolvedTheme });
     await updateProfile({ theme });
+  },
+
+  setReminder: async (enabled, time) => {
+    set({ reminderEnabled: enabled, reminderTime: time });
+    await updateProfile({ reminderEnabled: enabled, reminderTime: time });
   },
 
   syncSystemTheme: (resolved) => {

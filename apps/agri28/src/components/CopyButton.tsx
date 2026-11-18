@@ -7,6 +7,8 @@ interface CopyButtonProps {
   text: string;
   label: string;
   copiedLabel: string;
+  /** Appelé après une copie réussie (alimente le carnet de prompts). */
+  onCopied?: () => void;
 }
 
 async function copyToClipboard(text: string): Promise<boolean> {
@@ -36,7 +38,7 @@ async function copyToClipboard(text: string): Promise<boolean> {
   }
 }
 
-export function CopyButton({ text, label, copiedLabel }: CopyButtonProps) {
+export function CopyButton({ text, label, copiedLabel, onCopied }: CopyButtonProps) {
   const { t } = useTranslation('common');
   const [copied, setCopied] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -49,7 +51,10 @@ export function CopyButton({ text, label, copiedLabel }: CopyButtonProps) {
           void copyToClipboard(text).then((ok) => {
             setCopied(ok);
             setFailed(!ok);
-            if (ok) window.setTimeout(() => setCopied(false), 2500);
+            if (ok) {
+              onCopied?.();
+              window.setTimeout(() => setCopied(false), 2500);
+            }
           });
         }}
       >

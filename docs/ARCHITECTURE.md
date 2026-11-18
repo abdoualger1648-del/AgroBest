@@ -88,7 +88,7 @@ Principe directeur : **le contenu est une donnée, pas du code**. Ajouter un jou
     ├── content/                   # ← CONTENU PÉDAGOGIQUE (hors du code)
     │   ├── guardrails.json        # 8 garde-fous, FR + AR
     │   ├── days/day-01.{fr,ar}.json  # jour 1 (BROUILLON, relu en phase 3)
-    │   ├── templates/             # modèles exportables              (phase 5)
+    │   ├── templates/templates.json  # 5 modèles vierges, bilingues
     │   ├── tools.json             # outils IA : gratuité, disponibilité en Algérie, date de vérif.
     │   ├── wilayas.json           # 69 wilayas (loi 26-06, JO n° 25 du 5 avril 2026)
     │   └── sources.json           # sources consultées, datées, avec niveau de confiance
@@ -119,7 +119,7 @@ Principe directeur : **le contenu est une donnée, pas du code**. Ajouter un jou
         ├── domain/                # logique pure : course, streak, quiz, prompt, timer, dossier
         ├── content/               # schémas Zod, chargeur à la demande, catalogues, markdown
         ├── hooks/                 # useTimer (cadence le minuteur du domaine)
-        └── export/                # .docx, .xlsx, certificat PDF          (phase 5)
+        └── export/                # model (pur) · docx · xlsx · certificate · calendar (.ics)
 ```
 
 ## 4. Modèle de données (IndexedDB via Dexie)

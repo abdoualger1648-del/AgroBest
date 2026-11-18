@@ -1,0 +1,12 @@
+{
+  "title": "Bibliothèque de modèles",
+  "subtitle": "Des documents vierges, prêts à remplir avec vos propres chiffres.",
+  "download": {
+    "docx": "Modèle Word (.docx)",
+    "xlsx": "Modèle tableur (.xlsx)"
+  },
+  "working": "Préparation du modèle…",
+  "error": "Le modèle n'a pas pu être produit.",
+  "generatedOn": "Modèle vierge produit le {{date}} avec Agricole DZ 360.",
+  "empty": "Les tableaux sont volontairement vides : aucun chiffre n'est pré-rempli."
+}
