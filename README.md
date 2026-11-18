@@ -44,6 +44,13 @@ propres prix, à les dater et à les comparer.
 
 ---
 
+## Mettre l'application en service
+
+Réglages GitHub, règles Firestore, premier APK, compte administrateur :
+**[docs/MISE-EN-SERVICE.md](docs/MISE-EN-SERVICE.md)**, pas à pas.
+
+---
+
 ## Démarrage
 
 Il faut Node.js 22 ou plus récent.
