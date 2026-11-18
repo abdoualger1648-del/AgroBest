@@ -6,7 +6,10 @@ import type { DayProgress, Project } from '@/domain/types';
 import { computeStreak, type Streak } from '@/domain/streak';
 import {
   createProject as dbCreateProject,
+  deleteProject as dbDeleteProject,
   getActiveProject,
+  listProjects,
+  setActiveProject,
   updateProject as dbUpdateProject,
   type ProjectInput,
 } from '@/db/repositories/project';
@@ -38,6 +41,8 @@ import type { BadgeId, BadgeRecord, DossierItem, PromptEntry } from '@/domain/ty
 
 interface CourseState {
   project: Project | null;
+  /** Tous les dossiers de l'appareil, du plus récemment modifié au plus ancien. */
+  projects: Project[];
   progress: DayProgress[];
   dossier: DossierItem[];
   prompts: PromptEntry[];
@@ -50,6 +55,9 @@ interface CourseState {
   loaded: boolean;
   load: () => Promise<void>;
   createProject: (input: ProjectInput) => Promise<Project>;
+  /** Bascule sur un autre dossier : tout l'état du parcours est rechargé. */
+  changerDeProjet: (id: string) => Promise<void>;
+  supprimerProjet: (id: string) => Promise<void>;
   updateProject: (patch: Partial<Omit<Project, 'id' | 'createdAt'>>) => Promise<void>;
   startDay: (day: number) => Promise<void>;
   saveDay: (day: number, patch: DayPatch) => Promise<void>;
@@ -96,24 +104,48 @@ const EMPTY_STREAK: Streak = { current: 0, best: 0, lastActiveDay: null };
 
 export const useCourse = create<CourseState>((set, get) => ({
   project: null,
+  projects: [],
   ...EMPTY,
   freshBadges: [],
   streak: EMPTY_STREAK,
   loaded: false,
 
   load: async () => {
-    const project = await getActiveProject();
+    const [project, projects] = await Promise.all([getActiveProject(), listProjects()]);
     if (!project) {
-      set({ project: null, ...EMPTY, freshBadges: [], streak: EMPTY_STREAK, loaded: true });
+      set({
+        project: null,
+        projects,
+        ...EMPTY,
+        freshBadges: [],
+        streak: EMPTY_STREAK,
+        loaded: true,
+      });
       return;
     }
-    set({ project, ...(await readAll(project.id)), loaded: true });
+    set({ project, projects, ...(await readAll(project.id)), loaded: true });
   },
 
   createProject: async (input) => {
     const project = await dbCreateProject(input);
-    set({ project, ...(await readAll(project.id)) });
+    set({ project, projects: await listProjects(), ...(await readAll(project.id)) });
     return project;
+  },
+
+  // Changer de dossier recharge TOUT : progression, Dossier, prompts, badges
+  // et série. Garder l'état du dossier précédent afficherait les chiffres de
+  // l'un sous le nom de l'autre.
+  changerDeProjet: async (id) => {
+    const { projects } = get();
+    const project = projects.find((candidat) => candidat.id === id);
+    if (!project) return;
+    await setActiveProject(id);
+    set({ project, freshBadges: [], ...(await readAll(id)) });
+  },
+
+  supprimerProjet: async (id) => {
+    await dbDeleteProject(id);
+    await get().load();
   },
 
   updateProject: async (patch) => {

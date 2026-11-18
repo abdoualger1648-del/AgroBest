@@ -13,6 +13,10 @@ Dans la [console Firebase](https://console.firebase.google.com/), projet `agrico
 2. **Firestore Database** → *Créer une base de données* → **mode production**
    (les règles ci-dessous remplaceront celles par défaut) → région au choix.
 
+> **Les règles ont changé en phase 9** (niveau multi-dossiers). Si votre projet tourne déjà,
+> republiez-les : sans cela, personne ne pourra demander le niveau supérieur, ni se le voir
+> accorder. L'application continue de fonctionner pour tout le reste.
+
 ## 2. Publier les règles de sécurité
 
 Copier le contenu de [`firestore.rules`](firestore.rules) dans
@@ -69,3 +73,6 @@ l'écran Administration (décision D49).
 | `actif` | activé ou non — **écrit par l'administrateur seul** |
 | `demandeLe` | date de la demande d'activation |
 | `activeLe` | date de l'activation |
+| `niveau` | `standard` (un dossier) ou `multi` (cinq) — **écrit par l'administrateur seul** |
+| `demandeNiveauLe` | date de la demande de passage au niveau supérieur |
+| `niveauLe` | date à laquelle le niveau a été accordé |

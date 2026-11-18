@@ -84,12 +84,34 @@ export async function setActiveProject(id: string): Promise<void> {
   await updateProfile({ activeProjectId: id });
 }
 
+/**
+ * Supprime un dossier et **tout** ce qui lui appartient.
+ *
+ * Les prompts et les badges manquaient à cette cascade : ils sont arrivés en
+ * phase 5, après l'écriture de cette fonction, et personne ne l'avait vu parce
+ * qu'aucun écran ne supprimait de dossier. Ils laissaient des orphelins
+ * invisibles, rattachés à un projet disparu.
+ */
 export async function deleteProject(id: string): Promise<void> {
-  await db.transaction('rw', db.projects, db.progress, db.dossierItems, db.profile, async () => {
-    await db.projects.delete(id);
-    await db.progress.where('projectId').equals(id).delete();
-    await db.dossierItems.where('projectId').equals(id).delete();
-    const profile = await getProfile();
-    if (profile.activeProjectId === id) await updateProfile({ activeProjectId: null });
-  });
+  // Six tables : Dexie veut un tableau au-delà de cinq.
+  await db.transaction(
+    'rw',
+    [db.projects, db.progress, db.dossierItems, db.promptEntries, db.badges, db.profile],
+    async () => {
+      await db.projects.delete(id);
+      await db.progress.where('projectId').equals(id).delete();
+      await db.dossierItems.where('projectId').equals(id).delete();
+      await db.promptEntries.where('projectId').equals(id).delete();
+      await db.badges.where('projectId').equals(id).delete();
+
+      const profile = await getProfile();
+      if (profile.activeProjectId === id) {
+        // On bascule sur un autre dossier s'il en reste un, pour ne pas
+        // renvoyer l'utilisateur sur l'écran de création alors qu'il a
+        // encore des dossiers.
+        const restants = await listProjects();
+        await updateProfile({ activeProjectId: restants[0]?.id ?? null });
+      }
+    },
+  );
 }

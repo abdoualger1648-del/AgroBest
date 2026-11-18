@@ -6,6 +6,7 @@ import {
   CONFIGURATION_FIREBASE,
 } from './firebase.config';
 import type { CompteDistantInfos } from '@/db/repositories/compte';
+import type { Niveau } from '@/domain/access';
 // Imports de types uniquement : effacés à la compilation, ils ne font donc
 // pas entrer le SDK dans le paquet initial. Le code, lui, l'importe à la
 // demande dans `charger()`.
@@ -37,6 +38,14 @@ interface DocumentUtilisateur {
   actif?: unknown;
   demandeLe?: unknown;
   activeLe?: unknown;
+  niveau?: unknown;
+  demandeNiveauLe?: unknown;
+  niveauLe?: unknown;
+}
+
+/** Un document écrit avant la phase 9 n'a pas de niveau : il est « standard ». */
+function lireNiveau(valeur: unknown): Niveau {
+  return valeur === 'multi' ? 'multi' : 'standard';
 }
 
 /** Reconnaît un `Timestamp` Firestore sans dépendre de sa classe. */
@@ -126,6 +135,9 @@ export class ServiceFirebase implements ServiceCompte {
         actif: false,
         demandeLe: null,
         activeLe: null,
+        niveau: 'standard',
+        demandeNiveauLe: null,
+        niveauLe: null,
       });
       return {
         uid: utilisateur.uid,
@@ -134,6 +146,9 @@ export class ServiceFirebase implements ServiceCompte {
         actif: false,
         demandeLe: null,
         activeLe: null,
+        niveau: 'standard',
+        demandeNiveauLe: null,
+        niveauLe: null,
       };
     }
 
@@ -145,6 +160,9 @@ export class ServiceFirebase implements ServiceCompte {
       actif: donnees.actif === true,
       demandeLe: enMillisecondes(donnees.demandeLe),
       activeLe: enMillisecondes(donnees.activeLe),
+      niveau: lireNiveau(donnees.niveau),
+      demandeNiveauLe: enMillisecondes(donnees.demandeNiveauLe),
+      niveauLe: enMillisecondes(donnees.niveauLe),
     };
   }
 
@@ -218,6 +236,17 @@ export class ServiceFirebase implements ServiceCompte {
     });
   }
 
+  demanderNiveau(): Promise<CompteDistantInfos> {
+    return this.appel(async (modules) => {
+      const utilisateur = await this.utilisateurConnecte(modules);
+      const { firestore, base } = modules;
+      await firestore.updateDoc(firestore.doc(base, COLLECTION_UTILISATEURS, utilisateur.uid), {
+        demandeNiveauLe: firestore.serverTimestamp(),
+      });
+      return this.etatComplet(modules, utilisateur);
+    });
+  }
+
   // ——— Administration (D49) ———
 
   /**
@@ -255,18 +284,21 @@ export class ServiceFirebase implements ServiceCompte {
           firestore.orderBy('demandeLe', 'asc'),
         ),
       );
-      return resultat.docs
-        .map((document) => {
-          const donnees = document.data() as DocumentUtilisateur;
-          return {
-            uid: document.id,
-            email: typeof donnees.email === 'string' ? donnees.email : '',
-            demandeLe: enMillisecondes(donnees.demandeLe) ?? 0,
-            dejaActif: donnees.actif === true,
-          };
-        })
-        .filter((demande) => demande.demandeLe > 0 && !demande.dejaActif)
-        .map(({ dejaActif: _ignore, ...demande }) => demande);
+      const demandes: DemandeEnAttente[] = [];
+      for (const document of resultat.docs) {
+        const donnees = document.data() as DocumentUtilisateur;
+        const email = typeof donnees.email === 'string' ? donnees.email : '';
+        const activation = enMillisecondes(donnees.demandeLe) ?? 0;
+        const niveau = enMillisecondes(donnees.demandeNiveauLe) ?? 0;
+
+        if (activation > 0 && donnees.actif !== true) {
+          demandes.push({ uid: document.id, email, demandeLe: activation, nature: 'activation' });
+        }
+        if (niveau > 0 && lireNiveau(donnees.niveau) !== 'multi') {
+          demandes.push({ uid: document.id, email, demandeLe: niveau, nature: 'niveau' });
+        }
+      }
+      return demandes.sort((a, b) => a.demandeLe - b.demandeLe);
     });
   }
 
@@ -276,6 +308,16 @@ export class ServiceFirebase implements ServiceCompte {
       await firestore.updateDoc(firestore.doc(base, COLLECTION_UTILISATEURS, uid), {
         actif: true,
         activeLe: firestore.serverTimestamp(),
+      });
+    });
+  }
+
+  accorderNiveau(uid: string): Promise<void> {
+    return this.appel(async (modules) => {
+      const { firestore, base } = modules;
+      await firestore.updateDoc(firestore.doc(base, COLLECTION_UTILISATEURS, uid), {
+        niveau: 'multi',
+        niveauLe: firestore.serverTimestamp(),
       });
     });
   }

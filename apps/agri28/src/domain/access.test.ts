@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
+  DOSSIERS_MULTI,
+  DOSSIERS_STANDARD,
   LECONS_OFFERTES,
   accesAuJour,
+  dossiersAutorises,
+  peutCreerUnDossier,
+  peutDemanderNiveau,
   dernierJourAccessible,
   etatCompte,
   leconsRestantes,
@@ -138,5 +143,38 @@ describe('demande d’activation', () => {
     expect(peutDemanderActivation({ statut: 'anonyme' })).toBe(false);
     expect(peutDemanderActivation({ statut: 'non_verifie', email: 'a@b.dz' })).toBe(false);
     expect(peutDemanderActivation({ statut: 'actif', email: 'a@b.dz', activeLe: 1 })).toBe(false);
+  });
+});
+
+describe('niveaux et nombre de dossiers', () => {
+  it('ouvre un dossier au niveau de base, cinq au niveau supérieur', () => {
+    expect(dossiersAutorises('standard')).toBe(DOSSIERS_STANDARD);
+    expect(dossiersAutorises('multi')).toBe(DOSSIERS_MULTI);
+    expect(DOSSIERS_STANDARD).toBe(1);
+    expect(DOSSIERS_MULTI).toBe(5);
+  });
+
+  it('laisse créer tant qu’il reste de la place, et pas au-delà', () => {
+    expect(peutCreerUnDossier('standard', 0)).toBe(true);
+    expect(peutCreerUnDossier('standard', 1)).toBe(false);
+    expect(peutCreerUnDossier('multi', 4)).toBe(true);
+    expect(peutCreerUnDossier('multi', 5)).toBe(false);
+    // Un compte qui dépasserait son plafond — niveau retiré, par exemple —
+    // ne peut pas en créer d'autres, mais rien n'est effacé pour autant.
+    expect(peutCreerUnDossier('standard', 3)).toBe(false);
+  });
+
+  it('ne laisse demander le niveau qu’à un compte utilisable qui ne l’a pas', () => {
+    const essai: EtatCompte = { statut: 'essai', email: 'a@b.dz' };
+    const actif: EtatCompte = { statut: 'actif', email: 'a@b.dz', activeLe: 1 };
+
+    expect(peutDemanderNiveau(essai, 'standard')).toBe(true);
+    expect(peutDemanderNiveau(actif, 'standard')).toBe(true);
+
+    // Déjà au niveau supérieur : la demande n'a plus d'objet.
+    expect(peutDemanderNiveau(actif, 'multi')).toBe(false);
+    // Et avant d'avoir un compte utilisable, elle n'en a pas encore.
+    expect(peutDemanderNiveau({ statut: 'anonyme' }, 'standard')).toBe(false);
+    expect(peutDemanderNiveau({ statut: 'non_verifie', email: 'a@b.dz' }, 'standard')).toBe(false);
   });
 });

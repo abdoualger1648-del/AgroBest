@@ -2,6 +2,7 @@ import Dexie, { type EntityTable } from 'dexie';
 import type { Lang } from '@/lib/lang';
 import type { ThemePreference } from '@/lib/appearance';
 import type { BadgeRecord, DayProgress, DossierItem, Project, PromptEntry } from '@/domain/types';
+import type { Niveau } from '@/domain/access';
 
 export const DB_NAME = 'agri28';
 export const SCHEMA_VERSION = 4;
@@ -38,6 +39,10 @@ export interface CompteRecord {
   actif: boolean;
   demandeLe: number | null;
   activeLe: number | null;
+  /** Niveau du compte : nombre de dossiers autorisés (phase 9). */
+  niveau: Niveau;
+  demandeNiveauLe: number | null;
+  niveauLe: number | null;
   /** Dernière fois que l'état a pu être relu auprès du service distant. */
   synchroniseLe: number | null;
 }

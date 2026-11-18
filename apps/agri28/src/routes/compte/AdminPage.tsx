@@ -36,7 +36,7 @@ export function AdminPage() {
   const { t } = useTranslation('compte');
   const lang = usePreferences((state) => state.lang);
   const [etat, setEtat] = useState<Etat>({ phase: 'chargement' });
-  const [activeRecemment, setActiveRecemment] = useState<string | null>(null);
+  const [activeRecemment, setActiveRecemment] = useState<DemandeEnAttente['nature'] | null>(null);
 
   // L'administrateur est un compte comme les autres : il démarre en essai.
   // Les règles l'autorisent à écrire le champ « actif » de n'importe quel
@@ -72,10 +72,11 @@ export function AdminPage() {
     setEtat(await lireEtat());
   }
 
-  async function activer(demande: DemandeEnAttente) {
-    setActiveRecemment(demande.email);
+  async function accorder(demande: DemandeEnAttente) {
+    setActiveRecemment(demande.nature);
     try {
-      await serviceCompte.activerCompte(demande.uid);
+      if (demande.nature === 'activation') await serviceCompte.activerCompte(demande.uid);
+      else await serviceCompte.accorderNiveau(demande.uid);
     } catch (erreur) {
       setEtat({ phase: 'erreur', code: erreur instanceof ErreurCompte ? erreur.code : 'inconnue' });
       return;
@@ -116,7 +117,7 @@ export function AdminPage() {
 
       {activeRecemment ? (
         <p role="status" className="mb-4 text-sm font-medium text-primary">
-          {t('admin.active')}
+          {activeRecemment === 'niveau' ? t('admin.accorde') : t('admin.active')}
         </p>
       ) : null}
 
@@ -125,14 +126,19 @@ export function AdminPage() {
       ) : (
         <ul className="flex flex-col gap-3">
           {etat.demandes.map((demande) => (
-            <li key={demande.uid}>
+            <li key={`${demande.uid}-${demande.nature}`}>
               <Card>
                 <p className="font-semibold break-all">{demande.email}</p>
+                <p className="mt-1 text-sm font-medium text-primary">
+                  {demande.nature === 'niveau'
+                    ? t('admin.natureNiveau')
+                    : t('admin.natureActivation')}
+                </p>
                 <p className="mt-1 text-sm text-muted">
                   {t('admin.demandeLe', { date: formatDate(new Date(demande.demandeLe), lang) })}
                 </p>
-                <Button block className="mt-3" onClick={() => void activer(demande)}>
-                  {t('admin.activer')}
+                <Button block className="mt-3" onClick={() => void accorder(demande)}>
+                  {demande.nature === 'niveau' ? t('admin.accorder') : t('admin.activer')}
                 </Button>
               </Card>
             </li>

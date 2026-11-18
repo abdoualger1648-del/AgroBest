@@ -1,0 +1,23 @@
+{
+  "titre": "Mes dossiers",
+  "sousTitre": "Chaque dossier a son propre parcours de 28 jours et son propre Dossier de projet.",
+  "compteur": "{{n}} dossier(s) sur {{max}}",
+  "enCours": "Dossier en cours",
+  "ouvrir": "Ouvrir ce dossier",
+  "creer": "Nouveau dossier",
+  "nouveauTitre": "Nouveau dossier",
+  "nouveauSousTitre": "Une autre activité, un autre parcours de 28 jours.",
+  "nouveauValider": "Créer ce dossier",
+  "supprimer": "Supprimer",
+  "supprimerTitre": "Supprimer « {{nom}} » ?",
+  "supprimerTexte": "Sa progression, son Dossier de projet, ses prompts et ses badges seront effacés définitivement. Vos autres dossiers ne sont pas touchés.",
+  "supprimerAnnuler": "Annuler",
+  "supprimerConfirmer": "Supprimer définitivement",
+  "plafondTitre": "Un seul dossier à ce niveau",
+  "plafondTexte": "Le niveau supérieur permet de mener jusqu'à {{max}} dossiers de front : une activité par dossier, chacun avec son parcours et son Dossier exportable.",
+  "plafondAtteint": "Vous menez déjà {{max}} dossiers, le maximum de ce niveau. Supprimez-en un pour en créer un autre.",
+  "demander": "Demander le niveau supérieur",
+  "demandeEnvoyee": "Demande envoyée le {{date}}. Vous serez prévenu une fois le niveau accordé.",
+  "niveauAccorde": "Niveau multi-dossiers",
+  "activationDabord": "Demandez d'abord l'activation de votre compte : le niveau supérieur vient après."
+}

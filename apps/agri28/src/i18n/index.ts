@@ -15,6 +15,7 @@ import frBadges from './locales/fr/badges.json';
 import frTemplates from './locales/fr/templates.json';
 import frCompte from './locales/fr/compte.json';
 import frTelechargement from './locales/fr/telechargement.json';
+import frDossiers from './locales/fr/dossiers.json';
 
 import arCommon from './locales/ar/common.json';
 import arNav from './locales/ar/nav.json';
@@ -29,6 +30,7 @@ import arBadges from './locales/ar/badges.json';
 import arTemplates from './locales/ar/templates.json';
 import arCompte from './locales/ar/compte.json';
 import arTelechargement from './locales/ar/telechargement.json';
+import arDossiers from './locales/ar/dossiers.json';
 
 export const NAMESPACES = [
   'common',
@@ -44,6 +46,7 @@ export const NAMESPACES = [
   'templates',
   'compte',
   'telechargement',
+  'dossiers',
 ] as const;
 export type Namespace = (typeof NAMESPACES)[number];
 
@@ -67,6 +70,7 @@ export const resources = {
     templates: frTemplates,
     compte: frCompte,
     telechargement: frTelechargement,
+    dossiers: frDossiers,
   },
   ar: {
     common: arCommon,
@@ -82,6 +86,7 @@ export const resources = {
     templates: arTemplates,
     compte: arCompte,
     telechargement: arTelechargement,
+    dossiers: arDossiers,
   },
 } as const;
 

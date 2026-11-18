@@ -7,6 +7,7 @@ import { compteRequis, proposeApk } from '@/config';
 
 const LINKS = [
   { to: '/projet', labelKey: 'project' },
+  { to: '/dossiers', labelKey: 'dossiers' },
   { to: '/carnet', labelKey: 'notebook' },
   { to: '/modeles', labelKey: 'templates' },
   { to: '/badges', labelKey: 'badges' },
@@ -20,7 +21,7 @@ const LIEN_ADMIN = { to: '/compte/administration', labelKey: 'admin' } as const;
 const LIEN_APK = { to: '/telecharger', labelKey: 'apk' } as const;
 
 export function MorePage() {
-  const { t } = useTranslation(['nav', 'common', 'compte', 'telechargement']);
+  const { t } = useTranslation(['nav', 'common', 'compte', 'telechargement', 'dossiers']);
   const administrateur = useAdministrateur();
 
   const liens = [
@@ -45,7 +46,9 @@ export function MorePage() {
                   ? t('compte:admin.lien')
                   : labelKey === 'apk'
                     ? t('telechargement:titre')
-                    : t(`nav:${labelKey}`)}
+                    : labelKey === 'dossiers'
+                      ? t('dossiers:titre')
+                      : t(`nav:${labelKey}`)}
               </span>
               <ChevronEndIcon className="mirror shrink-0 text-muted" width="20" height="20" />
             </Link>

@@ -1,4 +1,4 @@
-import type { EtatCompte } from '@/domain/access';
+import type { EtatCompte, Niveau } from '@/domain/access';
 
 /**
  * Édition de l'application. Un même code source, trois distributions :
@@ -60,3 +60,6 @@ export const COMPTE_IMPLICITE: EtatCompte = {
   email: '',
   activeLe: 0,
 };
+
+/** Même raison : sans compte, aucun plafond de dossiers ne s'applique. */
+export const NIVEAU_IMPLICITE: Niveau = 'multi';

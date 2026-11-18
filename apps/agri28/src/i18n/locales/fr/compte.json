@@ -95,6 +95,10 @@
     "lien": "Administration",
     "monCompteTitre": "Votre propre compte n'est pas activé",
     "monCompteTexte": "Vous administrez, mais votre accès reste celui d'un essai. Vous pouvez l'ouvrir vous-même.",
-    "monCompteBouton": "Activer mon compte"
+    "monCompteBouton": "Activer mon compte",
+    "natureActivation": "Accès aux 28 leçons",
+    "natureNiveau": "Niveau multi-dossiers",
+    "accorder": "Accorder le niveau",
+    "accorde": "Niveau accordé."
   }
 }

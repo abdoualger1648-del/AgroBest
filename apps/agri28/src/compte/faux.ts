@@ -48,6 +48,9 @@ export class FauxServiceCompte implements ServiceCompte {
       actif: compte.actif,
       demandeLe: compte.demandeLe,
       activeLe: compte.activeLe,
+      niveau: compte.niveau,
+      demandeNiveauLe: compte.demandeNiveauLe,
+      niveauLe: compte.niveauLe,
     };
   }
 
@@ -69,6 +72,9 @@ export class FauxServiceCompte implements ServiceCompte {
         actif: false,
         demandeLe: null,
         activeLe: null,
+        niveau: 'standard',
+        demandeNiveauLe: null,
+        niveauLe: null,
         motDePasse,
       };
       this.comptes.set(email, compte);
@@ -114,6 +120,14 @@ export class FauxServiceCompte implements ServiceCompte {
     });
   }
 
+  demanderNiveau(): Promise<CompteDistantInfos> {
+    return this.appel(() => {
+      const compte = this.courant();
+      compte.demandeNiveauLe = Date.now();
+      return FauxServiceCompte.projeter(compte);
+    });
+  }
+
   // ——— Administration ———
 
   /** Comptes autorisés à administrer, désignés comme en production : une liste à part. */
@@ -129,28 +143,57 @@ export class FauxServiceCompte implements ServiceCompte {
   listerDemandes(): Promise<DemandeEnAttente[]> {
     return this.appel(() => {
       if (!this.administrateurs.has(this.courant().uid)) throw new ErreurCompte('non_connecte');
-      return [...this.comptes.values()]
-        .filter((compte) => !compte.actif && compte.demandeLe !== null)
-        .map((compte) => ({
-          uid: compte.uid,
-          email: compte.email,
-          demandeLe: compte.demandeLe ?? 0,
-        }))
-        .sort((a, b) => a.demandeLe - b.demandeLe);
+      const demandes: DemandeEnAttente[] = [];
+      for (const compte of this.comptes.values()) {
+        if (!compte.actif && compte.demandeLe !== null) {
+          demandes.push({
+            uid: compte.uid,
+            email: compte.email,
+            demandeLe: compte.demandeLe,
+            nature: 'activation',
+          });
+        }
+        if (compte.niveau !== 'multi' && compte.demandeNiveauLe !== null) {
+          demandes.push({
+            uid: compte.uid,
+            email: compte.email,
+            demandeLe: compte.demandeNiveauLe,
+            nature: 'niveau',
+          });
+        }
+      }
+      return demandes.sort((a, b) => a.demandeLe - b.demandeLe);
     });
   }
 
   activerCompte(uid: string): Promise<void> {
     return this.appel(() => {
-      if (!this.administrateurs.has(this.courant().uid)) throw new ErreurCompte('non_connecte');
-      for (const compte of this.comptes.values()) {
-        if (compte.uid === uid) {
-          compte.actif = true;
-          compte.activeLe = Date.now();
-          return;
-        }
+      this.exigerAdministrateur();
+      const compte = this.parUid(uid);
+      if (compte) {
+        compte.actif = true;
+        compte.activeLe = Date.now();
       }
     });
+  }
+
+  accorderNiveau(uid: string): Promise<void> {
+    return this.appel(() => {
+      this.exigerAdministrateur();
+      const compte = this.parUid(uid);
+      if (compte) {
+        compte.niveau = 'multi';
+        compte.niveauLe = Date.now();
+      }
+    });
+  }
+
+  private exigerAdministrateur(): void {
+    if (!this.administrateurs.has(this.courant().uid)) throw new ErreurCompte('non_connecte');
+  }
+
+  private parUid(uid: string): CompteStocke | undefined {
+    return [...this.comptes.values()].find((compte) => compte.uid === uid);
   }
 
   // ——— Leviers de test : ce que fait le monde extérieur ———

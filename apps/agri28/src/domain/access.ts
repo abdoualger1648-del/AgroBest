@@ -110,3 +110,34 @@ export function leconsRestantes(
 export function peutDemanderActivation(etat: EtatCompte): boolean {
   return etat.statut === 'essai' || etat.statut === 'demande_envoyee';
 }
+
+// ——— Niveaux d'accès : nombre de dossiers ———
+
+/**
+ * Niveau du compte. Il est **orthogonal** à l'activation : on peut être actif
+ * sans être multi-dossiers, et le niveau ne donne jamais accès aux leçons.
+ */
+export type Niveau = 'standard' | 'multi';
+
+/** Un dossier au niveau de base, cinq au niveau supérieur (choix utilisateur). */
+export const DOSSIERS_STANDARD = 1;
+export const DOSSIERS_MULTI = 5;
+
+export function dossiersAutorises(niveau: Niveau): number {
+  return niveau === 'multi' ? DOSSIERS_MULTI : DOSSIERS_STANDARD;
+}
+
+/** Reste-t-il de la place pour un dossier de plus ? */
+export function peutCreerUnDossier(niveau: Niveau, dossiersExistants: number): boolean {
+  return dossiersExistants < dossiersAutorises(niveau);
+}
+
+/**
+ * Demander le niveau supérieur n'a de sens que pour un compte qui n'y est pas
+ * encore, et qui a un accès utilisable — réclamer plus de dossiers avant même
+ * d'avoir confirmé son adresse n'aurait aucun sens.
+ */
+export function peutDemanderNiveau(etat: EtatCompte, niveau: Niveau): boolean {
+  if (niveau === 'multi') return false;
+  return etat.statut === 'essai' || etat.statut === 'demande_envoyee' || etat.statut === 'actif';
+}

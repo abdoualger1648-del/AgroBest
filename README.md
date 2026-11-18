@@ -26,7 +26,9 @@ Chaque jour suit la même structure, minuteur visible à l'écran :
 | Quiz | 3 min | trois questions, avec l'explication de chaque réponse |
 | Bilan | 2 min | ce que vous retenez, et une note de confiance |
 
-Le fil rouge est **« Mon projet »**, créé au premier jour. Chaque journée y ajoute une brique :
+Le fil rouge est **« Mon projet »**, créé au premier jour. Un compte mène un dossier ; le niveau
+supérieur, demandé depuis l'application et accordé par l'administrateur, en ouvre jusqu'à cinq —
+une activité par dossier (l'élevage ovin, l'apiculture…), chacun avec son parcours et son Dossier. Chaque journée y ajoute une brique :
 fiche projet, calendrier, budget, lettres, indicateurs… Au bout des 28 jours, le **Dossier de
 projet** s'exporte en Word ou en tableur, et un certificat PDF clôt le parcours.
 

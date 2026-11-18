@@ -60,6 +60,12 @@ const AdminPage = lazy(() =>
 const TelechargerPage = lazy(() =>
   import('@/routes/TelechargerPage').then((m) => ({ default: m.TelechargerPage })),
 );
+const DossiersPage = lazy(() =>
+  import('@/routes/dossiers/DossiersPage').then((m) => ({ default: m.DossiersPage })),
+);
+const NouveauDossierPage = lazy(() =>
+  import('@/routes/dossiers/NouveauDossierPage').then((m) => ({ default: m.NouveauDossierPage })),
+);
 
 function RouteFallback() {
   const { t } = useTranslation('common');
@@ -116,6 +122,8 @@ export default function App() {
             <Route index element={<HomePage />} />
             <Route path="bienvenue" element={<OnboardingPage />} />
             <Route path="projet" element={<ProjectPage />} />
+            <Route path="dossiers" element={<DossiersPage />} />
+            <Route path="dossiers/nouveau" element={<NouveauDossierPage />} />
             <Route path="jour" element={<DayListPage />} />
             <Route path="jour/:day" element={<DayPage />} />
             <Route path="dossier" element={<DossierPage />} />

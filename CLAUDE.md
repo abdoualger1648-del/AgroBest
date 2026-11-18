@@ -64,7 +64,8 @@ Chemins ci-dessous relatifs à `apps/agri28/` :
 - `content/` : `days/day-NN.<lang>.json`, `templates/templates.json` (5 modèles bilingues), `tools.json`, `guardrails.json`, `wilayas.json`, `sources.json`.
 - `src/lib/` : langue, apparence (thème/direction), formatage `Intl`.
 - `src/hooks/` : minuteur de séance (la logique reste dans `src/domain/timer.ts`).
-- `src/store/` : état d'interface Zustand, hydraté depuis IndexedDB.
+- `src/store/` : état d'interface Zustand, hydraté depuis IndexedDB. Le store du parcours porte la
+  liste des dossiers et la bascule de l'un à l'autre.
 - `src/compte/` : port vers le service de comptes, implémentation Firebase et implémentation en mémoire ;
   seul endroit qui parle à Firebase. Mise en service : [`firebase/README.md`](firebase/README.md).
 - `src/config.ts` : édition du build (`complete`, `apk`, `web`) et adresse de l'administrateur.
@@ -193,6 +194,10 @@ en FR, AR/RTL et thème sombre, clavier, cibles tactiles, hors ligne) : voir
 | D73 | L'écran « Mon compte » affiche l'**identifiant du compte**, avec un bouton pour le copier | 2026-11-18 | c'est lui qui désigne un administrateur (D56), et il fallait jusqu'ici aller le chercher dans la console Firebase. On le lit maintenant depuis le téléphone, ce qui réduit la désignation d'un administrateur à un copier-coller |
 | D74 | L'écran d'administration offre un bouton **« Activer mon compte »** à l'administrateur inactif | 2026-11-18 | l'administrateur est un compte comme les autres : il démarre en essai. Les règles l'autorisent déjà à écrire le champ `actif` de n'importe quel compte, le sien compris — lui imposer de s'adresser une demande pour ensuite y répondre n'aurait servi à rien. Un compte ordinaire ne voit jamais ce bouton, et les règles le refuseraient de toute façon |
 | D75 | **Mot de passe oublié** ajouté, et le message affiché est le **même** que l'adresse ait un compte ou non | 2026-11-18 | sans lui, un utilisateur qui oublie son mot de passe était bloqué définitivement : l'application n'offrait aucune issue. Répondre « adresse inconnue » aurait en revanche permis à n'importe qui de savoir qui est inscrit, d'où la réponse unique, côté interface comme côté service — une adresse sans compte n'y produit aucune erreur |
+| D76 | **Plusieurs dossiers** derrière un niveau de compte : 1 au niveau `standard`, **5** au niveau `multi`, demandé par l'utilisateur et accordé par l'administrateur | 2026-11-18 | choix de l'utilisateur du projet. Le modèle de données portait déjà le multi-dossier — tout est cloisonné par `projectId` depuis la phase 2 — il ne manquait que l'interface et le contrôle. Le niveau est **orthogonal** à l'activation : il ne donne jamais accès aux leçons, il n'ouvre que des dossiers |
+| D77 | Un second dossier **refait les 28 jours dans l'ordre**, verrou pédagogique compris | 2026-11-18 | choix de l'utilisateur du projet ; c'est le comportement existant appliqué tel quel, chaque dossier ayant sa propre progression |
+| D78 | Le plafond est vérifié **aussi sur l'écran de création**, pas seulement sur le bouton qui y mène | 2026-11-18 | l'adresse `/dossiers/nouveau` est atteignable directement ; un verrou qui ne tient que dans le bouton n'est pas un verrou. Un test y va droit |
+| D79 | `deleteProject` efface aussi les **prompts et les badges** | 2026-11-18 | ils sont arrivés en phase 5, après l'écriture de la cascade, et personne ne l'avait vu parce qu'aucun écran ne supprimait de dossier. Ils laissaient des orphelins rattachés à un projet disparu. La suppression bascule en outre sur un dossier restant, au lieu de renvoyer sur l'écran de création |
 
 ### Questions ouvertes
 *Aucune pour l'instant.*
@@ -252,6 +257,7 @@ L'APK lui-même est assemblé par le workflow **APK** de GitHub Actions : voir
 | 8c | Capacitor, APK signé construit par GitHub Actions | terminée |
 | 8d | ~~Vitrine limitée aux 3 leçons~~ — **remplacée** par l'édition web complète (D71) | terminée |
 | 8e | Édition web complète ; identifiant de compte lisible ; auto-activation de l'administrateur ; mot de passe oublié | terminée |
+| 9 | Plusieurs dossiers : niveau de compte, écran des dossiers, demande et octroi | terminée |
 
 ### Méthode de travail imposée
 Une phase à la fois. À la fin de chaque phase : résumé, tests, commit, puis **arrêt et attente d'un GO explicite**.

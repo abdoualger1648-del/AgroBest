@@ -8,11 +8,17 @@ import type { CompteDistantInfos } from '@/db/repositories/compte';
  * Toutes les méthodes peuvent échouer avec une `ErreurCompte`, dont le code
  * est traduisible. Aucune ne renvoie jamais de mot de passe.
  */
-/** Une demande d'activation, telle que la voit l'administrateur. */
+/**
+ * Une demande en attente, telle que la voit l'administrateur. Deux natures :
+ * ouvrir les 28 leçons, ou passer au niveau multi-dossiers.
+ */
+export type NatureDemande = 'activation' | 'niveau';
+
 export interface DemandeEnAttente {
   uid: string;
   email: string;
   demandeLe: number;
+  nature: NatureDemande;
 }
 
 /**
@@ -25,6 +31,8 @@ export interface ServiceAdministration {
   /** Demandes non encore activées, de la plus ancienne à la plus récente. */
   listerDemandes(): Promise<DemandeEnAttente[]>;
   activerCompte(uid: string): Promise<void>;
+  /** Accorde le niveau multi-dossiers à un compte. */
+  accorderNiveau(uid: string): Promise<void>;
 }
 
 export interface ServiceCompte extends ServiceAdministration {
@@ -43,6 +51,8 @@ export interface ServiceCompte extends ServiceAdministration {
   reinitialiserMotDePasse(email: string): Promise<void>;
   /** Écrit la demande d'activation. Renvoie l'état mis à jour. */
   demanderActivation(): Promise<CompteDistantInfos>;
+  /** Écrit la demande de passage au niveau multi-dossiers. */
+  demanderNiveau(): Promise<CompteDistantInfos>;
 }
 
 export type CodeErreurCompte =

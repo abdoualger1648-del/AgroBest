@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { etatCompte, type EtatCompte } from '@/domain/access';
+import { etatCompte, type EtatCompte, type Niveau } from '@/domain/access';
 import { normaliserEmail } from '@/domain/identifiants';
 import {
   enregistrerCompte,
@@ -16,6 +16,9 @@ interface CompteState {
   etat: EtatCompte;
   /** Identifiant du compte chez le service : sert à la demande d'activation. */
   uid: string | null;
+  /** Niveau du compte : combien de dossiers il peut mener (phase 9). */
+  niveau: Niveau;
+  demandeNiveauLe: number | null;
   /** Dernière synchronisation réussie avec le service, `null` si jamais. */
   synchroniseLe: number | null;
   charge: boolean;
@@ -32,6 +35,7 @@ interface CompteState {
   renvoyerVerification: () => Promise<boolean>;
   reinitialiserMotDePasse: (email: string) => Promise<boolean>;
   demanderActivation: () => Promise<boolean>;
+  demanderNiveau: () => Promise<boolean>;
   oublierErreur: () => void;
 }
 
@@ -67,13 +71,21 @@ export function creerStoreCompte(service: ServiceCompte = serviceCompte) {
     async function appliquer(infos: Awaited<ReturnType<ServiceCompte['relire']>>) {
       if (!infos) {
         await oublierCompte();
-        set({ etat: ANONYME, uid: null, synchroniseLe: null });
+        set({
+          etat: ANONYME,
+          uid: null,
+          niveau: 'standard',
+          demandeNiveauLe: null,
+          synchroniseLe: null,
+        });
         return;
       }
       const record = await enregistrerCompte(infos);
       set({
         etat: etatCompte(versCompteEnregistre(record)),
         uid: record.uid,
+        niveau: record.niveau,
+        demandeNiveauLe: record.demandeNiveauLe,
         synchroniseLe: record.synchroniseLe,
       });
     }
@@ -81,6 +93,8 @@ export function creerStoreCompte(service: ServiceCompte = serviceCompte) {
     return {
       etat: ANONYME,
       uid: null,
+      niveau: 'standard',
+      demandeNiveauLe: null,
       synchroniseLe: null,
       charge: false,
       enCours: false,
@@ -93,6 +107,8 @@ export function creerStoreCompte(service: ServiceCompte = serviceCompte) {
         set({
           etat: etatCompte(versCompteEnregistre(record)),
           uid: record?.uid ?? null,
+          niveau: record?.niveau ?? 'standard',
+          demandeNiveauLe: record?.demandeNiveauLe ?? null,
           synchroniseLe: record?.synchroniseLe ?? null,
           charge: true,
         });
@@ -120,7 +136,13 @@ export function creerStoreCompte(service: ServiceCompte = serviceCompte) {
         await operation(set, () => service.seDeconnecter());
         oublierDroits();
         await oublierCompte();
-        set({ etat: ANONYME, uid: null, synchroniseLe: null });
+        set({
+          etat: ANONYME,
+          uid: null,
+          niveau: 'standard',
+          demandeNiveauLe: null,
+          synchroniseLe: null,
+        });
       },
 
       // Hors ligne, un échec ne doit RIEN changer : quelqu'un d'activé qui
@@ -151,6 +173,13 @@ export function creerStoreCompte(service: ServiceCompte = serviceCompte) {
 
       demanderActivation: async () => {
         const infos = await operation(set, () => service.demanderActivation());
+        if (!infos) return false;
+        await appliquer(infos);
+        return true;
+      },
+
+      demanderNiveau: async () => {
+        const infos = await operation(set, () => service.demanderNiveau());
         if (!infos) return false;
         await appliquer(infos);
         return true;

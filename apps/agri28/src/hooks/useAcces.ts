@@ -1,6 +1,12 @@
 import { useMemo } from 'react';
-import { accesAuJour, dernierJourAccessible, type Acces, type EtatCompte } from '@/domain/access';
-import { COMPTE_IMPLICITE, compteRequis } from '@/config';
+import {
+  accesAuJour,
+  dernierJourAccessible,
+  type Acces,
+  type EtatCompte,
+  type Niveau,
+} from '@/domain/access';
+import { COMPTE_IMPLICITE, NIVEAU_IMPLICITE, compteRequis } from '@/config';
 import { useCompte } from '@/store/compte';
 
 /**
@@ -25,4 +31,10 @@ export function useAccesJour(jour: number): Acces {
 export function useDernierJourAccessible(): number {
   const etat = useEtatCompte();
   return useMemo(() => dernierJourAccessible(etat), [etat]);
+}
+
+/** Niveau du compte tel que l'interface doit le voir. */
+export function useNiveau(): Niveau {
+  const reel = useCompte((state) => state.niveau);
+  return compteRequis() ? reel : NIVEAU_IMPLICITE;
 }

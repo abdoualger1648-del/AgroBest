@@ -95,6 +95,10 @@
     "lien": "الإدارة",
     "monCompteTitre": "حسابك أنت غير مفعَّل",
     "monCompteTexte": "أنت تُشرف، لكن حسابك ما يزال تجريبيًّا. يمكنك فتحه بنفسك.",
-    "monCompteBouton": "تفعيل حسابي"
+    "monCompteBouton": "تفعيل حسابي",
+    "natureActivation": "الوصول إلى الدروس الثمانية والعشرين",
+    "natureNiveau": "مستوى متعدّد الملفّات",
+    "accorder": "منح المستوى",
+    "accorde": "مُنح المستوى."
   }
 }

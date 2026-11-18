@@ -6,8 +6,12 @@ rules_version = '2';
 // publiée dans l'application et n'autorise rien par elle-même.
 //
 // Règle qui porte tout le modèle (D49) : un utilisateur peut lire sa ligne et
-// écrire sa demande, mais **jamais** son propre champ `actif`. Seul un compte
-// administrateur l'écrit.
+// écrire ses DEMANDES, mais **jamais** son propre champ `actif` ni son propre
+// `niveau`. Seul un compte administrateur les écrit.
+//
+// Deux droits distincts :
+//   `actif`  ouvre les 28 leçons ;
+//   `niveau` ouvre plusieurs dossiers (« standard » ou « multi »).
 //
 // Un administrateur est désigné par l'existence du document `admins/{uid}`,
 // que seule la console Firebase peut créer. Aucune adresse personnelle ne
@@ -38,22 +42,29 @@ service cloud.firestore {
       allow get: if estLeSien(uid) || estAdmin();
       allow list: if estAdmin();
 
-      // À la création, le compte est forcément inactif, et porte l'adresse
-      // réellement authentifiée : on ne s'active pas soi-même, et on ne
-      // s'inscrit pas sous l'adresse d'un autre.
+      // À la création, le compte est forcément inactif, au niveau de base, et
+      // porte l'adresse réellement authentifiée : on ne s'active pas soi-même,
+      // on ne se donne pas de niveau, et on ne s'inscrit pas sous l'adresse
+      // d'un autre.
       allow create: if estLeSien(uid)
         && request.resource.data.actif == false
         && request.resource.data.activeLe == null
+        && request.resource.data.get('niveau', 'standard') == 'standard'
         && request.resource.data.email == request.auth.token.email;
 
-      // L'utilisateur ne peut toucher QUE la date de sa demande.
+      // L'utilisateur ne peut toucher QUE les dates de ses demandes, et ni son
+      // activation ni son niveau n'ont le droit de bouger au passage.
+      // `get(champ, défaut)` couvre les comptes créés avant que le niveau
+      // existe : leur document n'a pas encore ce champ.
       allow update: if estLeSien(uid)
-        && champsModifies().hasOnly(['demandeLe'])
-        && request.resource.data.actif == resource.data.actif;
+        && champsModifies().hasOnly(['demandeLe', 'demandeNiveauLe'])
+        && request.resource.data.actif == resource.data.actif
+        && request.resource.data.get('niveau', 'standard')
+             == resource.data.get('niveau', 'standard');
 
-      // L'administrateur ne touche QUE l'activation.
+      // L'administrateur ne touche QUE les droits : activation et niveau.
       allow update: if estAdmin()
-        && champsModifies().hasOnly(['actif', 'activeLe']);
+        && champsModifies().hasOnly(['actif', 'activeLe', 'niveau', 'niveauLe']);
 
       // Un compte ne s'efface pas : on désactive.
       allow delete: if false;
