@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "note": "Catalogue des outils d'IA cités par les leçons. Rien n'entre ici sans vérification web. availabilityDZ : « oui » = confirmé sur une page officielle de l'éditeur ; « a_verifier » = non confirmé depuis cette session.",
+  "note": "Catalogue des outils d'IA cités par les leçons. Rien n'entre ici sans vérification. availabilityDZ : « oui » = confirmé, soit sur une page officielle de l'éditeur (champ « source »), soit par l'utilisateur du projet à partir de son usage réel en Algérie (champ « source » à null, confirmation consignée dans « note ») ; « a_verifier » = non confirmé.",
   "tools": [
     {
       "id": "claude",
@@ -22,12 +22,12 @@
       "vendor": "OpenAI",
       "url": "https://chatgpt.com",
       "freeTier": true,
-      "availabilityDZ": "a_verifier",
-      "checkedOn": "2026-11-17",
+      "availabilityDZ": "oui",
+      "checkedOn": "2026-11-18",
       "source": null,
       "note": {
-        "fr": "Largement utilisé en Algérie, mais la liste officielle des pays pris en charge n'a pas pu être consultée depuis l'environnement de développement. À confirmer avant publication.",
-        "ar": "مستعمل على نطاق واسع في الجزائر، لكن القائمة الرسمية للبلدان المدعومة تعذّر الاطّلاع عليها. يجب التأكّد قبل النشر."
+        "fr": "Largement utilisé en Algérie. Disponibilité confirmée le 18/11/2026 par l'utilisateur du projet, à partir de son usage réel : la liste officielle des pays d'OpenAI n'est pas consultable depuis l'environnement de développement. Version gratuite limitée.",
+        "ar": "مستعمل على نطاق واسع في الجزائر. تأكّد توفّره بتاريخ 18/11/2026 من صاحب المشروع انطلاقًا من استعماله الفعلي، إذ يتعذّر الاطّلاع على قائمة البلدان الرسمية لـ OpenAI. النسخة المجانية محدودة."
       }
     },
     {
@@ -36,12 +36,12 @@
       "vendor": "Google",
       "url": "https://gemini.google.com",
       "freeTier": true,
-      "availabilityDZ": "a_verifier",
-      "checkedOn": "2026-11-17",
+      "availabilityDZ": "oui",
+      "checkedOn": "2026-11-18",
       "source": null,
       "note": {
-        "fr": "Liste officielle des pays non consultable depuis l'environnement de développement. À confirmer avant publication.",
-        "ar": "تعذّر الاطّلاع على قائمة البلدان الرسمية. يجب التأكّد قبل النشر."
+        "fr": "Disponibilité confirmée le 18/11/2026 par l'utilisateur du projet, à partir de son usage réel : la liste officielle des pays de Google n'est pas consultable depuis l'environnement de développement. Version gratuite limitée.",
+        "ar": "تأكّد توفّره بتاريخ 18/11/2026 من صاحب المشروع انطلاقًا من استعماله الفعلي، إذ يتعذّر الاطّلاع على قائمة البلدان الرسمية لـ Google. النسخة المجانية محدودة."
       }
     },
     {
@@ -50,12 +50,12 @@
       "vendor": "Google",
       "url": "https://notebooklm.google.com",
       "freeTier": true,
-      "availabilityDZ": "a_verifier",
+      "availabilityDZ": "oui",
       "checkedOn": "2026-11-18",
       "source": null,
       "note": {
-        "fr": "Outil d'analyse de documents. Plusieurs sources secondaires indiquent un renommage en « Gemini Notebook » à l'été 2026 et des limites d'usage modifiées ; aucune page officielle n'a pu être consultée. Disponibilité en Algérie à confirmer avant publication.",
-        "ar": "أداة لتحليل الوثائق. تشير عدّة مصادر ثانوية إلى إعادة تسميتها «Gemini Notebook» في صيف 2026 وإلى تعديل حدود الاستعمال؛ ولم يتسنَّ الاطّلاع على أي صفحة رسمية. يجب تأكيد توفّرها في الجزائر قبل النشر."
+        "fr": "Outil d'analyse de documents. Disponibilité confirmée le 18/11/2026 par l'utilisateur du projet. Plusieurs sources secondaires indiquent un renommage en « Gemini Notebook » à l'été 2026 et des limites d'usage modifiées ; aucune page officielle n'a pu être consultée, donc le jour 25 est écrit sans dépendre du nom ni des quotas.",
+        "ar": "أداة لتحليل الوثائق. تأكّد توفّرها بتاريخ 18/11/2026 من صاحب المشروع. تشير عدّة مصادر ثانوية إلى إعادة تسميتها «Gemini Notebook» في صيف 2026 وإلى تعديل حدود الاستعمال؛ ولم يتسنَّ الاطّلاع على أي صفحة رسمية، ولذلك كُتب اليوم 25 دون الاعتماد على الاسم ولا على الحصص."
       }
     }
   ]

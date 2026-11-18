@@ -153,19 +153,17 @@ en FR, AR/RTL et thème sombre, clavier, cibles tactiles, hors ligne) : voir
 | D40 | Déploiement par `deploy.yml` sur poussée vers **`master`**, avec `npm run verify` **avant** le build | 2026-11-18 | la CI de branche peut être verte et `master` cassé après une fusion ; le déploiement refait la vérification au lieu de la supposer |
 | D41 | Les captures du README sont **produites par script** (`npm run screenshots`) sur le build de production, pas prises à la main | 2026-11-18 | elles montrent le vrai rendu, sur un projet de démonstration identique à celui des tests, et se régénèrent après un changement d'interface au lieu de vieillir en silence |
 | D42 | Le guide de mise à jour du contenu est **orienté tâches** (`docs/CONTENU.md`), distinct du schéma de référence (`docs/lesson-schema.md`) | 2026-11-18 | qui corrige une faute n'a pas à lire un schéma Zod ; chaque règle de validation y est donnée avec sa raison, pas seulement son libellé |
+| D43 | **ChatGPT, Gemini et NotebookLM passent à `availabilityDZ: 'oui'`**, confirmés par l'utilisateur du projet à partir de son usage réel en Algérie, `source` restant `null` | 2026-11-18 | les listes officielles d'OpenAI et de Google restent inconsultables depuis cette session ; la confirmation et sa nature sont consignées dans la `note` de chaque outil et dans l'en-tête de `tools.json`, pour qu'on sache plus tard d'où vient l'information |
+| D44 | **Chiffres occidentaux confirmés** en arabe (`1 500 DA`, pas `١٥٠٠`) — D12 validée | 2026-11-18 | choix de l'utilisateur du projet |
+| D45 | L'encart « disponibilité non confirmée » est désormais couvert par **simulation** du catalogue | 2026-11-18 | plus aucun outil réel n'est `a_verifier` : sans ce test la branche pourrissait en silence, alors qu'un outil ajouté demain repartira de ce statut. Même raisonnement que D30 |
 
 ### Questions ouvertes
-- Chiffres occidentaux (`1 500 DA`) ou arabo-indiens (`١٥٠٠`) en arabe ? *(implémenté en occidentaux, décision D12 — à confirmer)*
-- **Disponibilité de ChatGPT, Gemini et NotebookLM en Algérie : toujours non vérifiée.** `platform.openai.com`,
-  `openai.com`, `support.google.com` et `gemini.google.com` ne sont pas joignables depuis cette session. Ces trois
-  outils restent marqués `a_verifier` dans `content/tools.json` et `validate:content` le signale à chaque exécution.
-  Ce n'est plus bloquant — le contenu des 28 jours est écrit pour rester juste quel que soit l'outil utilisé — mais
-  l'application affiche encore un avertissement à l'utilisateur final. Soit ces domaines sont autorisés dans les
-  paramètres réseau de la session, soit vous me confirmez vous-même la disponibilité, et je passe `availabilityDZ`
-  à `oui`. Claude est confirmé (page officielle d'Anthropic, l'Algérie y figure).
+*Aucune pour l'instant.*
 
 ### Questions tranchées
 - **Nom public** : Agricole DZ 360 (D23). **Ton** : vouvoiement FR, arabe standard simple (D22).
+- **Chiffres en arabe** : occidentaux (D12, confirmé D44).
+- **Outils cités** : ChatGPT, Gemini et NotebookLM utilisables en Algérie, confirmé par l'utilisateur du projet (D43).
 - ~~API `docx`~~ : **confirmée** en lisant les types du paquet — `bidirectional?: boolean` sur les options de paragraphe, `rightToLeft?: boolean` sur celles d'un run, `AlignmentType.START/END` logiques, `sizeComplexScript` pour la taille en script complexe.
 
 ---
