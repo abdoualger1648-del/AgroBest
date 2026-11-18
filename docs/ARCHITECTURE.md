@@ -11,11 +11,11 @@
 
 | Sujet | Décision | Conséquence technique |
 |---|---|---|
-| Emplacement du code | **`apps/agri28/`** dans `abdoualger1648-del/WinBest`, branche `claude/28-days-ai-agriculture-3ga039` | monorepo npm workspaces ; `CLAUDE.md` et `docs/` restent à la racine, la plateforme Winbest pourra vivre à côté |
+| Emplacement du code | **`apps/agri28/`** dans `abdoualger1648-del/AgroBest`, branche `claude/28-days-ai-agriculture-3ga039` | monorepo npm workspaces ; `CLAUDE.md` et `docs/` restent à la racine, la plateforme Winbest pourra vivre à côté |
 | Usage | PWA installée sur téléphone | Mobile-first strict, hors ligne complet, poids surveillé |
 | Chiffres algériens | **Prix précis quand une source fiable existe**, sinon fourchette ; source + date de relevé dans chaque leçon ; mention « à vérifier localement » sur les doses, traitements, règlements et aides | Champ `sources[]` obligatoire dans le JSON de leçon + fichier `content/sources.json` ; test qui refuse une leçon citant un prix sans source datée |
 | Rythme | **Libre** : dès qu'un jour est validé, le suivant s'ouvre | Verrouillage = « jour N−1 validé », pas de contrainte de date. La série (streak) reste affichée mais devient informative, jamais bloquante |
-| Déploiement | GitHub Pages | `base` Vite = `/WinBest/` en production, scope du service worker identique, `404.html` = copie de `index.html` pour les liens profonds |
+| Déploiement | GitHub Pages | `base` Vite = `/AgroBest/` en production, scope du service worker identique, `404.html` = copie de `index.html` pour les liens profonds |
 
 ### Décisions techniques que je prends (dites-moi si vous n'êtes pas d'accord)
 
@@ -84,7 +84,7 @@ Principe directeur : **le contenu est une donnée, pas du code**. Ajouter un jou
     ├── vite.config.ts             # base, PWA, alias @/, configuration Vitest
     ├── tsconfig.json              # strict + noUncheckedIndexedAccess
     ├── eslint.config.js           # analyse typée ; Dexie interdit hors de src/db/
-    ├── playwright.config.ts       # e2e sur le build, base /WinBest/, profil mobile
+    ├── playwright.config.ts       # e2e sur le build, base /AgroBest/, profil mobile
     ├── vitest.setup.ts            # jest-dom, fake-indexeddb, matchMedia
     │
     ├── content/                   # ← CONTENU PÉDAGOGIQUE (hors du code)

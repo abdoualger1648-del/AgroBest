@@ -21,7 +21,7 @@ réussi — si vous ne le voyez pas, arrêtez-vous là plutôt que de continuer.
 
 ## Étape 1 — Autoriser GitHub Pages à publier (2 min)
 
-Ouvrez **https://github.com/abdoualger1648-del/WinBest/settings/pages**
+Ouvrez **https://github.com/abdoualger1648-del/AgroBest/settings/pages**
 
 Sous *Build and deployment*, dans la liste **Source**, choisissez **GitHub Actions**.
 Il n'y a rien à enregistrer : le choix s'applique immédiatement.
@@ -85,7 +85,7 @@ Encodez le fichier :
 base64 -w 0 agricole360.jks > agricole360.b64     # macOS : base64 -i agricole360.jks -o agricole360.b64
 ```
 
-Ouvrez **https://github.com/abdoualger1648-del/WinBest/settings/secrets/actions** et créez,
+Ouvrez **https://github.com/abdoualger1648-del/AgroBest/settings/secrets/actions** et créez,
 avec *New repository secret*, ces cinq secrets :
 
 | Nom | Valeur |
@@ -105,15 +105,15 @@ avec *New repository secret*, ces cinq secrets :
 C'est ce qui débloque le reste : le site se publie, et le bouton de construction de l'APK
 apparaît. GitHub ne propose ces deux choses que pour la branche par défaut.
 
-Ouvrez **https://github.com/abdoualger1648-del/WinBest/compare/master...claude/28-days-ai-agriculture-3ga039**
+Ouvrez **https://github.com/abdoualger1648-del/AgroBest/compare/master...claude/28-days-ai-agriculture-3ga039**
 
 1. *Create pull request* → donnez un titre → *Create pull request*.
 2. Attendez que la vérification (CI) passe au vert : environ 5 minutes.
 3. *Merge pull request* → *Confirm merge*.
 
 **Vous devez voir**, quelques minutes après la fusion, une exécution réussie du workflow
-*Déploiement* dans **https://github.com/abdoualger1648-del/WinBest/actions**, et le site à
-l'adresse **https://abdoualger1648-del.github.io/WinBest/**
+*Déploiement* dans **https://github.com/abdoualger1648-del/AgroBest/actions**, et le site à
+l'adresse **https://abdoualger1648-del.github.io/AgroBest/**
 
 Ce site est la **vitrine** : les trois premières leçons, sans compte. C'est voulu — publier les
 28 leçons dans un navigateur viderait de son sens l'activation.
@@ -127,7 +127,7 @@ Ce site est la **vitrine** : les trois premières leçons, sans compte. C'est vo
 
 ## Étape 5 — Construire le premier APK (10 min)
 
-Ouvrez **https://github.com/abdoualger1648-del/WinBest/actions/workflows/apk.yml**
+Ouvrez **https://github.com/abdoualger1648-del/AgroBest/actions/workflows/apk.yml**
 
 *Run workflow* → branche `master` → version `1.0.0` → *Run workflow*.
 
@@ -187,12 +187,12 @@ Fermez et rouvrez l'application s'il n'apparaît pas tout de suite.
 
 Pour l'instant, le site dit « Aucune version n'est encore publiée ».
 
-1. Ouvrez **https://github.com/abdoualger1648-del/WinBest/releases/new**
+1. Ouvrez **https://github.com/abdoualger1648-del/AgroBest/releases/new**
 2. *Choose a tag* → tapez `v1.0.0` → *Create new tag*.
 3. Donnez un titre, glissez le fichier `.apk` dans la zone de pièces jointes, puis
    *Publish release*.
 4. Faites un clic droit sur le fichier attaché → *Copier l'adresse du lien*.
-5. Ouvrez **https://github.com/abdoualger1648-del/WinBest/settings/variables/actions** →
+5. Ouvrez **https://github.com/abdoualger1648-del/AgroBest/settings/variables/actions** →
    *New repository variable* → nom `URL_APK`, valeur : l'adresse copiée.
 6. Relancez le workflow *Déploiement* depuis l'onglet Actions.
 

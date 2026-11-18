@@ -38,7 +38,7 @@ Structure d'une journée : Concept 3 min · Pratique guidée 7 min · Quiz 3 min
 | Exports | `docx`, `exceljs`, `pdf-lib` | chargés **à la demande** uniquement |
 | Tests | Vitest 5 + Testing Library + fake-indexeddb ; Playwright (e2e, RTL, chemin de base) | |
 | Qualité | ESLint 10 (flat) + Prettier | garde-fou RTL par test, règle anti-import Dexie |
-| CI/Déploiement | GitHub Actions → GitHub Pages | `base = '/WinBest/'` en production |
+| CI/Déploiement | GitHub Actions → GitHub Pages | `base = '/AgroBest/'` en production |
 
 **Aucune télémétrie, jamais.** Éditions `complete` et `vitrine` : aucun backend, aucune donnée ne quitte
 l'appareil. Édition `apk` : Firebase sert **uniquement** au compte et à son activation — adresse email,
@@ -119,7 +119,7 @@ en FR, AR/RTL et thème sombre, clavier, cibles tactiles, hors ligne) : voir
 | # | Décision | Date | Motif |
 |---|---|---|---|
 | D1 | **Révisée** : code dans `apps/agri28/`, monorepo npm workspaces ; `CLAUDE.md` et `docs/` à la racine | 2026-11-17 | choix utilisateur ; laisse la racine libre pour la plateforme Winbest |
-| D2 | Déploiement GitHub Pages, `base = '/WinBest/'`, `404.html` = copie de `index.html` | 2026-11-17 | choix utilisateur ; liens profonds SPA |
+| D2 | Déploiement GitHub Pages, `base = '/AgroBest/'`, `404.html` = copie de `index.html` | 2026-11-17 | choix utilisateur ; liens profonds SPA |
 | D3 | Rythme **libre** : le jour N s'ouvre dès que N−1 est validé, sans attente calendaire | 2026-11-17 | choix utilisateur ; la série reste informative, jamais bloquante |
 | D4 | Prix précis quand une source fiable existe, sinon fourchette ; source + date obligatoires | 2026-11-17 | choix utilisateur |
 | D5 | Certificat PDF = canvas → PNG → `pdf-lib` | 2026-11-17 | pdf-lib et jsPDF ne lient pas les lettres arabes ; le canvas du navigateur, si. Compromis : texte non sélectionnable |
@@ -130,7 +130,7 @@ en FR, AR/RTL et thème sombre, clavier, cibles tactiles, hors ligne) : voir
 | D10 | TypeScript **6.0.3** et non 7.0 | 2026-11-17 | `typescript-eslint` exige `typescript <6.1.0` ; TS 7 casserait l'analyse typée. À repasser en 7 quand typescript-eslint le prendra en charge |
 | D11 | Polices **système** (pile arabe : Noto Sans Arabic, Geeza Pro, Tahoma…), pas de woff2 auto-hébergé en v1 | 2026-11-17 | zéro octet à télécharger, rendu correct hors ligne dès la première visite ; à réévaluer en phase 6 si le rendu arabe déçoit sur certains téléphones |
 | D12 | Chiffres **occidentaux** dans les deux langues (`-u-nu-latn`) ; séparateurs selon CLDR (fr-DZ : espace, ar-DZ : point) | 2026-11-17 | usage algérien courant pour les prix et les factures. **À confirmer par l'utilisateur du projet** |
-| D13 | Le chemin de base Vite dépend du `mode`, pas de la `command` | 2026-11-17 | sinon `vite preview` sert `/` alors que GitHub Pages sert `/WinBest/` — bug attrapé par les tests e2e |
+| D13 | Le chemin de base Vite dépend du `mode`, pas de la `command` | 2026-11-17 | sinon `vite preview` sert `/` alors que GitHub Pages sert `/AgroBest/` — bug attrapé par les tests e2e |
 | D14 | Manifeste PWA statique en français | 2026-11-17 | un manifeste ne porte qu'une langue ; nom localisé à étudier en phase 7 |
 | D15 | Icônes PNG générées par Chromium (`npm run icons`) à partir du même dessin que `favicon.svg` | 2026-11-17 | aucune dépendance d'image native, rendu identique au navigateur |
 | D16 | Cache de peinture `localStorage` (`agri28.theme`, `agri28.lang`) lu par un script en ligne dans `index.html` | 2026-11-17 | évite le clignotement de thème et de direction au démarrage ; IndexedDB reste la source de vérité |
@@ -185,6 +185,8 @@ en FR, AR/RTL et thème sombre, clavier, cibles tactiles, hors ligne) : voir
 | D65 | L'accès en vitrine est une fonction **distincte** (`accesVitrine`), pas un paramètre de plus sur `accesAuJour` | 2026-11-18 | un plafond d'édition et un droit de compte sont deux règles sans rapport ; les mêler rendrait les deux plus difficiles à lire et à éprouver |
 | D66 | L'adresse de l'APK vient du build (`VITE_URL_APK`) ; vide, la page le **dit** | 2026-11-18 | mieux vaut « aucune version n'est encore publiée » qu'un bouton qui mène à une erreur 404 |
 | D67 | Le site publié est l'édition **vitrine**, pas l'édition complète | 2026-11-18 | publier les 28 leçons librement dans un navigateur viderait de son sens l'activation construite en 8a et 8b |
+| D68 | Dépôt renommé **AgroBest** ; le chemin de base devient `/AgroBest/` | 2026-11-18 | choix de l'utilisateur du projet, pour l'adresse publique `https://abdoualger1648-del.github.io/AgroBest/`. Le nom public de l'application (Agricole DZ 360) et les identifiants internes (`agri28`, `dz.agricole360.app`) ne changent pas |
+| D69 | En CI, le serveur d'aperçu de Playwright **ne reconstruit pas** et sa sortie est **capturée** | 2026-11-18 | la CI échouait depuis sa toute première exécution, et je ne l'avais jamais regardée : je vérifiais en local et je supposais la CI identique. Playwright ignore par défaut la sortie standard du serveur, donc l'expiration ne disait rien de sa cause. Le build était déjà fait par l'étape précédente : le refaire doublait le travail et ajoutait un maillon dont l'échec était invisible |
 
 ### Questions ouvertes
 *Aucune pour l'instant.*
@@ -204,8 +206,8 @@ Depuis la **racine du dépôt** (les scripts sont relayés vers `apps/agri28`) :
 ```bash
 npm install
 npm run dev              # serveur de développement (base /)
-npm run build            # build de production (base /WinBest/)
-npm run preview          # sert le build sur http://127.0.0.1:4173/WinBest/
+npm run build            # build de production (base /AgroBest/)
+npm run preview          # sert le build sur http://127.0.0.1:4173/AgroBest/
 npm run typecheck        # tsc --noEmit
 npm run lint             # ESLint (analyse typée)
 npm run test             # Vitest

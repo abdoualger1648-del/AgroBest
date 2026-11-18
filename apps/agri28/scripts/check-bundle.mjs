@@ -48,7 +48,7 @@ const gzipKiB = (file) => {
 // 1. Chargement initial.
 const html = readFileSync(path.join(DIST, 'index.html'), 'utf8');
 const initialFiles = new Set(['index.html']);
-for (const match of html.matchAll(/(?:src|href)="\/WinBest\/([^"]+\.(?:js|css))"/g)) {
+for (const match of html.matchAll(/(?:src|href)="\/AgroBest\/([^"]+\.(?:js|css))"/g)) {
   initialFiles.add(match[1]);
 }
 

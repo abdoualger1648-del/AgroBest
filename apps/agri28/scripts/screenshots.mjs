@@ -12,7 +12,7 @@ import { chromium, devices } from '@playwright/test';
 import { mkdirSync } from 'node:fs';
 import path from 'node:path';
 
-const BASE = process.env.PREVIEW_URL ?? 'http://127.0.0.1:4173/WinBest/';
+const BASE = process.env.PREVIEW_URL ?? 'http://127.0.0.1:4173/AgroBest/';
 const OUT = path.resolve(import.meta.dirname, '..', '..', '..', 'docs', 'images');
 
 mkdirSync(OUT, { recursive: true });

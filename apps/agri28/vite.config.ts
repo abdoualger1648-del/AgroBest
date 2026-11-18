@@ -7,11 +7,11 @@ import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
 /**
- * GitHub Pages sert le site sous /WinBest/ (nom du dépôt).
+ * GitHub Pages sert le site sous /AgroBest/ (nom du dépôt).
  * VITE_BASE permet de surcharger pour un autre hébergement (Netlify, Vercel, local).
  * Décision D2 — voir CLAUDE.md.
  */
-const BASE = process.env.VITE_BASE ?? '/WinBest/';
+const BASE = process.env.VITE_BASE ?? '/AgroBest/';
 
 /**
  * GitHub Pages ne connaît pas le routage côté client : un lien profond rechargé
@@ -33,7 +33,7 @@ function githubPagesSpaFallback(): Plugin {
  * L'édition APK change deux choses au build :
  *
  * - le chemin de base est `/`, parce que Capacitor sert l'application depuis
- *   la racine d'une origine locale, et non depuis `/WinBest/` ;
+ *   la racine d'une origine locale, et non depuis `/AgroBest/` ;
  * - il n'y a pas de service worker : les fichiers sont déjà dans l'APK, une
  *   seconde couche de cache n'apporterait rien et son invite de mise à jour
  *   ne pourrait rien faire — un APK se met à jour en le réinstallant.

@@ -52,7 +52,7 @@ test.describe('parcours', () => {
     await page.getByRole('button', { name: 'Valider ma journée' }).click();
 
     // Retour à l'accueil avec la progression à jour.
-    await expect(page).toHaveURL(/\/WinBest\/$/);
+    await expect(page).toHaveURL(/\/AgroBest\/$/);
     await expect(page.getByText('1 / 28 jours')).toBeVisible();
     await expect(page.getByText(/Reprendre le jour 2/)).toBeVisible();
   });

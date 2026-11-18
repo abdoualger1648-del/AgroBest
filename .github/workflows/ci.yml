@@ -41,6 +41,9 @@ jobs:
       - name: Budget de poids
         run: npm run check:bundle
 
+      # Dépend de l'étape « Build de production » ci-dessus : en CI, le serveur
+      # d'aperçu de Playwright ne reconstruit pas, il sert le `dist/` déjà
+      # produit. Ne pas déplacer cette étape avant le build.
       - name: Tests de bout en bout
         run: npx playwright install --with-deps chromium && npm run test:e2e
         working-directory: apps/agri28

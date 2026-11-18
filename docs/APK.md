@@ -89,7 +89,7 @@ npm run icons:android  # régénère icônes et écran de démarrage
 ```
 
 `apk:verifier` ne remplace pas un essai sur téléphone, mais il attrape ce qui casse le plus
-souvent dans un APK : un chemin de base resté sur `/WinBest/`, un service worker encore actif,
+souvent dans un APK : un chemin de base resté sur `/AgroBest/`, un service worker encore actif,
 un appel réseau au démarrage, ou le verrou de compte qui ne s'applique pas.
 
 Assembler l'APK demande le SDK Android ; c'est le rôle de GitHub Actions.
@@ -98,7 +98,7 @@ Assembler l'APK demande le SDK Android ; c'est le rôle de GitHub Actions.
 
 | | Site web | APK |
 |---|---|---|
-| Chemin de base | `/WinBest/` | `/` |
+| Chemin de base | `/AgroBest/` | `/` |
 | Service worker | oui | **non** — les fichiers sont déjà locaux |
 | Cartes de source | oui | **non** — elles pèsent plus que le code |
 | Compte | aucun | obligatoire, essai sur 3 leçons |

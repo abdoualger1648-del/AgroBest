@@ -6,8 +6,8 @@ name: Déploiement
 #   Settings → Pages → Build and deployment → Source = « GitHub Actions ».
 # Sans ce réglage, l'étape de déploiement échoue avec une erreur de permission.
 #
-# L'adresse publique est https://<compte>.github.io/WinBest/ — c'est elle qui
-# impose `base = '/WinBest/'` au build de production (décision D2).
+# L'adresse publique est https://<compte>.github.io/AgroBest/ — c'est elle qui
+# impose `base = '/AgroBest/'` au build de production (décision D2).
 #
 # Le site est publié en édition VITRINE : les trois premières leçons, sans
 # compte, et une page de téléchargement de l'APK. Les leçons 4 à 28 n'y sont

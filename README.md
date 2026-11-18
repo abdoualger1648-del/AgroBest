@@ -69,8 +69,8 @@ Toutes se lancent **depuis la racine du dépôt** ; elles sont relayées vers `a
 | Commande | Rôle |
 |---|---|
 | `npm run dev` | serveur de développement |
-| `npm run build` | build de production (chemin de base `/WinBest/`) |
-| `npm run preview` | sert le build sur `http://127.0.0.1:4173/WinBest/` |
+| `npm run build` | build de production (chemin de base `/AgroBest/`) |
+| `npm run preview` | sert le build sur `http://127.0.0.1:4173/AgroBest/` |
 | `npm run verify` | types + lint + contenu + tests, en une fois |
 | `npm run test` | tests unitaires (Vitest) |
 | `npm run test:e2e` | tests de bout en bout (Playwright) |
@@ -131,9 +131,9 @@ la page dit simplement qu'aucune version n'est encore publiée.
 *Settings → Pages → Build and deployment → Source = **GitHub Actions***.
 Sans ce réglage, l'étape de déploiement échoue sur une erreur de permission.
 
-L'adresse publique est alors `https://<compte>.github.io/WinBest/`. C'est elle qui impose au build
-de production le chemin de base `/WinBest/`, et qui explique la copie de `index.html` en `404.html`
-— sans elle, un lien profond comme `/WinBest/jour/12` renverrait une erreur 404.
+L'adresse publique est alors `https://<compte>.github.io/AgroBest/`. C'est elle qui impose au build
+de production le chemin de base `/AgroBest/`, et qui explique la copie de `index.html` en `404.html`
+— sans elle, un lien profond comme `/AgroBest/jour/12` renverrait une erreur 404.
 
 Le workflow refait la vérification complète avant de publier : rien ne part en production sans que
 les types, le lint, le contenu, les tests et le budget de poids soient passés.
