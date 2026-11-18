@@ -156,6 +156,10 @@ en FR, AR/RTL et thème sombre, clavier, cibles tactiles, hors ligne) : voir
 | D43 | **ChatGPT, Gemini et NotebookLM passent à `availabilityDZ: 'oui'`**, confirmés par l'utilisateur du projet à partir de son usage réel en Algérie, `source` restant `null` | 2026-11-18 | les listes officielles d'OpenAI et de Google restent inconsultables depuis cette session ; la confirmation et sa nature sont consignées dans la `note` de chaque outil et dans l'en-tête de `tools.json`, pour qu'on sache plus tard d'où vient l'information |
 | D44 | **Chiffres occidentaux confirmés** en arabe (`1 500 DA`, pas `١٥٠٠`) — D12 validée | 2026-11-18 | choix de l'utilisateur du projet |
 | D45 | L'encart « disponibilité non confirmée » est désormais couvert par **simulation** du catalogue | 2026-11-18 | plus aucun outil réel n'est `a_verifier` : sans ce test la branche pourrissait en silence, alors qu'un outil ajouté demain repartira de ce statut. Même raisonnement que D30 |
+| D46 | **Distribution par APK partagé de la main à la main**, activation des comptes via Firebase. Le modèle « aucun backend » de la v1 prend fin | 2026-11-18 | choix de l'utilisateur du projet. Conséquence assumée : l'adresse email quitte l'appareil, et le texte de confidentialité de l'application doit le dire |
+| D47 | L'essai gratuit porte sur les **3 premières leçons**, pas sur 3 jours de calendrier | 2026-11-18 | choix de l'utilisateur du projet ; cohérent avec le rythme libre (D3) — qui enchaîne les leçons le premier soir demande son activation tout de suite au lieu d'attendre 72 heures |
+| D48 | **Seul le compte** (email, état d'activation, dates) va sur Firebase. Projet, réponses, prompts et Dossier restent à 100 % sur le téléphone | 2026-11-18 | choix de l'utilisateur du projet ; garde une promesse de confidentialité courte et vérifiable, et évite d'héberger les données d'exploitation d'autrui |
+| D49 | Notification des demandes d'activation **sans plan payant** : demande écrite dans Firestore, écran d'administration réservé au compte administrateur, plus un email prérempli côté utilisateur | 2026-11-18 | choix de l'utilisateur du projet. Un envoi d'email vraiment automatique exigerait Cloud Functions, donc le plan Blaze et une carte bancaire internationale |
 
 ### Questions ouvertes
 *Aucune pour l'instant.*
@@ -204,6 +208,7 @@ Dans `apps/agri28` uniquement : `npm run icons` (régénère les icônes PWA),
 | 5 | Dossier de projet, exports `.docx`/`.xlsx`, carnet, badges, certificat, rappels | **terminée — en attente de GO** |
 | 6 | Qualité : accessibilité, performance, hors ligne, relecture du contenu et des chiffres | **terminée — en attente de GO** |
 | 7 | Déploiement et documentation | **terminée — en attente de GO** |
+| 8 | Distribution APK : compte, essai de 3 leçons, activation Firebase, écran admin, vitrine limitée | **plan proposé — en attente de GO** |
 
 ### Méthode de travail imposée
 Une phase à la fois. À la fin de chaque phase : résumé, tests, commit, puis **arrêt et attente d'un GO explicite**.
