@@ -181,6 +181,10 @@ en FR, AR/RTL et thème sombre, clavier, cibles tactiles, hors ligne) : voir
 | D61 | L'édition APK **n'embarque ni service worker, ni cartes de source, et son chemin de base est `/`** | 2026-11-18 | les fichiers sont déjà locaux : une seconde couche de cache n'apporterait rien et son invite de mise à jour ne pourrait rien faire. Les cartes de source pesaient plus que le code (15 Mo → **3,7 Mo**), ce qui compte pour un fichier partagé par messagerie |
 | D62 | **Version et signature viennent de l'environnement**, jamais du dépôt ; sans clé fournie, l'APK sort signé en *debug* | 2026-11-18 | aucune clé ni numéro de version à tenir à la main dans le dépôt, et un premier APK reste essayable sans aucune configuration. Le résumé du workflow dit lequel des deux cas s'applique, parce qu'un APK de debug ne peut pas être remplacé plus tard par un APK signé |
 | D63 | `npm run apk:verifier` sert les fichiers **comme Capacitor** et contrôle le comportement | 2026-11-18 | l'assemblage Gradle exige le SDK Android, indisponible ici (`dl.google.com` bloqué), mais l'essentiel de ce qui casse dans un APK n'est pas Gradle : chemin de base, service worker resté actif, appel réseau au démarrage, verrou de compte inopérant. Ces quatre points sont vérifiés |
+| D64 | En vitrine, les leçons 4 à 28 **ne sont pas construites**, pas seulement masquées | 2026-11-18 | les masquer dans l'interface laisserait leurs fichiers téléchargeables par quiconque regarde le trafic réseau. `import.meta.glob` est choisi selon l'édition, la branche non retenue disparaît au build, et `check:bundle` vérifie le résultat sur `dist/` — contre-épreuve comprise : un fichier `day-17` ajouté à la main fait échouer la commande |
+| D65 | L'accès en vitrine est une fonction **distincte** (`accesVitrine`), pas un paramètre de plus sur `accesAuJour` | 2026-11-18 | un plafond d'édition et un droit de compte sont deux règles sans rapport ; les mêler rendrait les deux plus difficiles à lire et à éprouver |
+| D66 | L'adresse de l'APK vient du build (`VITE_URL_APK`) ; vide, la page le **dit** | 2026-11-18 | mieux vaut « aucune version n'est encore publiée » qu'un bouton qui mène à une erreur 404 |
+| D67 | Le site publié est l'édition **vitrine**, pas l'édition complète | 2026-11-18 | publier les 28 leçons librement dans un navigateur viderait de son sens l'activation construite en 8a et 8b |
 
 ### Questions ouvertes
 *Aucune pour l'instant.*
@@ -208,6 +212,7 @@ npm run test             # Vitest
 npm run test:e2e         # Playwright, build + preview automatiques
 npm run validate:content # garde-fous ; schéma complet des leçons à la phase 3
 npm run check:bundle     # budget de poids, à lancer après `npm run build`
+                         # VITE_EDITION=vitrine vérifie en plus l'absence des leçons 4 à 28
 npm run apk:web          # build en édition APK, puis copie dans le projet Android
 npm run verify           # typecheck + lint + format + contenu + tests, en une commande
 ```
@@ -238,7 +243,7 @@ L'APK lui-même est assemblé par le workflow **APK** de GitHub Actions : voir
 | 8a | Compte, essai de 3 leçons, verrouillage, écrans, service en mémoire | **terminée — en attente de GO** |
 | 8b | Branchement de Firebase, règles de sécurité, écran d'administration | **terminée — en attente de GO** |
 | 8c | Capacitor, APK signé construit par GitHub Actions | **terminée — en attente de GO** |
-| 8d | Vitrine limitée aux 3 leçons, page de téléchargement, documentation | à faire |
+| 8d | Vitrine limitée aux 3 leçons, page de téléchargement, documentation | **terminée — en attente de GO** |
 
 ### Méthode de travail imposée
 Une phase à la fois. À la fin de chaque phase : résumé, tests, commit, puis **arrêt et attente d'un GO explicite**.

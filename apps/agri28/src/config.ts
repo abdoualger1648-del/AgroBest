@@ -7,7 +7,8 @@ import type { EtatCompte } from '@/domain/access';
  * - `apk`      : l'application partagée en APK. Compte obligatoire, essai sur
  *                les trois premières leçons, puis activation (D46, D47).
  * - `vitrine`  : le site public, limité aux trois premières leçons, sans
- *                compte. Déclarée ici, mise en œuvre en phase 8d.
+ *                compte. Les leçons suivantes n'y sont pas seulement
+ *                masquées : elles ne sont pas construites.
  *
  * Choisie au build par `VITE_EDITION`, jamais devinée à l'exécution : une
  * édition qui changerait selon l'appareil serait impossible à tester.
@@ -19,6 +20,21 @@ const EDITIONS: readonly Edition[] = ['complete', 'apk', 'vitrine'];
 export function edition(): Edition {
   const valeur = import.meta.env.VITE_EDITION;
   return EDITIONS.includes(valeur as Edition) ? (valeur as Edition) : 'complete';
+}
+
+/** Nombre de leçons offertes par la vitrine ; `null` quand il n'y a pas de plafond. */
+export const LECONS_VITRINE = 3;
+
+export function plafondLecons(): number | null {
+  return edition() === 'vitrine' ? LECONS_VITRINE : null;
+}
+
+/**
+ * Adresse où télécharger l'APK, donnée au build. Vide tant qu'aucune version
+ * n'est publiée : l'écran le dit, au lieu de proposer un lien mort.
+ */
+export function urlApk(): string {
+  return import.meta.env.VITE_URL_APK ?? '';
 }
 
 /** L'édition exige-t-elle un compte et une activation ? */

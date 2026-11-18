@@ -17,6 +17,12 @@ import { clearProfile } from '@/db/repositories/profile';
 
 configure({ asyncUtilTimeout: 5000 });
 
+// Ces parcours montent l'application entière et traversent IndexedDB. La
+// limite globale d'un test vaut 5 s par défaut, soit exactement l'attente
+// maximale des recherches ci-dessous : les deux se télescopaient, et le test
+// expirait avant que la recherche ait fini d'attendre.
+vi.setConfig({ testTimeout: 20_000 });
+
 const UTILISATEUR = 'kamal@example.dz';
 const ADMIN = 'admin@example.dz';
 const MOT_DE_PASSE = 'orge2026';

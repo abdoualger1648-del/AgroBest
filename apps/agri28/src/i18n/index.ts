@@ -14,6 +14,7 @@ import frNotebook from './locales/fr/notebook.json';
 import frBadges from './locales/fr/badges.json';
 import frTemplates from './locales/fr/templates.json';
 import frCompte from './locales/fr/compte.json';
+import frVitrine from './locales/fr/vitrine.json';
 
 import arCommon from './locales/ar/common.json';
 import arNav from './locales/ar/nav.json';
@@ -27,6 +28,7 @@ import arNotebook from './locales/ar/notebook.json';
 import arBadges from './locales/ar/badges.json';
 import arTemplates from './locales/ar/templates.json';
 import arCompte from './locales/ar/compte.json';
+import arVitrine from './locales/ar/vitrine.json';
 
 export const NAMESPACES = [
   'common',
@@ -41,6 +43,7 @@ export const NAMESPACES = [
   'badges',
   'templates',
   'compte',
+  'vitrine',
 ] as const;
 export type Namespace = (typeof NAMESPACES)[number];
 
@@ -63,6 +66,7 @@ export const resources = {
     badges: frBadges,
     templates: frTemplates,
     compte: frCompte,
+    vitrine: frVitrine,
   },
   ar: {
     common: arCommon,
@@ -77,6 +81,7 @@ export const resources = {
     badges: arBadges,
     templates: arTemplates,
     compte: arCompte,
+    vitrine: arVitrine,
   },
 } as const;
 

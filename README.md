@@ -95,6 +95,10 @@ L'application existe en trois **éditions**, choisies au build par `VITE_EDITION
 | `apk` | obligatoire | l'application partagée en APK : essai sur les 3 premières leçons, puis activation |
 | `vitrine` | aucun | le site public, limité aux 3 premières leçons |
 
+Dans l'édition `vitrine`, les leçons 4 à 28 ne sont pas seulement masquées : **elles ne sont pas
+construites**. Les masquer dans l'interface laisserait leurs fichiers téléchargeables par
+quiconque regarde le trafic réseau. `npm run check:bundle` le vérifie sur les fichiers produits.
+
 En édition `apk`, Firebase sert **uniquement** au compte : adresse email, état d'activation, dates.
 Le projet, les réponses, les prompts et le Dossier ne quittent jamais le téléphone. Une fois le
 compte activé, l'application n'a plus jamais besoin du réseau — perdre la connexion ne referme rien.
@@ -108,9 +112,13 @@ L'APK Android, sa construction et sa signature : **[docs/APK.md](docs/APK.md)**.
 
 ## Déploiement
 
-L'application est publiée sur GitHub Pages par le workflow
+L'application est publiée sur GitHub Pages **en édition vitrine** par le workflow
 [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), à chaque poussée sur `master` ou
-à la demande.
+à la demande. Le site sert de démonstration et de page de téléchargement de l'APK.
+
+Pour que le bouton de téléchargement apparaisse, définir la variable `URL_APK`
+(*Settings → Secrets and variables → Actions → Variables*) avec l'adresse du fichier. Sans elle,
+la page dit simplement qu'aucune version n'est encore publiée.
 
 **À faire une seule fois** dans les réglages du dépôt :
 *Settings → Pages → Build and deployment → Source = **GitHub Actions***.

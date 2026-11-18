@@ -9,7 +9,7 @@
  *      (décision D32 : ils sont mis en cache au premier usage).
  */
 import { gzipSync } from 'node:zlib';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
 const DIST = path.resolve(import.meta.dirname, '..', 'dist');
@@ -19,6 +19,14 @@ const BUDGETS = {
   initial: 180,
   precache: 400,
 };
+
+/**
+ * L'édition construite, lue dans la même variable que le build. La vitrine
+ * n'embarque que les trois premières leçons : c'est une promesse faite à
+ * l'utilisateur du projet, donc elle se vérifie, elle ne se suppose pas.
+ */
+const EDITION = process.env.VITE_EDITION ?? 'complete';
+const VITRINE = EDITION === 'vitrine';
 
 const fail = [];
 const lines = [];
@@ -72,14 +80,34 @@ if (interdits.length > 0) {
   fail.push(`pré-caché alors que les décisions D32 et D57 l'excluent : ${interdits.join(', ')}`);
 }
 
-// Contre-épreuve : la semaine 1 doit bien être pré-cachée, sinon le test
-// ci-dessus passerait aussi avec un pré-cache vide de toute leçon.
-const semaine1 = precached.filter((url) => /day-0[1-7]\./.test(url));
-if (semaine1.length !== 14) {
-  fail.push(`semaine 1 attendue au pré-cache : 14 fichiers (7 jours × 2 langues), trouvé ${semaine1.length}`);
+// Contre-épreuve : les leçons attendues doivent bien être pré-cachées, sinon
+// le test ci-dessus passerait aussi avec un pré-cache vide de toute leçon.
+const attendues = VITRINE ? 6 : 14;
+const libelle = VITRINE ? 'leçons 1 à 3' : 'semaine 1';
+const motif = VITRINE ? /day-0[1-3]\./ : /day-0[1-7]\./;
+const presentes = precached.filter((url) => motif.test(url));
+if (presentes.length !== attendues) {
+  fail.push(
+    `pré-cache, ${libelle} : ${attendues} fichiers attendus, trouvé ${presentes.length}`,
+  );
 }
-lines.push(`semaine 1 pré-cachée ${semaine1.length} / 14 fichiers`);
+lines.push(`pré-cache, ${libelle}  ${presentes.length} / ${attendues} fichiers`);
 
+// En vitrine, les leçons 4 à 28 ne doivent exister NULLE PART dans dist/ :
+// les masquer dans l'interface les laisserait téléchargeables.
+if (VITRINE) {
+  const fichiers = readdirSync(path.join(DIST, 'assets'));
+  const fuites = fichiers.filter((nom) => /day-(?:0[4-9]|1\d|2[0-8])\./.test(nom));
+  if (fuites.length > 0) {
+    fail.push(`leçons hors vitrine présentes dans dist/ : ${fuites.join(', ')}`);
+  }
+  const construites = new Set(
+    fichiers.flatMap((nom) => /day-(\d{2})\.(?:fr|ar)[.-]/.exec(nom)?.slice(1, 2) ?? []),
+  );
+  lines.push(`vitrine : jours construits ${[...construites].sort().join(', ')}`);
+}
+
+console.log(`édition            ${EDITION}`);
 console.log(lines.join('\n'));
 if (fail.length > 0) {
   console.error('\nBudget dépassé :');

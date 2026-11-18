@@ -8,6 +8,15 @@ name: Déploiement
 #
 # L'adresse publique est https://<compte>.github.io/WinBest/ — c'est elle qui
 # impose `base = '/WinBest/'` au build de production (décision D2).
+#
+# Le site est publié en édition VITRINE : les trois premières leçons, sans
+# compte, et une page de téléchargement de l'APK. Les leçons 4 à 28 n'y sont
+# pas seulement masquées, elles ne sont pas construites — `check:bundle` le
+# vérifie sur les fichiers produits.
+#
+# Variable facultative (Settings → Secrets and variables → Actions → Variables) :
+#   URL_APK   adresse de téléchargement de l'APK. Sans elle, la page dit
+#             simplement qu'aucune version n'est encore publiée.
 
 on:
   push:
@@ -46,10 +55,15 @@ jobs:
       - name: Vérifier
         run: npm run verify
 
-      - name: Build de production
+      - name: Build de production (édition vitrine)
+        env:
+          VITE_EDITION: vitrine
+          VITE_URL_APK: ${{ vars.URL_APK }}
         run: npm run build
 
-      - name: Budget de poids
+      - name: Budget de poids, et absence des leçons 4 à 28
+        env:
+          VITE_EDITION: vitrine
         run: npm run check:bundle
 
       - uses: actions/configure-pages@v5
