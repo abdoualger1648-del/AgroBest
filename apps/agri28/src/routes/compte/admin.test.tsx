@@ -158,4 +158,28 @@ describe('écran d’administration', () => {
     expect(await screen.findByText('Mon compte')).toBeInTheDocument();
     expect(screen.queryByText('Administration')).not.toBeInTheDocument();
   });
+  it('l’administrateur peut ouvrir son propre accès sans se faire une demande', async () => {
+    const user = userEvent.setup();
+    await connecterAdmin();
+    expect(etat().etat.statut).toBe('essai');
+
+    await rouvrir('/compte/administration');
+    await user.click(await screen.findByRole('button', { name: 'Activer mon compte' }));
+
+    await waitFor(() => {
+      expect(etat().etat.statut).toBe('actif');
+    });
+    // Le bandeau disparaît une fois le compte ouvert.
+    expect(screen.queryByText("Votre propre compte n'est pas activé")).not.toBeInTheDocument();
+  });
+
+  it('un compte ordinaire ne voit jamais ce bouton', async () => {
+    await etat().sInscrire(UTILISATEUR, MOT_DE_PASSE);
+    service.confirmerEmail(UTILISATEUR);
+    await etat().rafraichir();
+
+    await rouvrir('/compte/administration');
+    await screen.findByText("Ce compte n'a pas les droits d'administration.");
+    expect(screen.queryByRole('button', { name: 'Activer mon compte' })).not.toBeInTheDocument();
+  });
 });

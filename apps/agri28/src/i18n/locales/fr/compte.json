@@ -90,6 +90,9 @@
     "demandeLe": "Demande du {{date}}",
     "chargement": "Lecture des demandes…",
     "refus": "Ce compte n'a pas les droits d'administration.",
-    "lien": "Administration"
+    "lien": "Administration",
+    "monCompteTitre": "Votre propre compte n'est pas activé",
+    "monCompteTexte": "Vous administrez, mais votre accès reste celui d'un essai. Vous pouvez l'ouvrir vous-même.",
+    "monCompteBouton": "Activer mon compte"
   }
 }

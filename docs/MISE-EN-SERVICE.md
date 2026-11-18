@@ -205,6 +205,9 @@ base. C'est ce qui évite d'inscrire votre adresse dans un dépôt public.
 **Vous devez voir**, dans l'application, un lien **Administration** dans l'onglet *Plus*.
 Fermez et rouvrez l'application s'il n'apparaît pas tout de suite.
 
+Votre propre compte démarre en essai, comme tous les autres : l'écran Administration vous propose
+alors un bouton **« Activer mon compte »**. Un clic, et vos 28 leçons sont ouvertes.
+
 ---
 
 ## Étape 8 — Publier l'APK et l'offrir au téléchargement (10 min)
