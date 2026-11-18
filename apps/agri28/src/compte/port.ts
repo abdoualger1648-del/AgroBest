@@ -34,6 +34,13 @@ export interface ServiceCompte extends ServiceAdministration {
   seConnecter(email: string, motDePasse: string): Promise<CompteDistantInfos>;
   seDeconnecter(): Promise<void>;
   renvoyerVerification(): Promise<void>;
+  /**
+   * Envoie un message de réinitialisation du mot de passe.
+   *
+   * Ne dit JAMAIS si l'adresse a un compte : répondre « adresse inconnue »
+   * permettrait à n'importe qui de savoir qui est inscrit.
+   */
+  reinitialiserMotDePasse(email: string): Promise<void>;
   /** Écrit la demande d'activation. Renvoie l'état mis à jour. */
   demanderActivation(): Promise<CompteDistantInfos>;
 }

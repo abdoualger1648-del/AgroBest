@@ -45,6 +45,21 @@ L'écran **Administration** apparaît alors dans l'application, pour ce compte u
   le propose, et les règles le refuseraient.
 - L'écran Administration ne doit pas apparaître.
 
+## Les messages envoyés par Firebase
+
+Firebase envoie lui-même deux messages, sans aucun réglage ni coût :
+
+| Message | Déclenché par |
+|---|---|
+| Confirmation de l'adresse | la création d'un compte, et le bouton « Renvoyer le message » |
+| Réinitialisation du mot de passe | le lien « Mot de passe oublié ? » de l'écran de connexion |
+
+Leur texte se modifie dans **Authentication → Templates**, y compris la langue.
+
+Le seul message que Firebase n'enverra pas gratuitement est celui qui **vous** prévient d'une
+demande d'activation : c'est pourquoi la demande est enregistrée dans Firestore et visible dans
+l'écran Administration (décision D49).
+
 ## Ce qui est stocké, et rien d'autre
 
 | Champ | Contenu |

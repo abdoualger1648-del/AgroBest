@@ -33,6 +33,7 @@ export function ComptePage() {
   const etat = useEtatCompte();
 
   const sInscrire = useCompte((state) => state.sInscrire);
+  const reinitialiserMotDePasse = useCompte((state) => state.reinitialiserMotDePasse);
   const seConnecter = useCompte((state) => state.seConnecter);
   const enCours = useCompte((state) => state.enCours);
   const derniereErreur = useCompte((state) => state.derniereErreur);
@@ -42,9 +43,23 @@ export function ComptePage() {
   const [motDePasse, setMotDePasse] = useState('');
   const [problemeEmail, setProblemeEmail] = useState<ProblemeEmail | null>(null);
   const [problemeMotDePasse, setProblemeMotDePasse] = useState<ProblemeMotDePasse | null>(null);
+  const [reinitialisationEnvoyee, setReinitialisationEnvoyee] = useState(false);
 
   // Déjà connecté : on montre l'état du compte au lieu d'un formulaire.
   if (etat.statut !== 'anonyme') return <EtatCompteCarte />;
+
+  /**
+   * Mot de passe oublié. Le message affiché est le même que l'adresse ait un
+   * compte ou non : dire « adresse inconnue » permettrait de savoir qui est
+   * inscrit.
+   */
+  async function oublie() {
+    const faute = validerEmail(email);
+    setProblemeEmail(faute);
+    setReinitialisationEnvoyee(false);
+    if (faute) return;
+    if (await reinitialiserMotDePasse(email)) setReinitialisationEnvoyee(true);
+  }
 
   async function envoyer(evenement: FormEvent) {
     evenement.preventDefault();
@@ -52,6 +67,7 @@ export function ComptePage() {
     const fauteMotDePasse = validerMotDePasse(motDePasse);
     setProblemeEmail(fauteEmail);
     setProblemeMotDePasse(fauteMotDePasse);
+    setReinitialisationEnvoyee(false);
     if (fauteEmail || fauteMotDePasse) return;
 
     const reussi =
@@ -141,6 +157,24 @@ export function ComptePage() {
         <Button type="submit" block disabled={enCours}>
           {t(mode === 'inscription' ? 'actions.creerCompte' : 'actions.seConnecter')}
         </Button>
+
+        {mode === 'connexion' ? (
+          <Button
+            block
+            variant="ghost"
+            className="mt-2"
+            disabled={enCours}
+            onClick={() => void oublie()}
+          >
+            {t('actions.motDePasseOublie')}
+          </Button>
+        ) : null}
+
+        {reinitialisationEnvoyee ? (
+          <p role="status" className="mt-3 text-sm font-medium text-primary">
+            {t('confirmation.reinitialisationEnvoyee')}
+          </p>
+        ) : null}
       </form>
 
       <Card className="mt-6 bg-surface-2">

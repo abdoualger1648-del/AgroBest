@@ -33,14 +33,16 @@
     "jaiConfirme": "J'ai confirmé, vérifier",
     "demander": "Demander mon activation",
     "verifier": "Vérifier maintenant",
-    "retour": "Revenir à l'accueil"
+    "retour": "Revenir à l'accueil",
+    "motDePasseOublie": "Mot de passe oublié ?"
   },
   "confirmation": {
     "titre": "Confirmez votre adresse",
     "texte": "Nous avons envoyé un message à {{email}}. Ouvrez-le et cliquez sur le lien, puis revenez ici.",
     "aide": "Le message peut mettre quelques minutes, et atterrir dans les indésirables.",
     "renvoye": "Message renvoyé.",
-    "toujoursPas": "L'adresse n'est pas encore confirmée. Vérifiez votre boîte, puis réessayez."
+    "toujoursPas": "L'adresse n'est pas encore confirmée. Vérifiez votre boîte, puis réessayez.",
+    "reinitialisationEnvoyee": "Si un compte existe pour cette adresse, un message vient d'y être envoyé. Ouvrez-le pour choisir un nouveau mot de passe."
   },
   "essai": {
     "titre": "Accès d'essai",

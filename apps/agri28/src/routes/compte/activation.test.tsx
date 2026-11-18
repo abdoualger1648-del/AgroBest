@@ -257,4 +257,46 @@ describe('édition APK : accès au parcours', () => {
     expect(screen.getByText(uid ?? '')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Copier l'identifiant/ })).toBeInTheDocument();
   });
+  it('envoie un message de réinitialisation du mot de passe', async () => {
+    const user = userEvent.setup();
+    // Un compte existe, mais on l'oublie : on repart de l'écran de connexion.
+    await allerJusquALEssai(user);
+    await useCompte.getState().seDeconnecter();
+
+    await rouvrir('/compte');
+    await user.click(await screen.findByRole('tab', { name: "J'ai déjà un compte" }));
+    await user.type(screen.getByLabelText('Adresse email'), EMAIL);
+    await user.click(screen.getByRole('button', { name: 'Mot de passe oublié ?' }));
+
+    expect(await screen.findByText(/Si un compte existe pour cette adresse/)).toBeInTheDocument();
+    expect(service.reinitialisationsEnvoyees).toContain(EMAIL);
+  });
+
+  it('ne révèle jamais qu’une adresse est inconnue', async () => {
+    const user = userEvent.setup();
+    await renderApp('fr', '/compte');
+
+    await user.click(await screen.findByRole('tab', { name: "J'ai déjà un compte" }));
+    await user.type(screen.getByLabelText('Adresse email'), 'personne@example.dz');
+    await user.click(screen.getByRole('button', { name: 'Mot de passe oublié ?' }));
+
+    // Le même message que pour une adresse inscrite : sinon n'importe qui
+    // pourrait vérifier qui a un compte.
+    expect(await screen.findByText(/Si un compte existe pour cette adresse/)).toBeInTheDocument();
+    expect(service.reinitialisationsEnvoyees).toHaveLength(0);
+  });
+
+  it('refuse une adresse mal écrite avant d’appeler le service', async () => {
+    const user = userEvent.setup();
+    await renderApp('fr', '/compte');
+
+    await user.click(await screen.findByRole('tab', { name: "J'ai déjà un compte" }));
+    await user.type(screen.getByLabelText('Adresse email'), 'pas-une-adresse');
+    await user.click(screen.getByRole('button', { name: 'Mot de passe oublié ?' }));
+
+    expect(
+      await screen.findByText('Cette adresse ne ressemble pas à une adresse email.'),
+    ).toBeInTheDocument();
+    expect(service.reinitialisationsEnvoyees).toHaveLength(0);
+  });
 });

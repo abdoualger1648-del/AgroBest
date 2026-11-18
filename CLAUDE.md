@@ -192,6 +192,7 @@ en FR, AR/RTL et thème sombre, clavier, cibles tactiles, hors ligne) : voir
 | D72 | L'APK reste proposé **partout sauf dans l'APK** (`proposeApk()`) | 2026-11-18 | une application installée fonctionne sans réseau, ce que le web ne garantit pas ; mais se proposer à soi-même n'aurait aucun sens |
 | D73 | L'écran « Mon compte » affiche l'**identifiant du compte**, avec un bouton pour le copier | 2026-11-18 | c'est lui qui désigne un administrateur (D56), et il fallait jusqu'ici aller le chercher dans la console Firebase. On le lit maintenant depuis le téléphone, ce qui réduit la désignation d'un administrateur à un copier-coller |
 | D74 | L'écran d'administration offre un bouton **« Activer mon compte »** à l'administrateur inactif | 2026-11-18 | l'administrateur est un compte comme les autres : il démarre en essai. Les règles l'autorisent déjà à écrire le champ `actif` de n'importe quel compte, le sien compris — lui imposer de s'adresser une demande pour ensuite y répondre n'aurait servi à rien. Un compte ordinaire ne voit jamais ce bouton, et les règles le refuseraient de toute façon |
+| D75 | **Mot de passe oublié** ajouté, et le message affiché est le **même** que l'adresse ait un compte ou non | 2026-11-18 | sans lui, un utilisateur qui oublie son mot de passe était bloqué définitivement : l'application n'offrait aucune issue. Répondre « adresse inconnue » aurait en revanche permis à n'importe qui de savoir qui est inscrit, d'où la réponse unique, côté interface comme côté service — une adresse sans compte n'y produit aucune erreur |
 
 ### Questions ouvertes
 *Aucune pour l'instant.*
@@ -250,7 +251,7 @@ L'APK lui-même est assemblé par le workflow **APK** de GitHub Actions : voir
 | 8b | Branchement de Firebase, règles de sécurité, écran d'administration | terminée |
 | 8c | Capacitor, APK signé construit par GitHub Actions | terminée |
 | 8d | ~~Vitrine limitée aux 3 leçons~~ — **remplacée** par l'édition web complète (D71) | terminée |
-| 8e | Édition web complète : compte et activation dans le navigateur | terminée |
+| 8e | Édition web complète ; identifiant de compte lisible ; auto-activation de l'administrateur ; mot de passe oublié | terminée |
 
 ### Méthode de travail imposée
 Une phase à la fois. À la fin de chaque phase : résumé, tests, commit, puis **arrêt et attente d'un GO explicite**.

@@ -194,6 +194,19 @@ export class ServiceFirebase implements ServiceCompte {
     });
   }
 
+  reinitialiserMotDePasse(email: string): Promise<void> {
+    return this.appel(async (modules) => {
+      try {
+        await modules.auth.sendPasswordResetEmail(modules.instanceAuth, email);
+      } catch (erreur) {
+        // Une adresse sans compte ne doit pas se distinguer d'une adresse
+        // inscrite : sinon n'importe qui pourrait vérifier qui est inscrit.
+        if (traduireErreurFirebase(erreur) === 'identifiants_invalides') return;
+        throw erreur;
+      }
+    });
+  }
+
   demanderActivation(): Promise<CompteDistantInfos> {
     return this.appel(async (modules) => {
       const utilisateur = await this.utilisateurConnecte(modules);

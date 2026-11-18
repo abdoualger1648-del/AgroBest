@@ -30,6 +30,7 @@ interface CompteState {
   /** Relit l'état auprès du service ; sans réseau, garde le cache local. */
   rafraichir: () => Promise<boolean>;
   renvoyerVerification: () => Promise<boolean>;
+  reinitialiserMotDePasse: (email: string) => Promise<boolean>;
   demanderActivation: () => Promise<boolean>;
   oublierErreur: () => void;
 }
@@ -135,6 +136,14 @@ export function creerStoreCompte(service: ServiceCompte = serviceCompte) {
       renvoyerVerification: async () => {
         const resultat = await operation(set, async () => {
           await service.renvoyerVerification();
+          return true as const;
+        });
+        return resultat === true;
+      },
+
+      reinitialiserMotDePasse: async (email) => {
+        const resultat = await operation(set, async () => {
+          await service.reinitialiserMotDePasse(normaliserEmail(email));
           return true as const;
         });
         return resultat === true;

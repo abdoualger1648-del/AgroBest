@@ -99,6 +99,13 @@ export class FauxServiceCompte implements ServiceCompte {
     });
   }
 
+  reinitialiserMotDePasse(email: string): Promise<void> {
+    return this.appel(() => {
+      // Réussite même si l'adresse est inconnue : voir le port.
+      if (this.comptes.has(email)) this.reinitialisationsEnvoyees.push(email);
+    });
+  }
+
   demanderActivation(): Promise<CompteDistantInfos> {
     return this.appel(() => {
       const compte = this.courant();
@@ -111,6 +118,9 @@ export class FauxServiceCompte implements ServiceCompte {
 
   /** Comptes autorisés à administrer, désignés comme en production : une liste à part. */
   private readonly administrateurs = new Set<string>();
+
+  /** Adresses auxquelles un message de réinitialisation a été envoyé. */
+  readonly reinitialisationsEnvoyees: string[] = [];
 
   estAdministrateur(): Promise<boolean> {
     return this.appel(() => this.administrateurs.has(this.courant().uid));
@@ -170,6 +180,7 @@ export class FauxServiceCompte implements ServiceCompte {
   reinitialiser(): void {
     this.comptes.clear();
     this.administrateurs.clear();
+    this.reinitialisationsEnvoyees.length = 0;
     this.connecte = null;
     this.horsLigne = false;
   }
