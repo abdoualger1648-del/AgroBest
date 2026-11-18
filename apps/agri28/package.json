@@ -18,6 +18,7 @@
     "test:e2e": "playwright test",
     "validate:content": "node --experimental-strip-types scripts/validate-content.ts",
     "icons": "node scripts/generate-icons.mjs",
+    "check:bundle": "node scripts/check-bundle.mjs",
     "verify": "npm run typecheck && npm run lint && npm run validate:content && npm run test"
   },
   "dependencies": {
@@ -35,6 +36,7 @@
     "zustand": "^5.1.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "1.63.0",
     "@tailwindcss/vite": "^4.3.5",
@@ -47,6 +49,7 @@
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6.3.0",
     "@vitest/coverage-v8": "^5.1.0",
+    "axe-core": "^4.14.1",
     "eslint": "^10.15.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.8",

@@ -355,6 +355,20 @@ Je ne promettrai pas dans l'interface une notification à l'heure exacte si la p
 - **Accessibilité** : contraste AA, cibles tactiles ≥ 44 px, focus visible, libellés ARIA, `prefers-reduced-motion`, tailles en `rem` (respect du réglage système), navigation clavier complète, pas d'information portée par la seule couleur.
 - **Budget performance** : JS initial ≤ 180 Ko gzip ; un jour de contenu ≤ 25 Ko ; bibliothèques d'export chargées **uniquement** au moment de l'export ; LCP < 2,5 s en 3G ; application entièrement utilisable hors ligne après la première visite.
 - **Tests** : logique de domaine 100 % couverte, validation du contenu en CI, parcours bout en bout « jour 1 → validation → brique dans le dossier », test hors ligne (`setOffline(true)`), test RTL.
+
+### Mesures de la phase 6
+
+Les trois exigences ci-dessus ne sont plus déclaratives : chacune a sa mesure, qui tourne en CI.
+
+| Exigence | Mesure | Résultat |
+|---|---|---|
+| Contraste AA | `src/styles/tokens.test.ts` lit le vrai `index.css`, en extrait les jetons des deux thèmes et calcule le rapport WCAG de 14 paires | 31 assertions ; plus faible rapport mesuré **5,27** pour un minimum exigé de 4,5 |
+| Absence de violation WCAG | `e2e/accessibilite.spec.ts` passe axe-core sur 9 écrans en français, 5 en arabe (RTL) et 3 en thème sombre | 0 violation |
+| Clavier et cibles tactiles | `e2e/qualite.spec.ts` : premier arrêt de tabulation = lien d'évitement, contour de focus ≥ 2 px, journée entière déroulée au clavier, tout élément interactif ≥ 24 px et actions principales ≥ 44 px | conforme |
+| Hors ligne | `e2e/qualite.spec.ts` : une journée complète puis le Dossier **et ses exports** sans réseau | conforme |
+| Budget de poids | `npm run check:bundle` mesure sur `dist/` le chargement initial et le pré-cache en gzip, et vérifie que les bibliothèques d'export et les jours 8 à 28 en sont bien absents | initial **155 Ko** (plafond 180), pré-cache **322 Ko** gzip (plafond 400) |
+
+Le plafond « un jour ≤ 25 Ko » est tenu avec une large marge : le plus gros fichier de leçon pèse 3,9 Ko gzip.
 - **Garde-fous pédagogiques** : stockés une seule fois dans `content/guardrails.json`, référencés par identifiant, affichés dans un encart visible et repris dans les exports. Texte de base : *l'IA ne remplace ni l'agronome, ni le vétérinaire, ni le juriste, ni le comptable ; toute dose, tout traitement, tout texte réglementaire et tout prix doit être vérifié auprès d'une source locale fiable.*
 - **Outils cités** : aucun outil n'entre dans le contenu avant vérification web (nom exact, gratuité, accessibilité depuis l'Algérie). `content/tools.json` conserve la date de vérification et un indicateur `availabilityDZ: 'oui' | 'partielle' | 'incertaine'`. Tout ce qui reste incertain vous sera signalé nommément.
 

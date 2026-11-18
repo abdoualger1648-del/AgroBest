@@ -38,7 +38,7 @@ export function DossierPage() {
     return (
       <>
         <PageHeader title={t('dossier:title')} description={t('dossier:noProject')} />
-        <Link to="/bienvenue">
+        <Link to="/bienvenue" className="block">
           <Button block>{t('project:none.cta')}</Button>
         </Link>
       </>

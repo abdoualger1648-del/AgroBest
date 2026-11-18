@@ -88,6 +88,10 @@ Schéma d'une leçon : [`docs/lesson-schema.md`](docs/lesson-schema.md) · exemp
 Contraste AA · cibles tactiles ≥ 44 px · focus visible · libellés ARIA · `prefers-reduced-motion` ·
 tailles en `rem` · navigation clavier · jamais d'information portée par la seule couleur.
 
+Chacune de ces règles a sa mesure automatique depuis la phase 6 (contraste calculé sur les jetons, audits axe-core
+en FR, AR/RTL et thème sombre, clavier, cibles tactiles, hors ligne) : voir
+[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) §9.
+
 ### Contenu
 - **Rien n'entre dans `content/` sans vérification.** `tools.json` porte `availabilityDZ` + `checkedOn` ; `sources.json` porte la date de consultation et un niveau de confiance ; `validate:content` avertit pour tout outil non confirmé et tout contenu marqué `draft`.
 - Un jour = une idée. La pratique produit toujours quelque chose de concret.
@@ -139,10 +143,21 @@ tailles en `rem` · navigation clavier · jamais d'information portée par la se
 | D28 | **Comptabilité simplifiée déplacée en semaine 4.** La semaine 3 compte 7 jours : veille, photo, météo/irrigation, énergie, achats, stocks, courriers | 2026-11-18 | le programme initial plaçait 8 sujets en semaine 3 ; la comptabilité précède naturellement les indicateurs et les rapports de la semaine 4 |
 | D26 | Champ **mois de démarrage** ajouté à la fiche projet | 2026-11-18 | le calendrier du jour 11 en dépend : sans lui, le prompt partait avec une variable vide |
 | D24 | Au démarrage, le **cache de peinture fait foi** s'il diffère du profil en base : il est appliqué puis réécrit dans IndexedDB | 2026-11-17 | corrige une perte réelle : le cache est écrit au clic, l'écriture IndexedDB arrive juste après ; fermer l'application entre les deux faisait perdre le choix de thème ou de langue |
+| D35 | Le **budget de poids** est une commande (`npm run check:bundle`) exécutée en CI après le build, pas une consigne écrite | 2026-11-18 | mesure en gzip sur `dist/` : chargement initial ≤ 180 Ko (155 mesurés), pré-cache ≤ 400 Ko (322 mesurés), et contre-épreuve que la semaine 1 est bien pré-cachée — sinon le test « aucun export au pré-cache » passerait aussi avec un pré-cache vide de toute leçon |
+| D36 | Le **contraste** est calculé sur les jetons du vrai `index.css`, jamais jugé à l'œil | 2026-11-18 | `src/styles/tokens.test.ts` extrait les variables des deux thèmes et applique la formule WCAG à 14 paires ; le rapport le plus faible mesuré est 5,27. Un jeton modifié casse le test au lieu de passer inaperçu |
+| D37 | Pas d'`aria-label` sur un élément de rôle *paragraph* : le temps restant du minuteur passe par un texte `sr-only`, le chiffre visible devient `aria-hidden` | 2026-11-18 | ARIA interdit de nommer un rôle générique ; l'étiquette pouvait être ignorée, donc le minuteur annoncé comme un nombre nu |
+| D38 | Les helpers e2e **attendent la persistance** (progression visible à l'accueil) avant de rendre la main | 2026-11-18 | un rechargement enchaîné trop vite après « Valider ma journée » interrompait l'écriture IndexedDB et le Dossier arrivait vide — le test hors ligne échouait sur un faux défaut de l'application |
+| D39 | Le composant `ComingSoon` et les clés i18n `status.comingSoon` / `inPreparation` / `offlineReady` sont **supprimés** | 2026-11-18 | code mort depuis D34 ; la parité AR/FR reste assurée, les clés partent des deux langues |
 
 ### Questions ouvertes
 - Chiffres occidentaux (`1 500 DA`) ou arabo-indiens (`١٥٠٠`) en arabe ? *(implémenté en occidentaux, décision D12 — à confirmer)*
-- **Bloquant pour la phase 3** : la disponibilité de ChatGPT, Gemini et NotebookLM en Algérie n'a pas pu être vérifiée — `platform.openai.com` et `support.google.com` ne sont pas joignables depuis cette session. Soit ces domaines sont autorisés dans les paramètres réseau de la session, soit vous me confirmez vous-même la disponibilité. Claude est confirmé (page officielle d'Anthropic, l'Algérie y figure).
+- **Disponibilité de ChatGPT, Gemini et NotebookLM en Algérie : toujours non vérifiée.** `platform.openai.com`,
+  `openai.com`, `support.google.com` et `gemini.google.com` ne sont pas joignables depuis cette session. Ces trois
+  outils restent marqués `a_verifier` dans `content/tools.json` et `validate:content` le signale à chaque exécution.
+  Ce n'est plus bloquant — le contenu des 28 jours est écrit pour rester juste quel que soit l'outil utilisé — mais
+  l'application affiche encore un avertissement à l'utilisateur final. Soit ces domaines sont autorisés dans les
+  paramètres réseau de la session, soit vous me confirmez vous-même la disponibilité, et je passe `availabilityDZ`
+  à `oui`. Claude est confirmé (page officielle d'Anthropic, l'Algérie y figure).
 
 ### Questions tranchées
 - **Nom public** : Agricole DZ 360 (D23). **Ton** : vouvoiement FR, arabe standard simple (D22).
@@ -164,6 +179,7 @@ npm run lint             # ESLint (analyse typée)
 npm run test             # Vitest
 npm run test:e2e         # Playwright, build + preview automatiques
 npm run validate:content # garde-fous ; schéma complet des leçons à la phase 3
+npm run check:bundle     # budget de poids, à lancer après `npm run build`
 npm run verify           # typecheck + lint + contenu + tests, en une commande
 ```
 
@@ -182,7 +198,7 @@ Dans `apps/agri28` uniquement : `npm run icons` (régénère les icônes PWA),
 | 3 | Contenu semaine 1 (jours 1-7), FR + AR | **terminée — en attente de GO** |
 | 4 | Contenu semaines 2, 3, 4 (un GO entre chaque) | **terminée — les 28 jours sont écrits, en attente de GO** |
 | 5 | Dossier de projet, exports `.docx`/`.xlsx`, carnet, badges, certificat, rappels | **terminée — en attente de GO** |
-| 6 | Qualité : accessibilité, performance, hors ligne, relecture du contenu et des chiffres | à faire |
+| 6 | Qualité : accessibilité, performance, hors ligne, relecture du contenu et des chiffres | **terminée — en attente de GO** |
 | 7 | Déploiement et documentation | à faire |
 
 ### Méthode de travail imposée

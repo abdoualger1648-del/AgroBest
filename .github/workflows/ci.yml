@@ -38,6 +38,9 @@ jobs:
       - name: Build de production
         run: npm run build
 
+      - name: Budget de poids
+        run: npm run check:bundle
+
       - name: Tests de bout en bout
         run: npx playwright install --with-deps chromium && npm run test:e2e
         working-directory: apps/agri28

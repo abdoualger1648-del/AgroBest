@@ -17,10 +17,7 @@
     "confirm": "Confirmer"
   },
   "status": {
-    "comingSoon": "Bientôt disponible",
-    "inPreparation": "Cet écran sera construit à la phase suivante.",
     "loading": "Chargement…",
-    "offlineReady": "Disponible hors ligne",
     "error": "Une erreur est survenue."
   },
   "a11y": {

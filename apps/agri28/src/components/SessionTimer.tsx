@@ -30,8 +30,9 @@ export function SessionTimer({ timer, totalSec }: SessionTimerProps) {
           />
         </div>
       </div>
-      <p className="font-semibold tabular-nums" aria-label={t('timer.aria', { time })}>
-        {time}
+      <p className="font-semibold tabular-nums">
+        <span className="sr-only">{t('timer.aria', { time })}</span>
+        <span aria-hidden="true">{time}</span>
       </p>
       <button
         type="button"

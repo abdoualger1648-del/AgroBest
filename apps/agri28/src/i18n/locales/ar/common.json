@@ -17,10 +17,7 @@
     "confirm": "تأكيد"
   },
   "status": {
-    "comingSoon": "قريبًا",
-    "inPreparation": "ستُبنى هذه الشاشة في المرحلة القادمة.",
     "loading": "جارٍ التحميل…",
-    "offlineReady": "متاح دون اتصال",
     "error": "حدث خطأ."
   },
   "a11y": {

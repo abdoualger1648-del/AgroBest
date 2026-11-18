@@ -83,7 +83,7 @@ export function HomePage() {
       </Link>
 
       {project ? (
-        <Link to={`/jour/${String(currentDay)}`}>
+        <Link to={`/jour/${String(currentDay)}`} className="block">
           <Button block className="mb-4">
             {summary.allDone
               ? t('home:ctaDone')
@@ -94,7 +94,7 @@ export function HomePage() {
           </Button>
         </Link>
       ) : (
-        <Link to="/bienvenue">
+        <Link to="/bienvenue" className="block">
           <Button block className="mb-4">
             {t('project:none.cta')}
             <ChevronEndIcon className="mirror" width="20" height="20" />

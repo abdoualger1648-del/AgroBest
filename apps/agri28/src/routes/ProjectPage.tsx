@@ -23,7 +23,7 @@ export function ProjectPage() {
     return (
       <>
         <PageHeader title={t('project:none.title')} description={t('project:none.description')} />
-        <Link to="/bienvenue">
+        <Link to="/bienvenue" className="block">
           <Button block>{t('project:none.cta')}</Button>
         </Link>
       </>

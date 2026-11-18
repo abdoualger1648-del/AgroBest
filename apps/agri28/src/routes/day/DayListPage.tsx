@@ -48,7 +48,9 @@ export function DayListPage() {
                   <span className="w-8 shrink-0 font-semibold tabular-nums">{day}</span>
                   <span className="min-w-0 flex-1">
                     <span className="block font-medium">{t('list.day', { day })}</span>
-                    <span className="block text-sm opacity-80">
+                    {/* Pas d'opacité : elle ferait passer le contraste sous le seuil AA.
+                        La couleur est héritée de l'état, dont le contraste est vérifié. */}
+                    <span className="block text-sm">
                       {t(`status.${status}`)}
                       {hasContent ? '' : ` · ${t('missing.title')}`}
                     </span>
