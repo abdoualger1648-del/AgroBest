@@ -10,3 +10,8 @@ playwright-report/
 blob-report/
 .playwright/
 *.log
+
+# Variables de build locales (voir apps/agri28/.env.example)
+.env
+.env.local
+.env.*.local

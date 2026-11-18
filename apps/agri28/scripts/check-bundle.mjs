@@ -65,9 +65,11 @@ if (precache > BUDGETS.precache) {
   fail.push(`pré-cache ${precache.toFixed(1)} Ko > ${BUDGETS.precache} Ko`);
 }
 
-const interdits = precached.filter((url) => /export-|day-(?:0[89]|1\d|2[0-8])\./.test(url));
+const interdits = precached.filter((url) =>
+  /export-|firebase-|day-(?:0[89]|1\d|2[0-8])\./.test(url),
+);
 if (interdits.length > 0) {
-  fail.push(`pré-caché alors que la décision D32 l'exclut : ${interdits.join(', ')}`);
+  fail.push(`pré-caché alors que les décisions D32 et D57 l'excluent : ${interdits.join(', ')}`);
 }
 
 // Contre-épreuve : la semaine 1 doit bien être pré-cachée, sinon le test

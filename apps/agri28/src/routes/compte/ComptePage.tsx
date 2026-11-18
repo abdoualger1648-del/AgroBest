@@ -58,7 +58,13 @@ export function ComptePage() {
       mode === 'inscription'
         ? await sInscrire(email, motDePasse)
         : await seConnecter(email, motDePasse);
-    if (reussi) await navigate('/compte/confirmation');
+    if (!reussi) return;
+
+    // Quelqu'un qui se reconnecte — le cas courant après une réinstallation —
+    // a déjà confirmé son adresse : l'envoyer sur l'écran d'attente serait
+    // absurde. On ne l'y envoie que si la confirmation manque réellement.
+    const aConfirmer = useCompte.getState().etat.statut === 'non_verifie';
+    await navigate(aConfirmer ? '/compte/confirmation' : '/');
   }
 
   return (

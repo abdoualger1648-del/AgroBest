@@ -92,6 +92,7 @@ export default defineConfig(({ mode }) => ({
         // coque et sa première semaine, pas les 56 fichiers de contenu.
         globIgnores: [
           '**/export-*.js',
+          '**/firebase-*.js',
           '**/day-0[89]*.js',
           '**/day-1[0-9]*.js',
           '**/day-2[0-8]*.js',
@@ -111,6 +112,16 @@ export default defineConfig(({ mode }) => ({
             options: {
               cacheName: 'export-libs',
               expiration: { maxEntries: 8, maxAgeSeconds: 60 * 60 * 24 * 180 },
+            },
+          },
+          {
+            // Le SDK Firebase ne sert qu'au compte : il arrive à la première
+            // action réseau, et jamais à l'installation (même raison que D32).
+            urlPattern: /\/assets\/firebase-[^/]+\.js$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'firebase-sdk',
+              expiration: { maxEntries: 6, maxAgeSeconds: 60 * 60 * 24 * 180 },
             },
           },
         ],
@@ -133,6 +144,8 @@ export default defineConfig(({ mode }) => ({
           if (id.includes('node_modules/docx')) return 'export-docx';
           if (id.includes('node_modules/exceljs')) return 'export-xlsx';
           if (id.includes('node_modules/pdf-lib')) return 'export-pdf';
+          if (id.includes('node_modules/firebase') || id.includes('node_modules/@firebase'))
+            return 'firebase-sdk';
           return undefined;
         },
       },

@@ -1,0 +1,75 @@
+rules_version = '2';
+
+// Règles de sécurité Firestore — Agricole DZ 360
+//
+// C'est ICI que se trouve la protection, pas dans la clé d'API : celle-ci est
+// publiée dans l'application et n'autorise rien par elle-même.
+//
+// Règle qui porte tout le modèle (D49) : un utilisateur peut lire sa ligne et
+// écrire sa demande, mais **jamais** son propre champ `actif`. Seul un compte
+// administrateur l'écrit.
+//
+// Un administrateur est désigné par l'existence du document `admins/{uid}`,
+// que seule la console Firebase peut créer. Aucune adresse personnelle ne
+// figure donc dans ces règles ni dans le code.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function estConnecte() {
+      return request.auth != null;
+    }
+
+    function estLeSien(uid) {
+      return estConnecte() && request.auth.uid == uid;
+    }
+
+    function estAdmin() {
+      return estConnecte()
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    function champsModifies() {
+      return request.resource.data.diff(resource.data).affectedKeys();
+    }
+
+    match /utilisateurs/{uid} {
+
+      allow get: if estLeSien(uid) || estAdmin();
+      allow list: if estAdmin();
+
+      // À la création, le compte est forcément inactif, et porte l'adresse
+      // réellement authentifiée : on ne s'active pas soi-même, et on ne
+      // s'inscrit pas sous l'adresse d'un autre.
+      allow create: if estLeSien(uid)
+        && request.resource.data.actif == false
+        && request.resource.data.activeLe == null
+        && request.resource.data.email == request.auth.token.email;
+
+      // L'utilisateur ne peut toucher QUE la date de sa demande.
+      allow update: if estLeSien(uid)
+        && champsModifies().hasOnly(['demandeLe'])
+        && request.resource.data.actif == resource.data.actif;
+
+      // L'administrateur ne touche QUE l'activation.
+      allow update: if estAdmin()
+        && champsModifies().hasOnly(['actif', 'activeLe']);
+
+      // Un compte ne s'efface pas : on désactive.
+      allow delete: if false;
+    }
+
+    match /admins/{uid} {
+      // Chacun peut vérifier s'il est administrateur, et seulement pour soi.
+      allow get: if estLeSien(uid);
+      allow list: if false;
+      // Se gère exclusivement depuis la console Firebase.
+      allow write: if false;
+    }
+
+    // Tout le reste est fermé.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

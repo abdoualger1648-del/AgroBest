@@ -9,6 +9,7 @@ import {
 } from '@/db/repositories/compte';
 import { ErreurCompte, type CodeErreurCompte, type ServiceCompte } from '@/compte/port';
 import { serviceCompte } from '@/compte';
+import { oublierDroits } from '@/compte/droits';
 
 interface CompteState {
   /** État dérivé, recalculé à chaque écriture — jamais pendant le rendu (D19). */
@@ -116,6 +117,7 @@ export function creerStoreCompte(service: ServiceCompte = serviceCompte) {
 
       seDeconnecter: async () => {
         await operation(set, () => service.seDeconnecter());
+        oublierDroits();
         await oublierCompte();
         set({ etat: ANONYME, uid: null, synchroniseLe: null });
       },

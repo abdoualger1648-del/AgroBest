@@ -85,6 +85,25 @@ Le guide complet : **[docs/CONTENU.md](docs/CONTENU.md)**.
 
 ---
 
+## Comptes et activation (édition APK)
+
+L'application existe en trois **éditions**, choisies au build par `VITE_EDITION` :
+
+| Édition | Compte | Usage |
+|---|---|---|
+| `complete` | aucun | développement et tests — rien n'est verrouillé |
+| `apk` | obligatoire | l'application partagée en APK : essai sur les 3 premières leçons, puis activation |
+| `vitrine` | aucun | le site public, limité aux 3 premières leçons |
+
+En édition `apk`, Firebase sert **uniquement** au compte : adresse email, état d'activation, dates.
+Le projet, les réponses, les prompts et le Dossier ne quittent jamais le téléphone. Une fois le
+compte activé, l'application n'a plus jamais besoin du réseau — perdre la connexion ne referme rien.
+
+La mise en service du projet Firebase, les règles de sécurité et la désignation de l'administrateur
+sont décrites dans **[firebase/README.md](firebase/README.md)**.
+
+---
+
 ## Déploiement
 
 L'application est publiée sur GitHub Pages par le workflow

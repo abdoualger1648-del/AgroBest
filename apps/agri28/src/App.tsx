@@ -54,6 +54,9 @@ const ConfirmationPage = lazy(() =>
 const ActivationPage = lazy(() =>
   import('@/routes/compte/ActivationPage').then((m) => ({ default: m.ActivationPage })),
 );
+const AdminPage = lazy(() =>
+  import('@/routes/compte/AdminPage').then((m) => ({ default: m.AdminPage })),
+);
 
 function RouteFallback() {
   const { t } = useTranslation('common');
@@ -102,6 +105,7 @@ export default function App() {
           <Route path="compte" element={<ComptePage />} />
           <Route path="compte/confirmation" element={<ConfirmationPage />} />
           <Route path="compte/activation" element={<ActivationPage />} />
+          <Route path="compte/administration" element={<AdminPage />} />
         </Route>
         <Route element={<GardeCompte />}>
           <Route element={<AppShell />}>

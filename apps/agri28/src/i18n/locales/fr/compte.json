@@ -76,5 +76,16 @@
     "actif": "Compte activé",
     "essai": "Compte en essai",
     "horsLigneAvertissement": "Pas de connexion : votre accès reste celui de la dernière vérification."
+  },
+  "admin": {
+    "titre": "Administration",
+    "sousTitre": "Demandes d'activation en attente. Activez un compte après avoir pris contact.",
+    "aucune": "Aucune demande en attente.",
+    "activer": "Activer",
+    "active": "Compte activé.",
+    "demandeLe": "Demande du {{date}}",
+    "chargement": "Lecture des demandes…",
+    "refus": "Ce compte n'a pas les droits d'administration.",
+    "lien": "Administration"
   }
 }

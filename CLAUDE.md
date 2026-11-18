@@ -65,7 +65,8 @@ Chemins ci-dessous relatifs à `apps/agri28/` :
 - `src/lib/` : langue, apparence (thème/direction), formatage `Intl`.
 - `src/hooks/` : minuteur de séance (la logique reste dans `src/domain/timer.ts`).
 - `src/store/` : état d'interface Zustand, hydraté depuis IndexedDB.
-- `src/compte/` : port vers le service de comptes et son implémentation ; seul endroit qui parlera à Firebase.
+- `src/compte/` : port vers le service de comptes, implémentation Firebase et implémentation en mémoire ;
+  seul endroit qui parle à Firebase. Mise en service : [`firebase/README.md`](firebase/README.md).
 - `src/config.ts` : édition du build (`complete`, `apk`, `vitrine`) et adresse de l'administrateur.
 
 Schéma d'une leçon : [`docs/lesson-schema.md`](docs/lesson-schema.md) · exemple : [`docs/examples/day-01.fr.sample.json`](docs/examples/day-01.fr.sample.json).
@@ -170,6 +171,10 @@ en FR, AR/RTL et thème sombre, clavier, cibles tactiles, hors ligne) : voir
 | D53 | Le service de comptes est derrière un **port** (`src/compte/port.ts`) ; la 8a n'embarque qu'une implémentation **en mémoire** | 2026-11-18 | écrans et logique d'accès entièrement éprouvés avant que Firebase existe, et aucune donnée ne sort de l'appareil tant que la 8b n'est pas faite. La 8b ne remplace qu'une ligne |
 | D54 | **Pas de pluriels i18next** dans le nouvel espace de noms : « {{n}} leçon(s) » plutôt que `restantes_one` / `restantes_other` | 2026-11-18 | l'arabe a six formes plurielles et le français deux : les jeux de clés diffèreraient et le test de parité AR/FR échouerait |
 | D55 | Projet Firebase **agricole360-4a470**, identifiant d'application Android **dz.agricole360.app** | 2026-11-18 | fournis par l'utilisateur du projet. L'adresse de l'administrateur n'est **pas** dans le dépôt : elle arrive au build par `VITE_EMAIL_ADMIN`, pour ne pas exposer une adresse personnelle dans un dépôt public |
+| D56 | L'**administrateur est désigné par un document `admins/{uid}`** dans Firestore, créé depuis la console, jamais par le code | 2026-11-18 | évite d'inscrire une adresse personnelle dans un dépôt public, et évite les *custom claims*, qui exigeraient un serveur. L'application ne fait que lire `admins/{uid}` pour afficher ou non l'écran |
+| D57 | Le **SDK Firebase est chargé à la demande** et exclu du pré-cache | 2026-11-18 | il pèse 220 Ko gzip, soit plus que toute l'application. Le cache local suffit à connaître l'accès au lancement (D52), donc le SDK n'arrive qu'à la première action réseau. Le chargement initial reste à 163,3 Ko, le SDK absent d'`index.html` même en édition APK |
+| D58 | La **clé d'API Firebase est dans le dépôt**, les règles de sécurité aussi | 2026-11-18 | Google publie ces clés dans toutes les applications web : elles identifient le projet et n'autorisent rien. La protection est dans `firebase/firestore.rules`, qui interdit à un utilisateur d'écrire son propre champ `actif`. Chaque valeur reste remplaçable au build pour viser un autre projet |
+| D59 | Le service choisi (**Firebase ou en mémoire**) l'est au chargement du module, d'après l'édition | 2026-11-18 | en test l'édition est `complete` : aucun test ne peut donc atteindre le vrai projet Firebase, et aucune donnée ne sort hors APK |
 
 ### Questions ouvertes
 *Aucune pour l'instant.*
@@ -219,7 +224,7 @@ Dans `apps/agri28` uniquement : `npm run icons` (régénère les icônes PWA),
 | 6 | Qualité : accessibilité, performance, hors ligne, relecture du contenu et des chiffres | **terminée — en attente de GO** |
 | 7 | Déploiement et documentation | **terminée — en attente de GO** |
 | 8a | Compte, essai de 3 leçons, verrouillage, écrans, service en mémoire | **terminée — en attente de GO** |
-| 8b | Branchement de Firebase, règles de sécurité, écran d'administration | à faire |
+| 8b | Branchement de Firebase, règles de sécurité, écran d'administration | **terminée — en attente de GO** |
 | 8c | Capacitor, APK signé construit par GitHub Actions | à faire |
 | 8d | Vitrine limitée aux 3 leçons, page de téléchargement, documentation | à faire |
 

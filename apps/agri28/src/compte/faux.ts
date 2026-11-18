@@ -1,4 +1,4 @@
-import { ErreurCompte, type ServiceCompte } from './port';
+import { ErreurCompte, type DemandeEnAttente, type ServiceCompte } from './port';
 import type { CompteDistantInfos } from '@/db/repositories/compte';
 
 interface CompteStocke extends CompteDistantInfos {
@@ -107,7 +107,49 @@ export class FauxServiceCompte implements ServiceCompte {
     });
   }
 
+  // ——— Administration ———
+
+  /** Comptes autorisés à administrer, désignés comme en production : une liste à part. */
+  private readonly administrateurs = new Set<string>();
+
+  estAdministrateur(): Promise<boolean> {
+    return this.appel(() => this.administrateurs.has(this.courant().uid));
+  }
+
+  listerDemandes(): Promise<DemandeEnAttente[]> {
+    return this.appel(() => {
+      if (!this.administrateurs.has(this.courant().uid)) throw new ErreurCompte('non_connecte');
+      return [...this.comptes.values()]
+        .filter((compte) => !compte.actif && compte.demandeLe !== null)
+        .map((compte) => ({
+          uid: compte.uid,
+          email: compte.email,
+          demandeLe: compte.demandeLe ?? 0,
+        }))
+        .sort((a, b) => a.demandeLe - b.demandeLe);
+    });
+  }
+
+  activerCompte(uid: string): Promise<void> {
+    return this.appel(() => {
+      if (!this.administrateurs.has(this.courant().uid)) throw new ErreurCompte('non_connecte');
+      for (const compte of this.comptes.values()) {
+        if (compte.uid === uid) {
+          compte.actif = true;
+          compte.activeLe = Date.now();
+          return;
+        }
+      }
+    });
+  }
+
   // ——— Leviers de test : ce que fait le monde extérieur ———
+
+  /** Désigne un compte comme administrateur, comme on le ferait dans la console. */
+  nommerAdministrateur(email: string): void {
+    const compte = this.comptes.get(email);
+    if (compte) this.administrateurs.add(compte.uid);
+  }
 
   /** L'utilisateur a cliqué sur le lien reçu par email. */
   confirmerEmail(email: string): void {
@@ -127,6 +169,7 @@ export class FauxServiceCompte implements ServiceCompte {
   /** Remet le service à zéro entre deux tests. */
   reinitialiser(): void {
     this.comptes.clear();
+    this.administrateurs.clear();
     this.connecte = null;
     this.horsLigne = false;
   }

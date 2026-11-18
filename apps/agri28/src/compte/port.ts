@@ -8,7 +8,26 @@ import type { CompteDistantInfos } from '@/db/repositories/compte';
  * Toutes les méthodes peuvent échouer avec une `ErreurCompte`, dont le code
  * est traduisible. Aucune ne renvoie jamais de mot de passe.
  */
-export interface ServiceCompte {
+/** Une demande d'activation, telle que la voit l'administrateur. */
+export interface DemandeEnAttente {
+  uid: string;
+  email: string;
+  demandeLe: number;
+}
+
+/**
+ * Côté administration (D49). Séparé par clarté, mais implémenté par le même
+ * service : c'est le même compte connecté qui décide des droits.
+ */
+export interface ServiceAdministration {
+  /** Le compte connecté a-t-il le droit d'administrer ? */
+  estAdministrateur(): Promise<boolean>;
+  /** Demandes non encore activées, de la plus ancienne à la plus récente. */
+  listerDemandes(): Promise<DemandeEnAttente[]>;
+  activerCompte(uid: string): Promise<void>;
+}
+
+export interface ServiceCompte extends ServiceAdministration {
   /** Relit l'état auprès du service. `null` si personne n'est connecté. */
   relire(): Promise<CompteDistantInfos | null>;
   sInscrire(email: string, motDePasse: string): Promise<CompteDistantInfos>;
