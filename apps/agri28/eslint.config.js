@@ -5,7 +5,11 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 
 export default tseslint.config(
-  { ignores: ['dist', 'coverage', 'playwright-report', 'test-results', 'dev-dist'] },
+  // `android` est un projet natif engendré par Capacitor : son code Java et
+  // les fichiers web qu'on y copie sont des sorties de build, pas des sources.
+  {
+    ignores: ['dist', 'coverage', 'playwright-report', 'test-results', 'dev-dist', 'android'],
+  },
 
   // Règles de base pour tous les fichiers.
   {

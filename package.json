@@ -14,6 +14,7 @@
     "test:e2e": "npm run test:e2e -w agri28",
     "validate:content": "npm run validate:content -w agri28",
     "check:bundle": "npm run check:bundle -w agri28",
+    "apk:web": "npm run apk:web -w agri28",
     "verify": "npm run verify -w agri28"
   },
   "engines": { "node": ">=22" }

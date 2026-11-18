@@ -102,6 +102,8 @@ compte activé, l'application n'a plus jamais besoin du réseau — perdre la co
 La mise en service du projet Firebase, les règles de sécurité et la désignation de l'administrateur
 sont décrites dans **[firebase/README.md](firebase/README.md)**.
 
+L'APK Android, sa construction et sa signature : **[docs/APK.md](docs/APK.md)**.
+
 ---
 
 ## Déploiement

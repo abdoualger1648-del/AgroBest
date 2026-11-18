@@ -1,0 +1,127 @@
+name: APK
+
+# Construit l'APK Android partageable de la main à la main (D46).
+#
+# Lancement : onglet Actions → « APK » → Run workflow.
+# Le fichier produit est attaché à l'exécution, dans « Artifacts ».
+#
+# SIGNATURE — deux cas, et le workflow dit lequel s'applique :
+#
+#   • Les quatre secrets ci-dessous sont présents → APK signé pour de bon,
+#     installable et surtout **remplaçable** par une mise à jour ultérieure.
+#   • Ils sont absents → APK signé en « debug ». Il s'installe et fonctionne,
+#     c'est parfait pour essayer, mais il ne doit pas être distribué : une
+#     version signée plus tard ne pourra pas s'installer par-dessus.
+#
+# Secrets à créer dans Settings → Secrets and variables → Actions :
+#   APK_KEYSTORE_BASE64    le fichier .jks encodé en base64
+#   APK_KEYSTORE_PASSWORD  mot de passe du magasin
+#   APK_KEY_ALIAS          nom de la clé
+#   APK_KEY_PASSWORD       mot de passe de la clé
+#   VITE_EMAIL_ADMIN       adresse qui reçoit les demandes d'activation
+#
+# Voir docs/APK.md pour la commande qui crée le magasin de clés.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Numéro de version affiché dans Android (ex. 1.0.0)'
+        required: false
+        default: '0.1.0'
+
+permissions:
+  contents: read
+
+jobs:
+  construire:
+    name: Construire l'APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Installer les dépendances
+        run: npm ci
+
+      # Rien ne part dans un APK sans que les types, le lint, le contenu et
+      # les tests soient passés — même raison qu'au déploiement (D40).
+      - name: Vérifier
+        run: npm run verify
+
+      - name: Construire l'application web (édition APK)
+        env:
+          VITE_EMAIL_ADMIN: ${{ secrets.VITE_EMAIL_ADMIN }}
+        run: npm run apk:web -w agri28
+
+      - name: Préparer la clé de signature
+        id: cle
+        env:
+          KEYSTORE_BASE64: ${{ secrets.APK_KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/signature.jks"
+            echo "chemin=$RUNNER_TEMP/signature.jks" >> "$GITHUB_OUTPUT"
+            echo "signe=oui" >> "$GITHUB_OUTPUT"
+          else
+            echo "chemin=" >> "$GITHUB_OUTPUT"
+            echo "signe=non" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Assembler l'APK
+        working-directory: apps/agri28/android
+        env:
+          APK_VERSION_NAME: ${{ inputs.version }}
+          APK_VERSION_CODE: ${{ github.run_number }}
+          APK_KEYSTORE_PATH: ${{ steps.cle.outputs.chemin }}
+          APK_KEYSTORE_PASSWORD: ${{ secrets.APK_KEYSTORE_PASSWORD }}
+          APK_KEY_ALIAS: ${{ secrets.APK_KEY_ALIAS }}
+          APK_KEY_PASSWORD: ${{ secrets.APK_KEY_PASSWORD }}
+        run: |
+          chmod +x ./gradlew
+          ./gradlew assembleRelease --no-daemon
+
+      - name: Effacer la clé
+        if: always()
+        run: rm -f "$RUNNER_TEMP/signature.jks"
+
+      - name: Renommer et résumer
+        id: paquet
+        env:
+          SIGNE: ${{ steps.cle.outputs.signe }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          SRC=apps/agri28/android/app/build/outputs/apk/release/app-release.apk
+          [ -f "$SRC" ] || SRC=apps/agri28/android/app/build/outputs/apk/release/app-release-unsigned.apk
+          NOM="agricole-dz-360-$VERSION.apk"
+          cp "$SRC" "$NOM"
+          echo "nom=$NOM" >> "$GITHUB_OUTPUT"
+          {
+            echo "## APK construit"
+            echo ""
+            echo "- Fichier : \`$NOM\` ($(du -h "$NOM" | cut -f1))"
+            echo "- Version : $VERSION (code ${{ github.run_number }})"
+            if [ "$SIGNE" = "oui" ]; then
+              echo "- Signature : **clé de release**. Distribuable."
+            else
+              echo "- Signature : **debug**, faute de secrets de signature."
+              echo "  Installable pour essayer, mais **à ne pas distribuer** :"
+              echo "  une version signée plus tard ne s'installera pas par-dessus."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.paquet.outputs.nom }}
+          path: ${{ steps.paquet.outputs.nom }}
+          retention-days: 30

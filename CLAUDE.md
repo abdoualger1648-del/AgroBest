@@ -68,6 +68,8 @@ Chemins ci-dessous relatifs à `apps/agri28/` :
 - `src/compte/` : port vers le service de comptes, implémentation Firebase et implémentation en mémoire ;
   seul endroit qui parle à Firebase. Mise en service : [`firebase/README.md`](firebase/README.md).
 - `src/config.ts` : édition du build (`complete`, `apk`, `vitrine`) et adresse de l'administrateur.
+- `capacitor.config.ts` + `android/` : empaquetage Android engendré par Capacitor. Le code natif n'est
+  ni formaté ni analysé : c'est une sortie de gabarit. Mode d'emploi : [`docs/APK.md`](docs/APK.md).
 
 Schéma d'une leçon : [`docs/lesson-schema.md`](docs/lesson-schema.md) · exemple : [`docs/examples/day-01.fr.sample.json`](docs/examples/day-01.fr.sample.json).
 Mettre à jour le contenu sans toucher au code : [`docs/CONTENU.md`](docs/CONTENU.md).
@@ -175,6 +177,10 @@ en FR, AR/RTL et thème sombre, clavier, cibles tactiles, hors ligne) : voir
 | D57 | Le **SDK Firebase est chargé à la demande** et exclu du pré-cache | 2026-11-18 | il pèse 220 Ko gzip, soit plus que toute l'application. Le cache local suffit à connaître l'accès au lancement (D52), donc le SDK n'arrive qu'à la première action réseau. Le chargement initial reste à 163,3 Ko, le SDK absent d'`index.html` même en édition APK |
 | D58 | La **clé d'API Firebase est dans le dépôt**, les règles de sécurité aussi | 2026-11-18 | Google publie ces clés dans toutes les applications web : elles identifient le projet et n'autorisent rien. La protection est dans `firebase/firestore.rules`, qui interdit à un utilisateur d'écrire son propre champ `actif`. Chaque valeur reste remplaçable au build pour viser un autre projet |
 | D59 | Le service choisi (**Firebase ou en mémoire**) l'est au chargement du module, d'après l'édition | 2026-11-18 | en test l'édition est `complete` : aucun test ne peut donc atteindre le vrai projet Firebase, et aucune donnée ne sort hors APK |
+| D60 | **Capacitor**, pas TWA : l'application web est embarquée dans l'APK | 2026-11-18 | elle fonctionne dès le premier lancement, sans réseau et sans hébergement — ce qu'exige un APK partagé de la main à la main. Un TWA ouvrirait un site distant et imposerait Digital Asset Links |
+| D61 | L'édition APK **n'embarque ni service worker, ni cartes de source, et son chemin de base est `/`** | 2026-11-18 | les fichiers sont déjà locaux : une seconde couche de cache n'apporterait rien et son invite de mise à jour ne pourrait rien faire. Les cartes de source pesaient plus que le code (15 Mo → **3,7 Mo**), ce qui compte pour un fichier partagé par messagerie |
+| D62 | **Version et signature viennent de l'environnement**, jamais du dépôt ; sans clé fournie, l'APK sort signé en *debug* | 2026-11-18 | aucune clé ni numéro de version à tenir à la main dans le dépôt, et un premier APK reste essayable sans aucune configuration. Le résumé du workflow dit lequel des deux cas s'applique, parce qu'un APK de debug ne peut pas être remplacé plus tard par un APK signé |
+| D63 | `npm run apk:verifier` sert les fichiers **comme Capacitor** et contrôle le comportement | 2026-11-18 | l'assemblage Gradle exige le SDK Android, indisponible ici (`dl.google.com` bloqué), mais l'essentiel de ce qui casse dans un APK n'est pas Gradle : chemin de base, service worker resté actif, appel réseau au démarrage, verrou de compte inopérant. Ces quatre points sont vérifiés |
 
 ### Questions ouvertes
 *Aucune pour l'instant.*
@@ -202,12 +208,18 @@ npm run test             # Vitest
 npm run test:e2e         # Playwright, build + preview automatiques
 npm run validate:content # garde-fous ; schéma complet des leçons à la phase 3
 npm run check:bundle     # budget de poids, à lancer après `npm run build`
+npm run apk:web          # build en édition APK, puis copie dans le projet Android
 npm run verify           # typecheck + lint + format + contenu + tests, en une commande
 ```
 
 Dans `apps/agri28` uniquement : `npm run icons` (régénère les icônes PWA),
 `npm run screenshots` (régénère les captures du README, `preview` devant tourner),
+`npm run icons:android` (icônes et écran de démarrage Android),
+`npm run apk:verifier` (sert les fichiers comme Capacitor et contrôle le comportement),
 `npm run format` / `npm run format:check`.
+
+L'APK lui-même est assemblé par le workflow **APK** de GitHub Actions : voir
+[`docs/APK.md`](docs/APK.md).
 
 ---
 
@@ -225,7 +237,7 @@ Dans `apps/agri28` uniquement : `npm run icons` (régénère les icônes PWA),
 | 7 | Déploiement et documentation | **terminée — en attente de GO** |
 | 8a | Compte, essai de 3 leçons, verrouillage, écrans, service en mémoire | **terminée — en attente de GO** |
 | 8b | Branchement de Firebase, règles de sécurité, écran d'administration | **terminée — en attente de GO** |
-| 8c | Capacitor, APK signé construit par GitHub Actions | à faire |
+| 8c | Capacitor, APK signé construit par GitHub Actions | **terminée — en attente de GO** |
 | 8d | Vitrine limitée aux 3 leçons, page de téléchargement, documentation | à faire |
 
 ### Méthode de travail imposée

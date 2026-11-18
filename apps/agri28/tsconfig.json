@@ -29,6 +29,7 @@
     "e2e",
     "scripts",
     "vite.config.ts",
+    "capacitor.config.ts",
     "playwright.config.ts",
     "vitest.setup.ts"
   ]
