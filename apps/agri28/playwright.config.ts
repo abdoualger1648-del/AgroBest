@@ -37,7 +37,9 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
     // Playwright ignore la sortie standard du serveur par défaut : quand il
     // expire, on ne voit ni le démarrage, ni l'erreur qui l'a empêché. On la
-    // laisse passer pour que la prochaine panne soit lisible du premier coup.
+    // laisse passer — c'est elle qui a montré que le serveur démarrait bien,
+    // mais sur « localhost », que le runner résout en IPv6 alors qu'on
+    // interroge 127.0.0.1. D'où le `--host 127.0.0.1` du script `preview`.
     stdout: 'pipe',
     stderr: 'pipe',
     timeout: 300_000,
