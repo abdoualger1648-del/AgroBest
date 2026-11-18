@@ -66,6 +66,43 @@ outil vérifié il y a plus de six mois. Ces avertissements ne bloquent pas, mai
 
 Un jour ne peut citer qu'un outil présent dans ce fichier : un identifiant inconnu est une erreur.
 
+### Adapter une leçon à un type d'activité
+
+Une leçon peut porter des **variantes** : l'exemple de terrain, les libellés de capture et les
+indices de prompt changent selon l'activité (`apiculture`, `maraichage`…). Le reste — concepts,
+quiz, gabarits de prompt — ne bouge pas.
+
+```json
+"variantes": {
+  "apiculture": {
+    "terrain": { "label": "Sur le terrain", "text": "Yacine conduit 40 ruches à Médéa…" },
+    "captures": { "c1": "Combien de ruches conduisez-vous ?" },
+    "indices": { "p1": "Si l'IA parle de pâturage au lieu de miellée, corrigez." }
+  }
+}
+```
+
+Un type sans variante lit le texte générique : une variante absente n'est jamais une page vide.
+
+**Le gabarit d'un prompt n'est pas remplaçable**, et le schéma ne l'autorise même pas. C'est lui
+qui porte les garde-fous, et il interpole déjà `{{project.type}}` : l'IA reçoit l'activité sans
+qu'on réécrive rien.
+
+#### Faire écrire une variante par Claude
+
+```bash
+ANTHROPIC_API_KEY=… npm run variantes -- --jour 7 --type apiculture
+```
+
+Le script écrit les deux langues **dans le même appel** — c'est ce qui garantit leur parité — puis
+vérifie la réponse contre le schéma et contre les identifiants réels de la leçon avant d'écrire.
+
+La variante est marquée `"brouillon": true`, et **l'application ne l'affiche pas** tant que ce
+drapeau est là. Relisez les deux fichiers, corrigez ce qui sonne faux, retirez le drapeau dans les
+**deux** langues, puis `npm run validate:content && npm run test`.
+
+C'est l'écriture qui est automatisée, jamais la publication.
+
 ### Ajouter un jour
 
 Utilisez le générateur `apps/agri28/scripts/authoring/emit.py`, qui écrit les deux langues côte à

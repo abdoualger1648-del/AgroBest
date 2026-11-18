@@ -17,6 +17,7 @@ import {
   wilayasFileSchema,
   type Lesson,
 } from '../src/content/schema.ts';
+import { PROJECT_TYPES } from '../src/domain/types.ts';
 
 const contentDir = resolve(dirname(fileURLToPath(import.meta.url)), '../content');
 
@@ -82,9 +83,29 @@ function allStrings(value: unknown, out: string[] = []): string[] {
   return out;
 }
 
+/**
+ * Signature des variantes : les types couverts, et dans chacun les champs
+ * remplacés. La parité AR/FR porte dessus comme sur le reste — une variante
+ * écrite dans une seule langue laisserait un apiculteur arabophone devant le
+ * texte générique sans qu'on s'en aperçoive.
+ */
+function signatureVariantes(lesson: Lesson): string[] {
+  return Object.entries(lesson.variantes ?? {})
+    .map(([type, variante]) => {
+      const champs = [
+        variante.terrain ? 'terrain' : null,
+        ...Object.keys(variante.captures ?? {}).map((id) => `capture:${id}`),
+        ...Object.keys(variante.indices ?? {}).map((id) => `indice:${id}`),
+      ].filter((champ): champ is string => champ !== null);
+      return `${type}=${champs.sort().join(',')}`;
+    })
+    .sort();
+}
+
 function lessonIdentifiers(lesson: Lesson) {
   const { practice, quiz } = lesson.sections;
   return {
+    variantes: signatureVariantes(lesson),
     steps: practice.steps.map((step) => step.id).sort(),
     prompts: practice.steps.flatMap((step) => (step.prompt ? [step.prompt.id] : [])).sort(),
     captures: practice.steps.flatMap((step) => (step.capture ? [step.capture.id] : [])).sort(),
@@ -200,6 +221,32 @@ for (const file of lessonFiles) {
         fail(
           `${file} : variable de prompt inconnue « {{${variable}}} » (prompt ${step.prompt.id}).`,
         );
+      }
+    }
+  }
+
+  // ——— variantes par type d'activité ———
+  const captureIds = new Set(
+    lesson.sections.practice.steps.flatMap((step) => (step.capture ? [step.capture.id] : [])),
+  );
+  const promptIds = new Set(
+    lesson.sections.practice.steps.flatMap((step) => (step.prompt ? [step.prompt.id] : [])),
+  );
+  for (const [type, variante] of Object.entries(lesson.variantes ?? {})) {
+    if (variante.brouillon === true) {
+      warn(`${file} : variante « ${type} » en brouillon — à relire, elle n'est pas affichée.`);
+    }
+    if (!PROJECT_TYPES.includes(type as (typeof PROJECT_TYPES)[number])) {
+      fail(`${file} : variante pour un type d'activité inconnu « ${type} ».`);
+    }
+    for (const id of Object.keys(variante.captures ?? {})) {
+      if (!captureIds.has(id)) {
+        fail(`${file} : variante « ${type} » vise une capture inexistante « ${id} ».`);
+      }
+    }
+    for (const id of Object.keys(variante.indices ?? {})) {
+      if (!promptIds.has(id)) {
+        fail(`${file} : variante « ${type} » vise un prompt inexistant « ${id} ».`);
       }
     }
   }

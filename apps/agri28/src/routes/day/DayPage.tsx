@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import type { Lesson } from '@/content/schema';
 import { LessonNotFoundError, loadLesson } from '@/content/loader';
+import { appliquerVariante } from '@/content/variantes';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { GuardrailNotice } from '@/components/GuardrailNotice';
@@ -44,13 +45,22 @@ export function DayPage() {
   const statuses = useMemo(() => computeDayStatuses(progress), [progress]);
   const status = statuses.get(day) ?? 'locked';
 
-  const [lesson, setLesson] = useState<Lesson | null>(null);
+  const [leconBrute, setLesson] = useState<Lesson | null>(null);
   const [missing, setMissing] = useState(false);
   const [step, setStep] = useState(0);
   const [captures, setCaptures] = useState<Record<string, string>>({});
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [confidence, setConfidence] = useState<number | undefined>(undefined);
   const [submitting, setSubmitting] = useState(false);
+
+  // La leçon affichée s'adapte au type d'activité du dossier (phase 10) :
+  // l'exemple de terrain, les questions posées et les indices changent pour
+  // un apiculteur ou un maraîcher. Le gabarit des prompts, lui, ne bouge
+  // jamais — c'est lui qui porte les garde-fous.
+  const lesson = useMemo(
+    () => (leconBrute ? appliquerVariante(leconBrute, project?.type ?? null) : null),
+    [leconBrute, project?.type],
+  );
 
   const timer = useTimer(SESSION_SECONDS, true);
 

@@ -198,6 +198,10 @@ en FR, AR/RTL et thème sombre, clavier, cibles tactiles, hors ligne) : voir
 | D77 | Un second dossier **refait les 28 jours dans l'ordre**, verrou pédagogique compris | 2026-11-18 | choix de l'utilisateur du projet ; c'est le comportement existant appliqué tel quel, chaque dossier ayant sa propre progression |
 | D78 | Le plafond est vérifié **aussi sur l'écran de création**, pas seulement sur le bouton qui y mène | 2026-11-18 | l'adresse `/dossiers/nouveau` est atteignable directement ; un verrou qui ne tient que dans le bouton n'est pas un verrou. Un test y va droit |
 | D79 | `deleteProject` efface aussi les **prompts et les badges** | 2026-11-18 | ils sont arrivés en phase 5, après l'écriture de la cascade, et personne ne l'avait vu parce qu'aucun écran ne supprimait de dossier. Ils laissaient des orphelins rattachés à un projet disparu. La suppression bascule en outre sur un dossier restant, au lieu de renvoyer sur l'écran de création |
+| D80 | Le parcours s'adapte au type d'activité par des **variantes ciblées** dans les mêmes 28 jours : exemple de terrain, libellés de capture, indices de prompt | 2026-11-18 | choix de l'utilisateur du projet. Forker les 28 jours pour les 9 types dans deux langues ferait 504 fichiers, qu'aucun humain ne relirait. Les concepts et les quiz ne dépendent pas du métier, et les gabarits interpolent déjà `{{project.type}}` : seul le texte de l'application devait suivre |
+| D81 | Une variante **ne peut jamais réécrire le gabarit d'un prompt** — le schéma est `strict` et ne l'expose pas | 2026-11-18 | le gabarit porte les garde-fous (« ne donne aucune dose », « cite tes sources »). L'ouvrir aux variantes ouvrirait le seul endroit du contenu qui protège l'utilisateur. Un test vérifie qu'aucun gabarit ne bouge après application |
+| D82 | Une variante marquée `brouillon` **n'est pas affichée** ; l'application l'ignore | 2026-11-18 | la relecture humaine devient un verrou, pas un pense-bête : le contenu écrit par une IA ne peut pas atteindre un agriculteur avant qu'un humain ait retiré le drapeau. `validate:content` le signale en plus |
+| D83 | L'écriture assistée est un **script hors application** (`npm run variantes`), pas une fonction de l'application | 2026-11-18 | choix de l'utilisateur du projet. Aucune clé d'API dans l'APK — elle y serait extractible — aucun coût par utilisateur, et tous les garde-fous tiennent. Les deux langues sont demandées dans le même appel, ce qui garantit la parité AR/FR par construction, comme `emit.py`. Le cœur (instructions, analyse, cohérence) est éprouvé par 11 tests sans dépenser un centime |
 
 ### Questions ouvertes
 *Aucune pour l'instant.*
@@ -258,6 +262,7 @@ L'APK lui-même est assemblé par le workflow **APK** de GitHub Actions : voir
 | 8d | ~~Vitrine limitée aux 3 leçons~~ — **remplacée** par l'édition web complète (D71) | terminée |
 | 8e | Édition web complète ; identifiant de compte lisible ; auto-activation de l'administrateur ; mot de passe oublié | terminée |
 | 9 | Plusieurs dossiers : niveau de compte, écran des dossiers, demande et octroi | terminée |
+| 10 | Parcours adapté au type d'activité ; écriture assistée des variantes | terminée |
 
 ### Méthode de travail imposée
 Une phase à la fois. À la fin de chaque phase : résumé, tests, commit, puis **arrêt et attente d'un GO explicite**.

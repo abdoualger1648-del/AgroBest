@@ -97,6 +97,35 @@ export const sourceRefSchema = z.object({
   checkedOn: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
 });
 
+/**
+ * Variante d'une leçon selon le type d'activité (phase 10).
+ *
+ * Volontairement **étroite** : on ne remplace que ce qui dépend vraiment du
+ * métier — l'exemple de terrain, les questions posées, l'indice d'un prompt.
+ *
+ * Le GABARIT d'un prompt n'est jamais remplaçable : il porte les garde-fous
+ * (« ne donne aucune dose », « cite tes sources »), et il interpole déjà
+ * `{{project.type}}`, donc l'IA reçoit l'activité sans qu'on réécrive rien.
+ * Laisser une variante le réécrire ouvrirait une porte sur le seul endroit
+ * du contenu qui protège l'utilisateur.
+ */
+export const varianteSchema = z
+  .object({
+    /** Remplace le bloc « exemple » du concept : l'histoire de terrain. */
+    terrain: z.object({ label: md.optional(), text: md }).optional(),
+    /** Libellés de capture à remplacer, par identifiant de capture. */
+    captures: z.record(z.string().min(1), md).optional(),
+    /** Indices de prompt à remplacer, par identifiant de prompt. */
+    indices: z.record(z.string().min(1), md).optional(),
+    /**
+     * Variante écrite par l'IA et pas encore relue. L'application l'ignore
+     * tant que ce drapeau est là : le contenu engendré ne peut donc pas
+     * atteindre un agriculteur avant qu'un humain l'ait lu et retiré.
+     */
+    brouillon: z.boolean().optional(),
+  })
+  .strict();
+
 export const lessonSchema = z
   .object({
     schema: z.literal(1),
@@ -135,6 +164,8 @@ export const lessonSchema = z
         dossierPreview: z.boolean(),
       }),
     }),
+    /** Variantes par type d'activité (`ovin`, `apiculture`…). Facultatif. */
+    variantes: z.record(z.string().min(1), varianteSchema).optional(),
     sources: z.array(sourceRefSchema).optional(),
     verifyLocally: z.array(md).optional(),
     nextTeaser: md.optional(),
@@ -206,6 +237,7 @@ export type Prompt = z.infer<typeof promptSchema>;
 export type Capture = z.infer<typeof captureSchema>;
 export type Step = z.infer<typeof stepSchema>;
 export type Question = z.infer<typeof questionSchema>;
+export type Variante = z.infer<typeof varianteSchema>;
 export type Lesson = z.infer<typeof lessonSchema>;
 export type DossierKind = z.infer<typeof dossierKindSchema>;
 

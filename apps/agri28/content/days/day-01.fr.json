@@ -205,5 +205,31 @@
   "verifyLocally": [
     "Aucune aide, démarche ou obligation citée par une IA ne doit être tenue pour vraie : la Chambre d'agriculture de votre wilaya et la Direction des services agricoles font foi."
   ],
-  "nextTeaser": "Demain : la différence entre une question vague et une demande qui donne une réponse utilisable, en quatre morceaux."
+  "nextTeaser": "Demain : la différence entre une question vague et une demande qui donne une réponse utilisable, en quatre morceaux.",
+  "variantes": {
+    "apiculture": {
+      "terrain": {
+        "label": "Sur le terrain",
+        "text": "Yacine conduit 40 ruches à Médéa. Chaque fin de saison, il passe une soirée à recopier ses récoltes et ses achats de cire sur un cahier, puis à deviner si l'année a payé. Il n'a besoin ni d'un logiciel ni d'un comptable pour commencer : il a besoin de **mettre en ordre ce qu'il sait déjà**."
+      },
+      "captures": {
+        "c1": "En une phrase : qu'est-ce que vous voulez avoir réussi dans 12 mois ? (récolte, nombre de ruches, vente)"
+      },
+      "indices": {
+        "p1": "Collez la reformulation obtenue ci-dessous. Si elle parle de pâturage au lieu de miellée, corrigez : c'est votre texte, pas celui de l'IA."
+      }
+    },
+    "maraichage": {
+      "terrain": {
+        "label": "Sur le terrain",
+        "text": "Nadia cultive 2 hectares de maraîchage à Aïn Defla. Chaque fin de campagne, elle passe une soirée à recopier ses achats de semences et d'engrais sur un cahier, puis à deviner si la saison a payé. Elle n'a besoin ni d'un logiciel ni d'un comptable pour commencer : elle a besoin de **mettre en ordre ce qu'elle sait déjà**."
+      },
+      "captures": {
+        "c1": "En une phrase : qu'est-ce que vous voulez avoir réussi dans 12 mois ? (surface, cultures, débouché)"
+      },
+      "indices": {
+        "p1": "Collez la reformulation obtenue ci-dessous. Si elle se trompe de culture ou de saison, corrigez : c'est votre texte, pas celui de l'IA."
+      }
+    }
+  }
 }
