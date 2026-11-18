@@ -51,6 +51,15 @@ jobs:
           distribution: temurin
           java-version: '21'
 
+      # Cache des dépendances Gradle. Sans lui, chaque build retélécharge tout
+      # depuis Maven Central, qui répond « 429 Too Many Requests » quand l'IP
+      # partagée du runner a trop tiré — c'est ce qui a fait échouer le build
+      # de la version 1.2.0, sans qu'une ligne de code soit en cause.
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          build-root-directory: apps/agri28/android
+          cache-read-only: false
+
       - name: Installer les dépendances
         run: npm ci
 
@@ -89,7 +98,11 @@ jobs:
           APK_KEY_PASSWORD: ${{ secrets.APK_KEY_PASSWORD }}
         run: |
           chmod +x ./gradlew
-          ./gradlew assembleRelease --no-daemon
+          # `--no-daemon` garde le runner léger ; les deux tentatives
+          # supplémentaires absorbent un 429 passager de Maven Central.
+          ./gradlew assembleRelease --no-daemon \
+            || (sleep 30 && ./gradlew assembleRelease --no-daemon) \
+            || (sleep 90 && ./gradlew assembleRelease --no-daemon)
 
       - name: Effacer la clé
         if: always()
