@@ -3,10 +3,12 @@ import { loadLesson } from './loader';
 import {
   ReponseInvalide,
   analyserReponse,
+  analyserJours,
   analyserReponseNiveau,
   cibles,
   construireInstructions,
   construireInstructionsNiveau,
+  leverBrouillons,
   niveauxGenerables,
   verifierCoherence,
   verifierCoherenceNiveau,
@@ -233,5 +235,99 @@ describe('verifierCoherenceNiveau', () => {
         ar: { defi: 'س', aide: 'زائد' },
       }).join(' '),
     ).toContain('réservé au niveau débutant');
+  });
+});
+
+describe('analyserJours', () => {
+  it('lit un jour seul, une liste et un intervalle', () => {
+    expect(analyserJours('7')).toEqual([7]);
+    expect(analyserJours('3,7,21')).toEqual([3, 7, 21]);
+    expect(analyserJours('8-11')).toEqual([8, 9, 10, 11]);
+    expect(analyserJours('8-10,28')).toEqual([8, 9, 10, 28]);
+  });
+
+  it('trie et dédoublonne', () => {
+    expect(analyserJours('5,3,5,4-5')).toEqual([3, 4, 5]);
+  });
+
+  it('tolère les espaces autour des morceaux', () => {
+    expect(analyserJours(' 3 , 7 ')).toEqual([3, 7]);
+  });
+
+  it('refuse ce qui n’est pas un jour ou un intervalle', () => {
+    // La relecture est un verrou (D82) : un intervalle mal tapé doit échouer
+    // bruyamment, jamais être interprété avec indulgence.
+    expect(() => analyserJours('tous')).toThrow(ReponseInvalide);
+    expect(() => analyserJours('8-')).toThrow(ReponseInvalide);
+    expect(() => analyserJours('8..14')).toThrow(ReponseInvalide);
+    expect(() => analyserJours('')).toThrow(ReponseInvalide);
+    expect(() => analyserJours('3,,7')).toThrow(ReponseInvalide);
+  });
+
+  it('refuse un intervalle à l’envers', () => {
+    expect(() => analyserJours('14-8')).toThrow(/l'envers/);
+  });
+
+  it('refuse un jour hors du parcours', () => {
+    expect(() => analyserJours('0')).toThrow(/hors du parcours/);
+    expect(() => analyserJours('29')).toThrow(/hors du parcours/);
+    expect(() => analyserJours('26-29')).toThrow(/hors du parcours/);
+  });
+});
+
+describe('leverBrouillons', () => {
+  function lecon() {
+    return {
+      id: 'day-08',
+      variantesNiveau: {
+        debutant: { aide: 'a', brouillon: true },
+        avance: { defi: 'd', brouillon: true },
+      },
+      variantes: { apiculture: { terrain: { text: 't' }, brouillon: true } },
+    } as Record<string, unknown>;
+  }
+
+  it('lève une clé précise et laisse les autres en brouillon', () => {
+    const r = leverBrouillons(lecon(), 'variantesNiveau', 'debutant');
+    expect(r.leves).toEqual(['debutant']);
+    expect(r.restants).toEqual(['avance']);
+    const v = r.lecon['variantesNiveau'] as Record<string, Record<string, unknown>>;
+    expect(v['debutant']).not.toHaveProperty('brouillon');
+    expect(v['avance']?.['brouillon']).toBe(true);
+  });
+
+  it('lève tout l’axe avec « tous »', () => {
+    const r = leverBrouillons(lecon(), 'variantesNiveau', 'tous');
+    expect(r.leves).toEqual(['avance', 'debutant']);
+    expect(r.restants).toEqual([]);
+  });
+
+  it('ne touche jamais à l’autre axe', () => {
+    // Valider les niveaux ne doit pas publier au passage une variante de
+    // métier que personne n'a relue.
+    const r = leverBrouillons(lecon(), 'variantesNiveau', 'tous');
+    const metier = r.lecon['variantes'] as Record<string, Record<string, unknown>>;
+    expect(metier['apiculture']?.['brouillon']).toBe(true);
+  });
+
+  it('ne modifie pas l’objet d’origine', () => {
+    const avant = lecon();
+    const copie = structuredClone(avant);
+    leverBrouillons(avant, 'variantesNiveau', 'tous');
+    expect(avant).toEqual(copie);
+  });
+
+  it('ne fait rien sur une leçon sans variante, ou déjà relue', () => {
+    expect(leverBrouillons({ id: 'day-02' }, 'variantesNiveau', 'tous').leves).toEqual([]);
+    const relue = { variantesNiveau: { debutant: { aide: 'a' } } };
+    const r = leverBrouillons(relue, 'variantesNiveau', 'tous');
+    expect(r.leves).toEqual([]);
+    expect(r.restants).toEqual([]);
+  });
+
+  it('ne lève rien pour une clé inconnue', () => {
+    const r = leverBrouillons(lecon(), 'variantesNiveau', 'expert');
+    expect(r.leves).toEqual([]);
+    expect(r.restants).toEqual(['avance', 'debutant']);
   });
 });

@@ -184,5 +184,15 @@
   "verifyLocally": [
     "L'état sanitaire de votre région, les alertes en cours et les conduites à tenir s'obtiennent auprès du vétérinaire, de l'inspection vétérinaire et de la subdivision agricole de votre commune."
   ],
-  "nextTeaser": "Demain : la photo. Ce qu'une image peut dire à l'IA, et surtout ce qu'elle ne peut pas."
+  "nextTeaser": "Demain : la photo. Ce qu'une image peut dire à l'IA, et surtout ce qu'elle ne peut pas.",
+  "variantesNiveau": {
+    "debutant": {
+      "aide": "La liste de surveillance ne sert que si elle tient sur un papier que vous gardez sur vous. Une fois la réponse reçue, recopiez-la à la main sur une demi-page : l'acte de recopier vous fera retirer ce qui ne vous concerne pas. Collez-la là où vous passez tous les jours — la porte de l'étable, le pare-soleil du véhicule, le dos de la porte d'entrée.",
+      "brouillon": true
+    },
+    "avance": {
+      "defi": "Pour chaque ligne de votre liste, demandez-vous qui vous appellerez si le signe apparaît, et vérifiez que vous avez son numéro. Une surveillance qui débouche sur « il faudrait que je trouve quelqu'un » a perdu les trois jours qui comptaient.",
+      "brouillon": true
+    }
+  }
 }

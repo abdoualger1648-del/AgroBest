@@ -24,7 +24,8 @@
     "apk:web": "node scripts/build-apk.mjs",
     "apk:verifier": "node scripts/verifier-apk.mjs",
     "check:bundle": "node scripts/check-bundle.mjs",
-    "verify": "npm run typecheck && npm run lint && npm run format:check && npm run validate:content && npm run test"
+    "verify": "npm run typecheck && npm run lint && npm run format:check && npm run validate:content && npm run test",
+    "variantes:valider": "node --experimental-strip-types scripts/authoring/valider-variantes.ts"
   },
   "dependencies": {
     "@capacitor/android": "^8.6.2",

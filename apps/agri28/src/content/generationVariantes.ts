@@ -350,3 +350,78 @@ export function verifierCoherenceNiveau(
 
   return fautes;
 }
+
+/**
+ * Lit une liste de jours écrite à la main : « 8-14 », « 3,7,21 », « 8-14,28 ».
+ *
+ * Volontairement strict, et c'est le but : la relecture est un verrou (D82).
+ * Un intervalle mal tapé doit échouer bruyamment, jamais être interprété avec
+ * indulgence — « 8-" » ne doit pas valoir « tous les jours ».
+ */
+export function analyserJours(argument: string): number[] {
+  const jours = new Set<number>();
+  for (const morceau of argument.split(',')) {
+    const nettoye = morceau.trim();
+    if (nettoye === '') throw new ReponseInvalide('liste de jours vide ou mal ponctuée.');
+
+    const intervalle = /^(\d{1,2})-(\d{1,2})$/.exec(nettoye);
+    const seul = /^(\d{1,2})$/.exec(nettoye);
+
+    if (intervalle) {
+      const debut = Number(intervalle[1]);
+      const fin = Number(intervalle[2]);
+      if (debut > fin) throw new ReponseInvalide(`intervalle à l'envers : « ${nettoye} ».`);
+      for (let jour = debut; jour <= fin; jour += 1) jours.add(jour);
+    } else if (seul) {
+      jours.add(Number(seul[1]));
+    } else {
+      throw new ReponseInvalide(`« ${nettoye} » n'est ni un jour ni un intervalle.`);
+    }
+  }
+
+  const hors = [...jours].filter((jour) => jour < 1 || jour > 28);
+  if (hors.length > 0) throw new ReponseInvalide(`jour hors du parcours : ${hors.join(', ')}.`);
+  return [...jours].sort((a, b) => a - b);
+}
+
+/**
+ * Retire le drapeau « brouillon » des variantes demandées, dans l'objet d'une
+ * leçon déjà lu. **Fonction pure** : elle ne lit ni n'écrit aucun fichier.
+ *
+ * Le cœur du script de validation vit ici, et non dans le script, pour la
+ * même raison que le reste de ce module : ce qui peut mal tourner doit être
+ * éprouvable sans toucher au contenu réel. Lever un drapeau par erreur
+ * mettrait un texte non relu sous les yeux d'un agriculteur.
+ *
+ * `cle` vaut un identifiant précis (« debutant », « apiculture ») ou « tous ».
+ * Rend les clés effectivement levées, dans l'ordre, et modifie une COPIE.
+ */
+export function leverBrouillons(
+  lecon: Record<string, unknown>,
+  champ: 'variantes' | 'variantesNiveau',
+  cle: string,
+): { lecon: Record<string, unknown>; leves: string[]; restants: string[] } {
+  const copie = structuredClone(lecon);
+  const variantes = copie[champ];
+  const leves: string[] = [];
+  const restants: string[] = [];
+
+  if (typeof variantes !== 'object' || variantes === null) {
+    return { lecon: copie, leves, restants };
+  }
+
+  for (const [nom, valeur] of Object.entries(variantes as Record<string, unknown>)) {
+    if (typeof valeur !== 'object' || valeur === null) continue;
+    const variante = valeur as Record<string, unknown>;
+    if (variante['brouillon'] !== true) continue;
+
+    if (cle === 'tous' || nom === cle) {
+      delete variante['brouillon'];
+      leves.push(nom);
+    } else {
+      restants.push(nom);
+    }
+  }
+
+  return { lecon: copie, leves: leves.sort(), restants: restants.sort() };
+}

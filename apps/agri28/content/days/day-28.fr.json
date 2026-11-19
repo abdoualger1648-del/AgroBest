@@ -200,5 +200,15 @@
   },
   "verifyLocally": [
     "Votre plan des 90 jours engage de l'argent et du travail : faites valider les volets techniques par un technicien ou un vétérinaire, et les volets financiers par un comptable ou votre banque."
-  ]
+  ],
+  "variantesNiveau": {
+    "debutant": {
+      "aide": "Dernier jour : ne recommencez rien. Ouvrez votre Dossier, copiez-en les grandes lignes, et laissez l'IA chercher les trous. Vous n'êtes pas obligé de les combler tous — notez simplement lesquels vous acceptez de laisser ouverts. Puis trois objectifs, avec trois dates. Trois, parce que c'est le nombre qu'on tient encore dans deux mois.",
+      "brouillon": true
+    },
+    "avance": {
+      "defi": "Pour chacun de vos trois objectifs, écrivez d'avance ce que vous abandonnerez pour lui faire de la place. Un trimestre ne s'allonge pas : un plan qui n'enlève rien est un plan qui ne se fera pas, et vous le saurez dès la troisième semaine.",
+      "brouillon": true
+    }
+  }
 }

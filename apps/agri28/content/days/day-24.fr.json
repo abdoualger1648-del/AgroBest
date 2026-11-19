@@ -180,5 +180,15 @@
       "dossierPreview": true
     }
   },
-  "nextTeaser": "Demain : faire lire vos documents par une IA — factures, fiches techniques, contrats — sans lui livrer ce qui ne la regarde pas."
+  "nextTeaser": "Demain : faire lire vos documents par une IA — factures, fiches techniques, contrats — sans lui livrer ce qui ne la regarde pas.",
+  "variantesNiveau": {
+    "debutant": {
+      "aide": "Le modèle sort vide, avec seulement des titres : c'est voulu. Remplissez-le une première fois ce soir, même avec des trous. Écrivez « je n'ai pas la donnée » là où elle manque, au lieu de laisser la ligne blanche : au mois suivant, vous saurez si c'est une donnée qui manque toujours, ou seulement ce mois-ci.",
+      "brouillon": true
+    },
+    "avance": {
+      "defi": "Écrivez votre rapport pour un lecteur précis — votre associé, votre banquier, la personne qui reprendra l'exploitation — et nommez-le en tête du document. Un rapport écrit pour personne finit par n'être lu par personne, à commencer par celui qui l'a écrit.",
+      "brouillon": true
+    }
+  }
 }

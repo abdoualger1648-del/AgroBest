@@ -179,5 +179,15 @@
     "Les dates de semis, de traitement et de récolte dépendent de votre région, de l'altitude et de l'année : confirmez-les auprès de la subdivision agricole, d'un technicien ou d'exploitants voisins.",
     "Aucune dose ni aucun produit ne doit figurer au calendrier sans l'avis d'un vétérinaire ou d'un technicien."
   ],
-  "nextTeaser": "Demain : les bras. Qui travaille, quand, et comment tenir un pic sans épuiser son monde."
+  "nextTeaser": "Demain : les bras. Qui travaille, quand, et comment tenir un pic sans épuiser son monde.",
+  "variantesNiveau": {
+    "debutant": {
+      "aide": "Le calendrier sort d'un coup, et il paraît impressionnant. Ne le prenez pas pour argent comptant : lisez-le mois par mois et comparez avec ce que vous avez réellement fait l'an dernier. Mettez une croix à côté de chaque mois qui vous paraît faux, sans chercher tout de suite la bonne date. Vous corrigerez les mois cochés ensuite, un par un.",
+      "brouillon": true
+    },
+    "avance": {
+      "defi": "Superposez votre calendrier corrigé et le trou de trésorerie du jour 8. Repérez les mois où un pic de travail tombe sur un creux de caisse : ce sont les seuls qui vous obligeront à arbitrer, et mieux vaut les voir maintenant qu'au moment de payer.",
+      "brouillon": true
+    }
+  }
 }

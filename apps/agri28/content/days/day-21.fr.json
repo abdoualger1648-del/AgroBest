@@ -192,5 +192,15 @@
     "La liste des pièces, les délais et le guichet compétent se confirment auprès de la Chambre d'agriculture, de la subdivision agricole ou de l'APC de votre commune.",
     "Pour un litige, un recours ou un engagement important, faites relire votre courrier par une personne compétente."
   ],
-  "nextTeaser": "Semaine 4 : piloter. Comptabilité simplifiée, indicateurs, rapports, analyse de vos documents, et votre plan d'action à 90 jours."
+  "nextTeaser": "Semaine 4 : piloter. Comptabilité simplifiée, indicateurs, rapports, analyse de vos documents, et votre plan d'action à 90 jours.",
+  "variantesNiveau": {
+    "debutant": {
+      "aide": "Les crochets du modèle sont faits pour rester vides à l'écran : vous les remplirez à la main sur le papier, ou au stylo sur le formulaire. N'y mettez jamais votre numéro de carte, votre numéro de compte ni une date de naissance. Relisez la lettre à voix haute avant de l'imprimer : les phrases trop longues s'entendent avant de se voir.",
+      "brouillon": true
+    },
+    "avance": {
+      "defi": "Demandez, pour chaque pièce de votre liste, ce qui la remplace quand on ne l'a pas. Puis allez faire confirmer la liste entière au guichet, et notez les écarts. C'est ce relevé-là, et non la lettre, qui vous fera gagner un déplacement la prochaine fois.",
+      "brouillon": true
+    }
+  }
 }

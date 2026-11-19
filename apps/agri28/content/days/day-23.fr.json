@@ -181,5 +181,15 @@
   "verifyLocally": [
     "Les seuils techniques (mortalité, rendement, pertes acceptables) se fixent avec votre vétérinaire ou votre technicien, selon votre conduite et votre région."
   ],
-  "nextTeaser": "Demain : transformer ces chiffres en un rapport mensuel écrit en dix minutes."
+  "nextTeaser": "Demain : transformer ces chiffres en un rapport mensuel écrit en dix minutes.",
+  "variantesNiveau": {
+    "debutant": {
+      "aide": "Quatre, pas plus : au cinquième, on cesse de les relever. Si la réponse en propose six, gardez les quatre que vous pouvez calculer à partir du tableau que vous tenez déjà, et écartez les autres sans regret. Un indicateur dont la donnée n'est pas déjà dans votre tableau ne sera jamais calculé.",
+      "brouillon": true
+    },
+    "avance": {
+      "defi": "Pour chacun de vos quatre seuils, écrivez l'action que vous déclencherez quand il sera franchi — une action, pas une intention. Un seuil sans action attachée produit de l'inquiétude et rien d'autre, et on finit par cesser de le regarder.",
+      "brouillon": true
+    }
+  }
 }

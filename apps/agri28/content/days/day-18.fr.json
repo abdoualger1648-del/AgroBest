@@ -175,5 +175,15 @@
     "Le dimensionnement d'une installation de pompage relève d'un installateur ou d'un bureau d'études qui visite le site.",
     "Les dispositifs d'aide à l'équipement changent : seules la Direction des services agricoles, la Chambre d'agriculture et votre banque font foi."
   ],
-  "nextTeaser": "Demain : acheter. Comparer trois offres qui ne se comparent pas, et écrire une demande de prix qui obtient une réponse."
+  "nextTeaser": "Demain : acheter. Comparer trois offres qui ne se comparent pas, et écrire une demande de prix qui obtient une réponse.",
+  "variantesNiveau": {
+    "debutant": {
+      "aide": "Cette journée se termine plus tard que les autres, et c'est normal. La liste que vous obtenez aujourd'hui sert à aller chercher des informations qui ne sont pas chez vous : votre dépense de carburant d'un mois, et une offre chiffrée. Recopiez la liste, gardez-la dans le véhicule, et revenez au second prompt quand vous aurez les deux. Rien ne presse : la journée reste validée.",
+      "brouillon": true
+    },
+    "avance": {
+      "defi": "Demandez le calcul une seconde fois en changeant un seul paramètre — le prix du carburant, ou la durée de pompage quotidienne. Vous verrez de combien le retour se déplace. Un retour qui s'effondre dès qu'on bouge une seule hypothèse n'est pas un retour : c'est un pari, et il vaut mieux le savoir avant de signer.",
+      "brouillon": true
+    }
+  }
 }

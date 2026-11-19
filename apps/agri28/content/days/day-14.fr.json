@@ -187,5 +187,15 @@
   "verifyLocally": [
     "Un suivi de gestion n'est pas une comptabilité officielle : pour vos déclarations et vos obligations fiscales, adressez-vous à un comptable."
   ],
-  "nextTeaser": "Semaine 3 : le terrain. Veille sanitaire, photo de diagnostic, météo et irrigation, achats, stocks et dossiers administratifs."
+  "nextTeaser": "Semaine 3 : le terrain. Veille sanitaire, photo de diagnostic, météo et irrigation, achats, stocks et dossiers administratifs.",
+  "variantesNiveau": {
+    "debutant": {
+      "aide": "Si vous n'avez pas de tableur sur votre téléphone, ne bloquez pas là-dessus : recopiez l'en-tête du tableau en haut d'une page de cahier, une colonne par titre, et tirez les traits à la règle. Ce qui fait vivre un tableau, ce n'est pas l'outil, c'est le rendez-vous de l'étape suivante. Beaucoup de bonnes exploitations se tiennent sur un cahier.",
+      "brouillon": true
+    },
+    "avance": {
+      "defi": "Au bout d'un mois, un tableau de suivi ne contient plus que des colonnes qu'on ne remplit pas. Décidez dès maintenant laquelle vous supprimerez en premier si le rendez-vous déborde les dix minutes, et écrivez-le à côté du tableau. Choisir d'avance ce qu'on abandonne est ce qui permet de tenir le reste.",
+      "brouillon": true
+    }
+  }
 }

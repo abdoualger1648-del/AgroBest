@@ -215,6 +215,9 @@ en FR, AR/RTL et thème sombre, clavier, cibles tactiles, hors ligne) : voir
 | D93 | La garde de niveau laisse **les réglages et le compte** atteignables ; un **effacement complet des données** refait passer le test | 2026-11-19 | changer de langue ou se déconnecter ne doit jamais exiger de répondre à huit questions d'abord. À l'inverse, « effacer toutes mes données » est un vrai recommencement : repartir par le test est cohérent, et un test de bout en bout fige ce comportement |
 | D94 | Les variantes de niveau de la **semaine 1** sont écrites à la main et relues ; les jours 8 à 28 passeront par `npm run variantes -- --niveau` | 2026-11-19 | 28 jours × 2 niveaux × 2 langues font 112 textes : les écrire tous à la main maintenant produirait de la matière que personne ne relirait vraiment. La semaine 1 rend la fonctionnalité réelle dès le premier jour ; le reste suit la règle D82 — écrit par l'IA, en brouillon, invisible jusqu'à relecture humaine |
 | D95 | Le test de niveau s'applique dans **toutes les éditions**, y compris `complete` | 2026-11-19 | un seul chemin de code, comme D51 pour le compte. Conséquence assumée : les tests de bout en bout le passent vraiment, par l'écran, au lieu d'écrire un niveau en base — ce chemin est maintenant la première chose que vit un utilisateur, un raccourci l'aurait laissé sans épreuve |
+| D96 | Le motif « texte réglementaire » est corrigé sur **deux** défauts : « loi » doit être suivie d'un **numéro**, et le `\b` ne couvre plus que les variantes **latines** | 2026-11-19 | deux vraies pannes, trouvées en écrivant le contenu de la phase 12. (1) `loi\s*n` attrapait le mot **« loin »**, les deux lettres étant collées : n'importe quel auteur serait tombé dessus. (2) En JavaScript, `\b` se fonde sur l'alphabet ASCII : placé devant le groupe entier, il empêchait **toute** correspondance arabe — la règle ne s'appliquait donc qu'au français depuis la phase 3. Rien n'était passé au travers, parce que les leçons arabes citant un texte ont une jumelle française qui, elle, était contrôlée ; l'écriture en paire masquait le trou. Onze contre-épreuves fixent désormais les deux alphabets |
+| D97 | Lever un drapeau `brouillon` se fait par une **commande** (`npm run variantes:valider`), qui exige des jours **nommés explicitement** ; sa décision vit dans une fonction **pure** et testée | 2026-11-19 | retirer 84 drapeaux à la main serait une source d'erreurs à lui seul, et D82 n'y gagnerait rien. Mais il n'y a volontairement **pas** de « tout valider » : ce serait exactement le tampon que D82 cherche à éviter. La commande ne touche jamais l'autre axe — valider les niveaux ne doit pas publier au passage une variante de métier que personne n'a lue |
+| D98 | Les variantes de niveau des jours **8 à 28** sont écrites et livrées **en brouillon**, donc invisibles | 2026-11-19 | application directe de D82 et D94 : ces 84 textes sont écrits par une IA, et aucun n'atteindra un agriculteur avant que l'utilisateur du projet les ait lus et ait levé leur drapeau, semaine par semaine. La semaine 1, relue, reste la seule affichée |
 
 ### Questions ouvertes
 *Aucune pour l'instant.*
@@ -252,6 +255,13 @@ npm run verify           # typecheck + lint + format + contenu + tests, en une c
 ```bash
 npm run variantes -- --jour 7 --type apiculture    # axe métier (phase 10)
 npm run variantes -- --jour 7 --niveau debutant    # axe niveau (phase 12)
+```
+
+Après relecture, lever le drapeau `brouillon` sur les jours nommés (jamais « tous les jours ») :
+
+```bash
+npm run variantes:valider -- --jours 8-14 --niveau tous
+npm run variantes:valider -- --jours 21 --type apiculture
 ```
 
 Dans `apps/agri28` uniquement : `npm run icons` (régénère les icônes PWA),

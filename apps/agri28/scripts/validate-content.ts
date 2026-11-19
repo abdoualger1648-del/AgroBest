@@ -49,8 +49,22 @@ const ALLOWED_VARIABLES = new Set([
 const MONEY = /\d[\d\s.,\u00a0]*\s?(?:DA|DZD|دج|د\.ج)/u;
 
 /** Références à un texte réglementaire précis (≠ simple mention d'une institution). */
+// « loi » doit être suivie d'un NUMÉRO, sinon le motif attrape le mot
+// « loin » : `loi\s*n` y correspond, les deux lettres étant collées. Faux
+// positif trouvé sur un texte parfaitement ordinaire — même famille que D27.
+// Une loi sans numéro n'est de toute façon pas « un texte précis ».
+// Deux pièges, trouvés en phase 12 :
+//
+//   1. « loi » doit être suivie d'un NUMÉRO, sinon le motif attrape le mot
+//      « loin » : `loi\s*n` y correspond, les deux lettres étant collées.
+//      Une loi sans numéro n'est de toute façon pas « un texte précis ».
+//   2. Le `\b` ne doit couvrir QUE les variantes latines. En JavaScript il
+//      se fonde sur l'alphabet ASCII : placé devant le groupe entier, il
+//      empêchait toute correspondance arabe, et la règle ne s'appliquait
+//      donc qu'au français depuis la phase 3. Même disposition que NEGATION,
+//      où les variantes arabes étaient déjà hors du groupe.
 const REGULATION =
-  /\b(?:loi\s*n|décret|arrêté|journal\s+officiel|article\s+\d|قانون\s*رقم|مرسوم|الجريدة\s+الرسمية)/iu;
+  /\b(?:loi\s*(?:n\s*[°º]?\s*)?\d|décret|arrêté|journal\s+officiel|article\s+\d)|قانون\s*رقم|مرسوم|الجريدة\s+الرسمية/iu;
 
 /**
  * Une phrase qui INTERDIT de citer un texte réglementaire ne l'affirme pas :

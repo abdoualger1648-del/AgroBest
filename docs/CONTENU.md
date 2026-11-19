@@ -140,6 +140,21 @@ ANTHROPIC_API_KEY=… npm run variantes -- --jour 7 --niveau debutant
 Même script, même garantie de parité, même drapeau `"brouillon": true` à retirer après relecture.
 Un seul axe par appel : `--type` ou `--niveau`, jamais les deux.
 
+#### Publier une variante que vous venez de relire
+
+Les jours 8 à 28 sont déjà écrits, **en brouillon** : l'application les ignore. Après avoir lu une
+semaine, levez son drapeau d'une commande plutôt qu'à la main :
+
+```bash
+npm run variantes:valider -- --jours 8-14 --niveau tous
+npx prettier --write 'content/days/day-*.json'
+npm run validate:content && npm run test
+```
+
+Les jours se nomment toujours explicitement : il n'existe **pas** de « tout valider ». Ce serait
+le tampon que le drapeau cherche justement à éviter. La commande ne touche qu'un seul axe à la
+fois : valider les niveaux ne publie jamais au passage une variante de métier que personne n'a lue.
+
 ### Changer les questions du test de niveau
 
 `content/test-niveau.json` porte les questions, leurs options et leurs **points**. Les deux

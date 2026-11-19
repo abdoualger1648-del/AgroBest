@@ -178,5 +178,15 @@
   "verifyLocally": [
     "Un contrat, un engagement de livraison ou un acte qui vous lie doit être relu par une personne compétente avant signature."
   ],
-  "nextTeaser": "Demain : cesser de tout réexpliquer. Construire le bloc de contexte qui décrit votre exploitation une fois pour toutes."
+  "nextTeaser": "Demain : cesser de tout réexpliquer. Construire le bloc de contexte qui décrit votre exploitation une fois pour toutes.",
+  "variantesNiveau": {
+    "debutant": {
+      "aide": "Avant de déposer un document, regardez ce qu'il contient : un contrat porte souvent un nom, une adresse, un numéro de compte. Masquez-les au feutre et photographiez la page masquée, ou recopiez seulement le passage qui vous intéresse. Posez ensuite une question précise — « quelles sont mes obligations de livraison ? » — plutôt que « résume ».",
+      "brouillon": true
+    },
+    "avance": {
+      "defi": "Prenez trois chiffres de la réponse et retrouvez-les un par un dans le document d'origine. Notez combien vous en retrouvez exactement. Cette mesure-là, faite sur vos propres documents, vaut tous les avis sur la fiabilité des IA — et elle change d'un document à l'autre.",
+      "brouillon": true
+    }
+  }
 }

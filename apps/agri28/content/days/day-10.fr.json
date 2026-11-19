@@ -179,5 +179,15 @@
   "verifyLocally": [
     "Les pièces exigées pour un financement et les conditions d'octroi varient d'une banque et d'un dispositif à l'autre : renseignez-vous à l'agence et auprès de la Chambre d'agriculture avant de monter le dossier."
   ],
-  "nextTeaser": "Demain : le calendrier. Douze mois, vos travaux, vos pics de charge — et ce que l'IA ne peut pas savoir de votre région."
+  "nextTeaser": "Demain : le calendrier. Douze mois, vos travaux, vos pics de charge — et ce que l'IA ne peut pas savoir de votre région.",
+  "variantesNiveau": {
+    "debutant": {
+      "aide": "Pour « coller vos éléments des jours précédents », ouvrez votre Dossier de projet dans une autre fenêtre : tout y est déjà rangé par journée. Copiez chaque morceau un par un dans le prompt, à l'endroit indiqué entre crochets, puis effacez les crochets. S'il vous manque un élément parce que vous aviez sauté une étape, écrivez simplement « à compléter » : un document se corrige, il ne se refait pas.",
+      "brouillon": true
+    },
+    "avance": {
+      "defi": "Reprenez les objections du banquier et classez-les en deux tas : celles qui appellent un document, celles qui appellent un chiffre. Préparez le document du premier tas aujourd'hui. C'est lui qu'on vous demandera au guichet, et c'est celui qu'on n'a jamais sous la main.",
+      "brouillon": true
+    }
+  }
 }
