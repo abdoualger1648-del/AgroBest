@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { cleanup, configure, screen, waitFor } from '@testing-library/react';
+import { cleanup, configure, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderApp } from '@/test/renderApp';
 import { serviceEnMemoire } from '@/compte';
@@ -125,10 +125,18 @@ describe('plusieurs dossiers', () => {
     oublierDroits();
 
     await rouvrir('/compte/administration');
-    expect(await screen.findByText(UTILISATEUR)).toBeInTheDocument();
-    expect(screen.getByText('Niveau multi-dossiers')).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: 'Accorder le niveau' }));
-    expect(await screen.findByText('Aucune demande en attente.')).toBeInTheDocument();
+    // On reste dans la section des DEMANDES : depuis la phase 13, l'écran
+    // porte aussi la liste de tous les comptes, où la même personne figure.
+    const demandes = await screen.findByRole('region', { name: 'Demandes en attente' });
+    expect(within(demandes).getByText(UTILISATEUR)).toBeInTheDocument();
+    expect(within(demandes).getByText('Niveau multi-dossiers')).toBeInTheDocument();
+    await user.click(within(demandes).getByRole('button', { name: 'Accorder le niveau' }));
+    // La section est re-rendue après l'accord : on la retrouve au lieu de
+    // réutiliser l'ancien nœud, que React a remplacé.
+    await waitFor(async () => {
+      const apres = await screen.findByRole('region', { name: 'Demandes en attente' });
+      expect(within(apres).getByText('Aucune demande en attente.')).toBeInTheDocument();
+    });
 
     // L'utilisateur retrouve son niveau, et peut créer un second dossier.
     await compte().seDeconnecter();

@@ -7,6 +7,7 @@ import {
 } from './firebase.config';
 import type { CompteDistantInfos } from '@/db/repositories/compte';
 import type { Niveau } from '@/domain/access';
+import type { CompteAdministre } from '@/domain/comptes';
 // Imports de types uniquement : effacés à la compilation, ils ne font donc
 // pas entrer le SDK dans le paquet initial. Le code, lui, l'importe à la
 // demande dans `charger()`.
@@ -41,6 +42,8 @@ interface DocumentUtilisateur {
   niveau?: unknown;
   demandeNiveauLe?: unknown;
   niveauLe?: unknown;
+  /** Date du dernier retrait d'accès (phase 13). */
+  desactiveLe?: unknown;
 }
 
 /** Un document écrit avant la phase 9 n'a pas de niveau : il est « standard ». */
@@ -302,12 +305,62 @@ export class ServiceFirebase implements ServiceCompte {
     });
   }
 
+  /**
+   * Tous les comptes, triés par adresse.
+   *
+   * `orderBy('email')` et rien d'autre : un tri sur un seul champ utilise
+   * l'index automatique (D70). Surtout, il ne faut PAS trier sur `demandeLe`
+   * comme `listerDemandes` — Firestore écarte les documents dépourvus du
+   * champ trié, et quelqu'un qui n'a jamais rien demandé disparaîtrait de la
+   * liste des comptes, c'est-à-dire exactement de l'endroit où il doit être.
+   */
+  listerComptes(): Promise<CompteAdministre[]> {
+    return this.appel(async (modules) => {
+      const { firestore, base } = modules;
+      const resultat = await firestore.getDocs(
+        firestore.query(
+          firestore.collection(base, COLLECTION_UTILISATEURS),
+          firestore.orderBy('email', 'asc'),
+        ),
+      );
+      return resultat.docs.map((document): CompteAdministre => {
+        const donnees = document.data() as DocumentUtilisateur;
+        return {
+          uid: document.id,
+          email: typeof donnees.email === 'string' ? donnees.email : '',
+          actif: donnees.actif === true,
+          niveau: lireNiveau(donnees.niveau),
+          demandeLe: enMillisecondes(donnees.demandeLe),
+          activeLe: enMillisecondes(donnees.activeLe),
+          desactiveLe: enMillisecondes(donnees.desactiveLe),
+          demandeNiveauLe: enMillisecondes(donnees.demandeNiveauLe),
+          niveauLe: enMillisecondes(donnees.niveauLe),
+        };
+      });
+    });
+  }
+
   activerCompte(uid: string): Promise<void> {
     return this.appel(async (modules) => {
       const { firestore, base } = modules;
       await firestore.updateDoc(firestore.doc(base, COLLECTION_UTILISATEURS, uid), {
         actif: true,
         activeLe: firestore.serverTimestamp(),
+        // Rouvrir un accès efface la trace du retrait : le champ décrit
+        // l'état COURANT, pas l'historique.
+        desactiveLe: null,
+      });
+    });
+  }
+
+  desactiverCompte(uid: string): Promise<void> {
+    return this.appel(async (modules) => {
+      const { firestore, base } = modules;
+      // `activeLe` n'est pas effacé : il dit qu'un accès avait été ouvert,
+      // et quand. C'est la trace que le retrait seul ne donnerait pas.
+      await firestore.updateDoc(firestore.doc(base, COLLECTION_UTILISATEURS, uid), {
+        actif: false,
+        desactiveLe: firestore.serverTimestamp(),
       });
     });
   }
@@ -318,6 +371,16 @@ export class ServiceFirebase implements ServiceCompte {
       await firestore.updateDoc(firestore.doc(base, COLLECTION_UTILISATEURS, uid), {
         niveau: 'multi',
         niveauLe: firestore.serverTimestamp(),
+      });
+    });
+  }
+
+  retirerNiveau(uid: string): Promise<void> {
+    return this.appel(async (modules) => {
+      const { firestore, base } = modules;
+      await firestore.updateDoc(firestore.doc(base, COLLECTION_UTILISATEURS, uid), {
+        niveau: 'standard',
+        niveauLe: null,
       });
     });
   }

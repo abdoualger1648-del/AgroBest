@@ -58,7 +58,7 @@ Corriger un prix ou ajouter un jour = éditer un JSON, sans toucher à React.
 
 Chemins ci-dessous relatifs à `apps/agri28/` :
 
-- `src/domain/` : logique pure, sans DOM, testée à 100 % (parcours, minuteur, série, quiz, prompts, dossier, droits de compte, **niveau de parcours**).
+- `src/domain/` : logique pure, sans DOM, testée à 100 % (parcours, minuteur, série, quiz, prompts, dossier, droits de compte, niveau de parcours, **gestion des comptes**).
 - `src/db/repositories/` : seul endroit qui connaît Dexie.
 - `src/content/` : schémas Zod + chargeur `import()` par jour et par langue.
 - `src/export/` : modèle neutre (pur, testé), `.docx`, `.xlsx`, certificat PDF, rappel `.ics` — chargés à la demande.
@@ -218,11 +218,17 @@ en FR, AR/RTL et thème sombre, clavier, cibles tactiles, hors ligne) : voir
 | D96 | Le motif « texte réglementaire » est corrigé sur **deux** défauts : « loi » doit être suivie d'un **numéro**, et le `\b` ne couvre plus que les variantes **latines** | 2026-11-19 | deux vraies pannes, trouvées en écrivant le contenu de la phase 12. (1) `loi\s*n` attrapait le mot **« loin »**, les deux lettres étant collées : n'importe quel auteur serait tombé dessus. (2) En JavaScript, `\b` se fonde sur l'alphabet ASCII : placé devant le groupe entier, il empêchait **toute** correspondance arabe — la règle ne s'appliquait donc qu'au français depuis la phase 3. Rien n'était passé au travers, parce que les leçons arabes citant un texte ont une jumelle française qui, elle, était contrôlée ; l'écriture en paire masquait le trou. Onze contre-épreuves fixent désormais les deux alphabets |
 | D97 | Lever un drapeau `brouillon` se fait par une **commande** (`npm run variantes:valider`), qui exige des jours **nommés explicitement** ; sa décision vit dans une fonction **pure** et testée | 2026-11-19 | retirer 84 drapeaux à la main serait une source d'erreurs à lui seul, et D82 n'y gagnerait rien. Mais il n'y a volontairement **pas** de « tout valider » : ce serait exactement le tampon que D82 cherche à éviter. La commande ne touche jamais l'autre axe — valider les niveaux ne doit pas publier au passage une variante de métier que personne n'a lue |
 | D98 | Les variantes de niveau des jours **8 à 28** sont écrites et livrées **en brouillon**, donc invisibles | 2026-11-19 | application directe de D82 et D94 : ces 84 textes sont écrits par une IA, et aucun n'atteindra un agriculteur avant que l'utilisateur du projet les ait lus et ait levé leur drapeau, semaine par semaine. La semaine 1, relue, reste la seule affichée |
+| D99 | L'administrateur **ne peut pas se retirer ses propres droits** depuis l'écran — mais il peut toujours se les donner | 2026-11-19 | un clic malheureux sur sa propre ligne lui fermerait les 28 leçons, et rien dans l'application ne lui permettrait de revenir en arrière sans passer par la console Firebase. Dans l'autre sens, rien à protéger : D74 l'autorisait déjà à s'activer. La règle vit dans `actionsPossibles`, fonction pure, et deux tests la figent |
+| D100 | `listerComptes` trie sur **`email`**, jamais sur `demandeLe` | 2026-11-19 | Firestore **écarte les documents dépourvus du champ trié**. `listerDemandes` trie sur `demandeLe` (D70), ce qui convient à son objet, mais la même requête pour les comptes ferait disparaître quiconque n'a jamais rien demandé — exactement les personnes que la liste complète existe pour montrer. `email` est présent sur tout document depuis sa création, et reste un tri à un seul champ, donc sans index composite à créer |
+| D101 | `desactiveLe` n'existe que dans la vue de l'administrateur, **pas dans le cache local** du compte | 2026-11-19 | choix de l'utilisateur du projet d'ajouter une date de retrait. Mais l'application d'un utilisateur n'a besoin que de savoir si son accès est ouvert : porter ce champ jusqu'à `CompteRecord` aurait imposé une migration IndexedDB de plus sans rien apporter à personne. Conséquence : les **règles Firestore doivent être republiées**, la liste des champs qu'un administrateur peut écrire ayant changé |
+| D102 | Rouvrir un accès **efface** `desactiveLe` ; une fermeture **conserve** `activeLe` | 2026-11-19 | le champ décrit l'état COURANT, pas l'historique : une date de retrait affichée sur un compte ouvert serait trompeuse. À l'inverse, garder `activeLe` après une fermeture est ce qui distingue « accès jamais ouvert » de « accès ouvert puis retiré ». Un vrai journal des décisions est une autre affaire, et l'utilisateur du projet l'a écartée |
+| D103 | Les deux listes de l'écran d'administration sont des **sections nommées** (`region`) | 2026-11-19 | une personne qui a une demande en attente figure dans les deux : sans nom, ni un lecteur d'écran ni un test ne pouvait dire de laquelle on parle. Trois tests existants échouaient d'ailleurs sur un « Found multiple elements » après l'ajout de la liste complète — le défaut était d'abord d'accessibilité |
 
 ### Questions ouvertes
 *Aucune pour l'instant.*
 
 ### Questions tranchées
+- **Gestion des comptes** (choix de l'utilisateur du projet) : l'administrateur **liste tous les comptes**, ouvre et **ferme** un accès, accorde et **retire** le niveau multi-dossiers ; une **date de retrait** (`desactiveLe`) est conservée — ce qui impose de **republier les règles Firestore**. La suppression d'un compte reste impossible, par les règles (`allow delete: if false`) comme par Firebase Auth.
 - **Test de niveau** (choix de l'utilisateur du projet) : mesure **3 axes** — aisance IA, maturité du projet, gestion existante ; **3 niveaux** (débutant / intermédiaire / avancé) ; **mêmes 28 jours à profondeur adaptée**, pas de parcours raccourci ni réordonné ; **obligatoire au départ, refaisable à tout moment**.
 - **Nom public** : Agricole DZ 360 (D23). **Ton** : vouvoiement FR, arabe standard simple (D22).
 - **Chiffres en arabe** : occidentaux (D12, confirmé D44).
@@ -296,6 +302,7 @@ L'APK lui-même est assemblé par le workflow **APK** de GitHub Actions : voir
 | 10 | Parcours adapté au type d'activité ; écriture assistée des variantes | terminée |
 | 11 | Notifications des demandes pour l'administrateur | terminée |
 | 12 | Test de niveau avant le parcours ; profondeur des journées adaptée au niveau | terminée |
+| 13 | Gestion des comptes par l'administrateur : liste complète, ouverture et fermeture d'accès, niveau accordé ou retiré | terminée |
 
 ### Méthode de travail imposée
 Une phase à la fois. À la fin de chaque phase : résumé, tests, commit, puis **arrêt et attente d'un GO explicite**.

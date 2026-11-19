@@ -10,11 +10,17 @@ import { usePreferences } from '@/store/preferences';
 import { useCompte } from '@/store/compte';
 import { useAdministration } from '@/store/administration';
 import { useEtatCompte } from '@/hooks/useAcces';
+import { ListeComptes } from './ListeComptes';
 
 /**
- * Écran d'administration (D49) : les demandes en attente, et un bouton pour
- * y répondre. Les règles de sécurité Firestore refusent de toute façon
- * l'écriture à quiconque d'autre — l'écran n'est qu'un confort.
+ * Écran d'administration.
+ *
+ * Deux parties : les demandes en attente (D49), qui appellent une réponse,
+ * puis la gestion de TOUS les comptes (phase 13) — y compris ceux qui n'ont
+ * jamais rien demandé, et que la liste des demandes ne pouvait pas montrer.
+ *
+ * Les règles de sécurité Firestore refusent de toute façon l'écriture à
+ * quiconque d'autre : l'écran n'est qu'un confort, jamais la protection.
  */
 export function AdminPage() {
   const { t } = useTranslation('compte');
@@ -112,30 +118,43 @@ export function AdminPage() {
         </p>
       ) : null}
 
-      {demandes.length === 0 ? (
-        <p className="text-muted">{t('admin.aucune')}</p>
-      ) : (
-        <ul className="flex flex-col gap-3">
-          {demandes.map((demande) => (
-            <li key={`${demande.uid}-${demande.nature}`}>
-              <Card>
-                <p className="font-semibold break-all">{demande.email}</p>
-                <p className="mt-1 text-sm font-medium text-primary">
-                  {demande.nature === 'niveau'
-                    ? t('admin.natureNiveau')
-                    : t('admin.natureActivation')}
-                </p>
-                <p className="mt-1 text-sm text-muted">
-                  {t('admin.demandeLe', { date: formatDate(new Date(demande.demandeLe), lang) })}
-                </p>
-                <Button block className="mt-3" onClick={() => void accorder(demande)}>
-                  {demande.nature === 'niveau' ? t('admin.accorder') : t('admin.activer')}
-                </Button>
-              </Card>
-            </li>
-          ))}
-        </ul>
-      )}
+      {/*
+        Deux sections NOMMÉES, et c'est délibéré : une personne qui a une
+        demande en attente apparaît dans les deux. Sans nom, ni un lecteur
+        d'écran ni un test ne pourrait dire de laquelle on parle.
+      */}
+      <section aria-labelledby="demandes-titre">
+        <h2 id="demandes-titre" className="text-xl font-bold">
+          {t('admin.demandesTitre')}
+        </h2>
+
+        {demandes.length === 0 ? (
+          <p className="mt-3 text-muted">{t('admin.aucune')}</p>
+        ) : (
+          <ul className="mt-3 flex flex-col gap-3">
+            {demandes.map((demande) => (
+              <li key={`${demande.uid}-${demande.nature}`}>
+                <Card>
+                  <p className="font-semibold break-all">{demande.email}</p>
+                  <p className="mt-1 text-sm font-medium text-primary">
+                    {demande.nature === 'niveau'
+                      ? t('admin.natureNiveau')
+                      : t('admin.natureActivation')}
+                  </p>
+                  <p className="mt-1 text-sm text-muted">
+                    {t('admin.demandeLe', { date: formatDate(new Date(demande.demandeLe), lang) })}
+                  </p>
+                  <Button block className="mt-3" onClick={() => void accorder(demande)}>
+                    {demande.nature === 'niveau' ? t('admin.accorder') : t('admin.activer')}
+                  </Button>
+                </Card>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <ListeComptes />
     </>
   );
 }

@@ -1,4 +1,7 @@
 import type { CompteDistantInfos } from '@/db/repositories/compte';
+import type { CompteAdministre } from '@/domain/comptes';
+
+export type { CompteAdministre };
 
 /**
  * Port vers le service de comptes. L'application ne connaît que cette
@@ -30,9 +33,22 @@ export interface ServiceAdministration {
   estAdministrateur(): Promise<boolean>;
   /** Demandes non encore activées, de la plus ancienne à la plus récente. */
   listerDemandes(): Promise<DemandeEnAttente[]>;
+  /**
+   * Tous les comptes, triés par adresse (phase 13).
+   *
+   * Distinct de `listerDemandes`, et pas seulement par commodité : la liste
+   * des demandes s'appuie sur `orderBy('demandeLe')`, qui **écarte** les
+   * documents dépourvus de ce champ. Quelqu'un qui n'a jamais rien demandé
+   * n'y figure donc pas, alors qu'il doit figurer ici.
+   */
+  listerComptes(): Promise<CompteAdministre[]>;
   activerCompte(uid: string): Promise<void>;
+  /** Ferme les 28 leçons. Le Dossier de la personne reste sur son appareil. */
+  desactiverCompte(uid: string): Promise<void>;
   /** Accorde le niveau multi-dossiers à un compte. */
   accorderNiveau(uid: string): Promise<void>;
+  /** Ramène un compte au niveau standard : un seul dossier. */
+  retirerNiveau(uid: string): Promise<void>;
 }
 
 export interface ServiceCompte extends ServiceAdministration {

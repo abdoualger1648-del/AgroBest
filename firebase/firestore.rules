@@ -62,9 +62,12 @@ service cloud.firestore {
         && request.resource.data.get('niveau', 'standard')
              == resource.data.get('niveau', 'standard');
 
-      // L'administrateur ne touche QUE les droits : activation et niveau.
+      // L'administrateur ne touche QUE les droits : activation, niveau, et la
+      // date du dernier retrait. `desactiveLe` est écrit par l'administrateur
+      // seul, jamais par l'utilisateur : la liste ci-dessus est donc la
+      // frontière exacte de son pouvoir.
       allow update: if estAdmin()
-        && champsModifies().hasOnly(['actif', 'activeLe', 'niveau', 'niveauLe']);
+        && champsModifies().hasOnly(['actif', 'activeLe', 'niveau', 'niveauLe', 'desactiveLe']);
 
       // Un compte ne s'efface pas : on désactive.
       allow delete: if false;

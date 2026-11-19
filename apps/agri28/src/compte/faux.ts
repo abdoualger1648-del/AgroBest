@@ -1,8 +1,11 @@
 import { ErreurCompte, type DemandeEnAttente, type ServiceCompte } from './port';
+import type { CompteAdministre } from '@/domain/comptes';
 import type { CompteDistantInfos } from '@/db/repositories/compte';
 
 interface CompteStocke extends CompteDistantInfos {
   motDePasse: string;
+  /** Date du dernier retrait d'accès (phase 13), vue par l'administrateur. */
+  desactiveLe: number | null;
 }
 
 /**
@@ -75,6 +78,7 @@ export class FauxServiceCompte implements ServiceCompte {
         niveau: 'standard',
         demandeNiveauLe: null,
         niveauLe: null,
+        desactiveLe: null,
         motDePasse,
       };
       this.comptes.set(email, compte);
@@ -166,6 +170,25 @@ export class FauxServiceCompte implements ServiceCompte {
     });
   }
 
+  listerComptes(): Promise<CompteAdministre[]> {
+    return this.appel(() => {
+      this.exigerAdministrateur();
+      return [...this.comptes.values()]
+        .map((compte): CompteAdministre => ({
+          uid: compte.uid,
+          email: compte.email,
+          actif: compte.actif,
+          niveau: compte.niveau,
+          demandeLe: compte.demandeLe,
+          activeLe: compte.activeLe,
+          desactiveLe: compte.desactiveLe,
+          demandeNiveauLe: compte.demandeNiveauLe,
+          niveauLe: compte.niveauLe,
+        }))
+        .sort((a, b) => a.email.localeCompare(b.email));
+    });
+  }
+
   activerCompte(uid: string): Promise<void> {
     return this.appel(() => {
       this.exigerAdministrateur();
@@ -173,6 +196,21 @@ export class FauxServiceCompte implements ServiceCompte {
       if (compte) {
         compte.actif = true;
         compte.activeLe = Date.now();
+        // Rouvrir un accès efface la trace du retrait : le champ décrit
+        // l'état COURANT, pas l'historique. Un journal est une autre affaire.
+        compte.desactiveLe = null;
+      }
+    });
+  }
+
+  desactiverCompte(uid: string): Promise<void> {
+    return this.appel(() => {
+      this.exigerAdministrateur();
+      const compte = this.parUid(uid);
+      if (compte) {
+        compte.actif = false;
+        compte.desactiveLe = Date.now();
+        // `activeLe` est conservé : il dit qu'un accès avait été ouvert, et quand.
       }
     });
   }
@@ -184,6 +222,17 @@ export class FauxServiceCompte implements ServiceCompte {
       if (compte) {
         compte.niveau = 'multi';
         compte.niveauLe = Date.now();
+      }
+    });
+  }
+
+  retirerNiveau(uid: string): Promise<void> {
+    return this.appel(() => {
+      this.exigerAdministrateur();
+      const compte = this.parUid(uid);
+      if (compte) {
+        compte.niveau = 'standard';
+        compte.niveauLe = null;
       }
     });
   }

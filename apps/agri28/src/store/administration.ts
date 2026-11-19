@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { plusRecente, resumerDemandes, type ResumeDemandes } from '@/domain/demandes';
+import { resumerComptes, type CompteAdministre, type ResumeComptes } from '@/domain/comptes';
 import { ErreurCompte, type CodeErreurCompte, type DemandeEnAttente } from '@/compte/port';
 import { serviceCompte } from '@/compte';
 import { estAdministrateur } from '@/compte/droits';
@@ -37,21 +38,44 @@ export type PhaseAdmin = 'inconnu' | 'chargement' | 'refuse' | 'pret' | 'erreur'
 interface AdministrationState {
   phase: PhaseAdmin;
   demandes: DemandeEnAttente[];
+  /** Tous les comptes, triés par adresse (phase 13). */
+  comptes: CompteAdministre[];
+  resumeComptes: ResumeComptes;
   code: CodeErreurCompte | null;
   vuJusquA: number;
   resume: ResumeDemandes;
   rafraichir: () => Promise<void>;
+  /**
+   * Applique une décision sur un compte, puis relit la liste.
+   *
+   * Un seul point de passage pour les quatre actions : l'écran n'appelle
+   * jamais le service directement, donc aucune ne peut oublier de rafraîchir,
+   * ni d'attraper son erreur.
+   */
+  agir: (action: ActionAdmin, uid: string) => Promise<boolean>;
   /** Marque les demandes affichées comme vues : le compteur « nouvelles » retombe. */
   marquerVu: () => void;
   /** Prévient une seule fois par lot de demandes nouvelles. */
   notifierSiNouvelles: (titre: string, corps: (nombre: number) => string) => boolean;
 }
 
+export type ActionAdmin = 'activer' | 'desactiver' | 'accorderNiveau' | 'retirerNiveau';
+
 const RESUME_VIDE: ResumeDemandes = { total: 0, activations: 0, niveaux: 0, nouvelles: 0 };
+const COMPTES_VIDE: ResumeComptes = { total: 0, actifs: 0, enAttente: 0, multi: 0 };
+
+const APPELS: Record<ActionAdmin, (uid: string) => Promise<void>> = {
+  activer: (uid) => serviceCompte.activerCompte(uid),
+  desactiver: (uid) => serviceCompte.desactiverCompte(uid),
+  accorderNiveau: (uid) => serviceCompte.accorderNiveau(uid),
+  retirerNiveau: (uid) => serviceCompte.retirerNiveau(uid),
+};
 
 export const useAdministration = create<AdministrationState>((set, get) => ({
   phase: 'inconnu',
   demandes: [],
+  comptes: [],
+  resumeComptes: COMPTES_VIDE,
   code: null,
   vuJusquA: lireRepere(CLE_VU),
   resume: RESUME_VIDE,
@@ -60,13 +84,26 @@ export const useAdministration = create<AdministrationState>((set, get) => ({
     set({ phase: 'chargement', code: null });
     try {
       if (!(await estAdministrateur())) {
-        set({ phase: 'refuse', demandes: [], resume: RESUME_VIDE });
+        set({
+          phase: 'refuse',
+          demandes: [],
+          comptes: [],
+          resume: RESUME_VIDE,
+          resumeComptes: COMPTES_VIDE,
+        });
         return;
       }
-      const demandes = await serviceCompte.listerDemandes();
+      // Les deux listes sont lues ensemble : un écran qui montrerait des
+      // demandes à jour et des comptes périmés serait pire qu'inutile.
+      const [demandes, comptes] = await Promise.all([
+        serviceCompte.listerDemandes(),
+        serviceCompte.listerComptes(),
+      ]);
       set({
         phase: 'pret',
         demandes,
+        comptes,
+        resumeComptes: resumerComptes(comptes),
         resume: resumerDemandes(demandes, get().vuJusquA),
       });
     } catch (erreur) {
@@ -75,6 +112,20 @@ export const useAdministration = create<AdministrationState>((set, get) => ({
         code: erreur instanceof ErreurCompte ? erreur.code : 'inconnue',
       });
     }
+  },
+
+  agir: async (action, uid) => {
+    try {
+      await APPELS[action](uid);
+    } catch (erreur) {
+      set({
+        phase: 'erreur',
+        code: erreur instanceof ErreurCompte ? erreur.code : 'inconnue',
+      });
+      return false;
+    }
+    await get().rafraichir();
+    return true;
   },
 
   marquerVu: () => {

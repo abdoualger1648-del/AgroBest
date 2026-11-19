@@ -76,3 +76,19 @@ l'écran Administration (décision D49).
 | `niveau` | `standard` (un dossier) ou `multi` (cinq) — **écrit par l'administrateur seul** |
 | `demandeNiveauLe` | date de la demande de passage au niveau supérieur |
 | `niveauLe` | date à laquelle le niveau a été accordé |
+
+## Republier les règles après une mise à jour
+
+`firestore.rules` évolue avec l'application. À chaque changement, il faut **recoller le fichier**
+dans [la console Firestore](https://console.firebase.google.com/project/agricole360-4a470/firestore/rules)
+et publier : les règles déployées ne se mettent pas à jour toutes seules depuis le dépôt.
+
+Deux changements attendent aujourd'hui une republication :
+
+| Phase | Ce qui a changé | Sans republication |
+|---|---|---|
+| 9 | `niveau`, `niveauLe`, `demandeNiveauLe` | accorder le niveau multi-dossiers échoue |
+| 13 | `desactiveLe` ajouté aux champs que l'administrateur peut écrire | fermer un accès échoue |
+
+Les autres actions (lister, activer, accorder le niveau) fonctionnent déjà avec les règles de la
+phase 9.

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { cleanup, configure, screen, waitFor } from '@testing-library/react';
+import { cleanup, configure, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderApp } from '@/test/renderApp';
 import { serviceEnMemoire } from '@/compte';
@@ -25,6 +25,20 @@ configure({ asyncUtilTimeout: 5000 });
 vi.setConfig({ testTimeout: 20_000 });
 
 const UTILISATEUR = 'kamal@example.dz';
+
+/**
+ * La section « Demandes en attente », et elle seule.
+ *
+ * Depuis la phase 13, l'écran porte aussi la liste de TOUS les comptes : une
+ * personne qui a une demande en attente y apparaît donc deux fois. Chercher
+ * dans la page entière trouverait les deux.
+ */
+async function sectionDemandes(): Promise<HTMLElement> {
+  // Asynchrone : l'écran se monte à la demande, et la section n'existe pas
+  // encore à l'instant où le test l'appelle.
+  return screen.findByRole('region', { name: 'Demandes en attente' });
+}
+
 const ADMIN = 'admin@example.dz';
 const MOT_DE_PASSE = 'orge2026';
 
@@ -120,7 +134,7 @@ describe('écran d’administration', () => {
     await connecterAdmin();
 
     await rouvrir('/compte/administration');
-    expect(await screen.findByText(UTILISATEUR)).toBeInTheDocument();
+    expect(within(await sectionDemandes()).getByText(UTILISATEUR)).toBeInTheDocument();
   });
 
   it('ne liste pas un compte qui n’a rien demandé', async () => {
@@ -139,8 +153,11 @@ describe('écran d’administration', () => {
     await connecterAdmin();
 
     await rouvrir('/compte/administration');
-    await screen.findByText(UTILISATEUR);
-    await user.click(screen.getByRole('button', { name: 'Activer' }));
+    const demandes = await sectionDemandes();
+    within(demandes).getByText(UTILISATEUR);
+    // Le bouton de la DEMANDE, pas celui de la même personne dans la liste
+    // complète des comptes, qui porte le même libellé.
+    await user.click(within(demandes).getByRole('button', { name: 'Activer' }));
 
     // La demande disparaît de la liste.
     expect(await screen.findByText('Aucune demande en attente.')).toBeInTheDocument();
@@ -261,7 +278,7 @@ describe('notifications des demandes', () => {
     expect(useAdministration.getState().resume.nouvelles).toBe(1);
 
     await rouvrir('/compte/administration');
-    await screen.findByText(UTILISATEUR);
+    within(await sectionDemandes()).getByText(UTILISATEUR);
 
     await waitFor(() => {
       expect(useAdministration.getState().resume.nouvelles).toBe(0);
