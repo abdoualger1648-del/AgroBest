@@ -1,7 +1,39 @@
 import { expect, type Page } from '@playwright/test';
 
+/**
+ * Passe le test de niveau (phase 12), que la garde impose avant tout le reste.
+ *
+ * On le passe VRAIMENT, par l'écran, au lieu d'écrire un niveau dans
+ * IndexedDB : c'est maintenant la première chose que vit un utilisateur, et
+ * un raccourci ici laisserait ce chemin sans aucune épreuve de bout en bout.
+ *
+ * La deuxième option de chaque question donne « Intermédiaire », c'est-à-dire
+ * le parcours standard sans aide ni défi ajoutés — les autres tests de bout en
+ * bout continuent donc d'examiner le contenu générique qu'ils connaissent.
+ */
+export async function passLevelTest(page: Page): Promise<void> {
+  await page.goto('./test-niveau');
+  await page.getByRole('button', { name: 'Commencer le test' }).click();
+
+  // Borne volontaire : sans elle, un bouton renommé ferait tourner la boucle
+  // jusqu'au délai de Playwright, sans dire pourquoi.
+  for (let garde = 0; garde < 30; garde += 1) {
+    await page.getByRole('radio').nth(1).check();
+    const suivant = page.getByRole('button', { name: 'Suivant' });
+    if (await suivant.isVisible()) {
+      await suivant.click();
+      continue;
+    }
+    await page.getByRole('button', { name: 'Voir mon niveau' }).click();
+    await expect(page.getByText('Intermédiaire')).toBeVisible();
+    return;
+  }
+  throw new Error("Le test de niveau n'a pas abouti en 30 questions.");
+}
+
 /** Crée le projet de test et laisse l'application sur le jour 1. */
 export async function createProject(page: Page): Promise<void> {
+  await passLevelTest(page);
   await page.goto('./bienvenue');
   await page.getByLabel(/Nom du projet/).fill('Élevage ovin Aïn Defla');
   await page.getByLabel(/^Taille/).fill('60');

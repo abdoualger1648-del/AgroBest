@@ -1,10 +1,11 @@
 import { expect, test } from '@playwright/test';
-import { completeDayOne, createProject, waitForServiceWorker } from './helpers';
+import { completeDayOne, createProject, passLevelTest, waitForServiceWorker } from './helpers';
 
 test.describe('navigation au clavier', () => {
   test('le premier arrêt de tabulation est le lien d’évitement, qui mène au contenu', async ({
     page,
   }) => {
+    await passLevelTest(page);
     await page.goto('./');
     await page.getByRole('heading', { level: 1 }).waitFor();
     await page.keyboard.press('Tab');

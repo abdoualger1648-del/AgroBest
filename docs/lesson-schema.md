@@ -81,15 +81,40 @@ type Lesson = {
   guardrails: GuardrailId[];      // identifiants de content/guardrails.json
   sections: {
     concept:  { durationMin: 3; body: Block[]; keyPoints: Md[] };
-    practice: { durationMin: 7; intro?: Block[]; steps: Step[] };
+    practice: { durationMin: 7; intro?: Block[]; steps: Step[];
+                aide?: Md; defi?: Md };   // remplis par la variante de niveau, pas à la main
     quiz:     { durationMin: 3; questions: Question[] };        // exactement 3
     review:   { durationMin: 2; checklist: Md[]; confidencePrompt: Md; dossierPreview: boolean };
   };
+  variantes?: Record<ProjectType, Variante>;            // par activité (phase 10)
+  variantesNiveau?: Record<NiveauParcours, VarianteNiveau>;  // par niveau (phase 12)
   sources?: { label: Md; url: string; checkedOn: string }[];    // 'YYYY-MM-DD'
   verifyLocally?: Md[];           // avertissements propres à ce jour
   nextTeaser?: Md;                // « demain : … »
 };
+
+// ——— les deux axes de variante ———
+// Ils s'appliquent l'un après l'autre : le métier d'abord, le niveau ensuite.
+// NI L'UN NI L'AUTRE n'expose le `template` d'un prompt : c'est lui qui porte
+// les garde-fous, et aucune variante ne peut le réécrire (D81).
+
+type Variante = {                 // clé = 'ovin' | 'bovin' | … (pas 'autre')
+  terrain?: { label?: Md; text: Md };      // remplace le bloc « example » du concept
+  captures?: Record<string, Md>;           // clé = capture.id existante
+  indices?: Record<string, Md>;            // clé = prompt.id existante
+  brouillon?: boolean;                     // true ⇒ non affichée (D82)
+};
+
+type VarianteNiveau = {           // clé = 'debutant' | 'avance' — jamais 'intermediaire'
+  aide?: Md;                               // AVANT les étapes, pour un débutant
+  defi?: Md;                               // APRÈS les étapes, pour un avancé
+  indices?: Record<string, Md>;
+  brouillon?: boolean;
+};
 ```
+
+`intermediaire` **est** le parcours standard : lui donner une variante ne ferait
+que dupliquer le contenu de base, et la validation le refuse.
 
 ---
 
@@ -132,6 +157,9 @@ Convention : les prompts se terminent toujours par une consigne de prudence adap
     *Nommer une institution ne déclenche rien* : « demandez à la Chambre d'agriculture » est une consigne de vérification, pas une affirmation à sourcer.
 11. Aucun lien `http://` (HTTPS uniquement) ; aucune URL raccourcie.
 12. Markdown restreint : aucune balise HTML, aucune image distante.
+13. **Variantes par activité** : la clé appartient à `PROJECT_TYPES` ; chaque `captures[]` et `indices[]` visé existe dans la leçon.
+14. **Variantes par niveau** : la clé vaut `debutant` ou `avance` — `intermediaire` est refusé ; la variante ne peut pas être vide ; chaque `indices[]` visé existe.
+15. La **parité AR/FR porte aussi sur les variantes des deux axes** : mêmes clés, mêmes champs remplacés. Une aide écrite en français seulement est un parcours à deux vitesses, donc une erreur.
 
 ---
 

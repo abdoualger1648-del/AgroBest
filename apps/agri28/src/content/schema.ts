@@ -1,4 +1,9 @@
 import { z } from 'zod';
+// Chemin relatif AVEC l'extension, et non l'alias « @/ » : ce fichier est
+// aussi chargé par `node --experimental-strip-types` depuis
+// `scripts/validate-content.ts`, et Node ne connaît ni l'alias de Vite ni
+// l'extension implicite. Même raison que dans `generationVariantes.ts`.
+import { AXES_NIVEAU } from '../domain/niveau.ts';
 
 /**
  * Schémas du contenu pédagogique. Source de vérité unique : utilisés à la fois
@@ -126,6 +131,32 @@ export const varianteSchema = z
   })
   .strict();
 
+/**
+ * Variante d'une leçon selon le NIVEAU de l'utilisateur (phase 12).
+ *
+ * Second axe, indépendant du type d'activité : un apiculteur débutant reçoit
+ * la variante « apiculture » *et* la variante « debutant ». Les deux sont
+ * appliquées l'une après l'autre.
+ *
+ * Volontairement plus étroite encore que `varianteSchema` : on n'ajoute que
+ * de l'accompagnement (`aide`) ou de l'exigence (`defi`), et on ne remplace
+ * que les indices de prompt. Le niveau ne touche ni l'exemple de terrain —
+ * c'est le métier qui le décide — ni, surtout, le GABARIT d'un prompt : D81
+ * vaut ici mot pour mot, le schéma ne l'expose pas.
+ */
+export const varianteNiveauSchema = z
+  .object({
+    /** Explication pas-à-pas ajoutée avant les étapes. Pour les débutants. */
+    aide: md.optional(),
+    /** Exigence supplémentaire ajoutée après les étapes. Pour les avancés. */
+    defi: md.optional(),
+    /** Indices de prompt à remplacer, par identifiant de prompt. */
+    indices: z.record(z.string().min(1), md).optional(),
+    /** Écrite par l'IA et pas encore relue : l'application l'ignore (D82). */
+    brouillon: z.boolean().optional(),
+  })
+  .strict();
+
 export const lessonSchema = z
   .object({
     schema: z.literal(1),
@@ -152,6 +183,14 @@ export const lessonSchema = z
         durationMin: z.number().int().positive(),
         intro: z.array(blockSchema).optional(),
         steps: z.array(stepSchema).min(1),
+        /**
+         * Accompagnement et exigence selon le niveau (phase 12). Vides dans
+         * les fichiers de contenu : c'est `appliquerNiveau` qui les remplit
+         * depuis `variantesNiveau`. Un auteur peut toutefois en écrire un
+         * valable pour tous les niveaux.
+         */
+        aide: md.optional(),
+        defi: md.optional(),
       }),
       quiz: z.object({
         durationMin: z.number().int().positive(),
@@ -166,6 +205,8 @@ export const lessonSchema = z
     }),
     /** Variantes par type d'activité (`ovin`, `apiculture`…). Facultatif. */
     variantes: z.record(z.string().min(1), varianteSchema).optional(),
+    /** Variantes par niveau (`debutant`, `intermediaire`, `avance`). Facultatif. */
+    variantesNiveau: z.record(z.string().min(1), varianteNiveauSchema).optional(),
     sources: z.array(sourceRefSchema).optional(),
     verifyLocally: z.array(md).optional(),
     nextTeaser: md.optional(),
@@ -238,6 +279,7 @@ export type Capture = z.infer<typeof captureSchema>;
 export type Step = z.infer<typeof stepSchema>;
 export type Question = z.infer<typeof questionSchema>;
 export type Variante = z.infer<typeof varianteSchema>;
+export type VarianteNiveau = z.infer<typeof varianteNiveauSchema>;
 export type Lesson = z.infer<typeof lessonSchema>;
 export type DossierKind = z.infer<typeof dossierKindSchema>;
 
@@ -343,3 +385,91 @@ export type TemplateBlock = z.infer<typeof templateBlockSchema>;
 export type Guardrail = z.infer<typeof guardrailsFileSchema>['guardrails'][number];
 export type Tool = z.infer<typeof toolsFileSchema>['tools'][number];
 export type Wilaya = z.infer<typeof wilayasFileSchema>['wilayas'][number];
+
+// ——— test de niveau (phase 12) ———
+
+/**
+ * Questions du test de niveau, dans **un seul fichier bilingue**.
+ *
+ * Même parti que `templates.json` et `guardrails.json` : les deux langues
+ * vivent côte à côte dans le même objet. La parité AR/FR est donc garantie
+ * par construction — il n'y a pas deux fichiers à tenir synchronisés, donc
+ * rien à vérifier après coup.
+ *
+ * Les points ne sont pas dans le code : un axe trop sévère se corrige en
+ * éditant ce JSON, sans toucher à React (règle fondatrice du projet).
+ */
+export const questionNiveauSchema = z
+  .object({
+    id: z.string().regex(/^[a-z0-9_]+$/),
+    axe: z.enum(AXES_NIVEAU),
+    text: bilingual,
+    /** Précision facultative affichée sous la question. */
+    aide: bilingual.optional(),
+    options: z
+      .array(
+        z.object({
+          id: z.string().regex(/^[a-z0-9_]+$/),
+          label: bilingual,
+          points: z.number().int().min(0).max(5),
+        }),
+      )
+      .min(2)
+      .max(4),
+  })
+  .strict();
+
+export const testNiveauFileSchema = z
+  .object({
+    schema: z.literal(1),
+    note: z.string().optional(),
+    questions: z.array(questionNiveauSchema).min(3),
+  })
+  .strict()
+  .superRefine((fichier, ctx) => {
+    const ids = fichier.questions.map((question) => question.id);
+    const doublons = ids.filter((id, index) => ids.indexOf(id) !== index);
+    if (doublons.length > 0) {
+      ctx.addIssue({
+        code: 'custom',
+        message: `Identifiants de question en double : ${[...new Set(doublons)].join(', ')}.`,
+        path: ['questions'],
+      });
+    }
+
+    // Chaque axe doit porter au moins une question : sinon son score vaudrait
+    // zéro pour tout le monde et pèserait sur le niveau sans rien mesurer.
+    for (const axe of AXES_NIVEAU) {
+      if (!fichier.questions.some((question) => question.axe === axe)) {
+        ctx.addIssue({
+          code: 'custom',
+          message: `Aucune question pour l'axe « ${axe} » : son score vaudrait zéro pour tout le monde.`,
+          path: ['questions'],
+        });
+      }
+    }
+
+    fichier.questions.forEach((question, index) => {
+      const optionIds = question.options.map((option) => option.id);
+      if (new Set(optionIds).size !== optionIds.length) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'Identifiants d’option en double.',
+          path: ['questions', index, 'options'],
+        });
+      }
+      // Une question dont toutes les options valent le même nombre de points
+      // ne mesure rien : elle allonge le test sans rien apporter.
+      const points = new Set(question.options.map((option) => option.points));
+      if (points.size < 2) {
+        ctx.addIssue({
+          code: 'custom',
+          message: `La question « ${question.id} » ne discrimine rien : toutes ses options valent le même nombre de points.`,
+          path: ['questions', index, 'options'],
+        });
+      }
+    });
+  });
+
+export type QuestionNiveau = z.infer<typeof questionNiveauSchema>;
+export type TestNiveauFile = z.infer<typeof testNiveauFileSchema>;

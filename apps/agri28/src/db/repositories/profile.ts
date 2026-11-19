@@ -12,6 +12,11 @@ export function buildDefaultProfile(now: number = Date.now()): ProfileRecord {
     reminderTime: null,
     onboardingDone: false,
     activeProjectId: null,
+    // null = test de niveau pas encore passé : c'est ce qui l'ouvre au
+    // premier lancement, avant la création du premier dossier.
+    niveauParcours: null,
+    niveauScores: null,
+    niveauEvalueLe: null,
     createdAt: now,
     updatedAt: now,
     schemaVersion: SCHEMA_VERSION,

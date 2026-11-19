@@ -93,7 +93,8 @@ Principe directeur : **le contenu est une donnée, pas du code**. Ajouter un jou
     │   ├── templates/templates.json  # 5 modèles vierges, bilingues
     │   ├── tools.json             # outils IA : gratuité, disponibilité en Algérie, date de vérif.
     │   ├── wilayas.json           # 69 wilayas (loi 26-06, JO n° 25 du 5 avril 2026)
-    │   └── sources.json           # sources consultées, datées, avec niveau de confiance
+    │   ├── sources.json           # sources consultées, datées, avec niveau de confiance
+    │   └── test-niveau.json       # questions du test de niveau, bilingues (phase 12)
     │
     ├── scripts/
     │   ├── validate-content.ts    # Zod (mêmes schémas que l'app) + parité AR/FR + prix sans source
@@ -118,7 +119,8 @@ Principe directeur : **le contenu est une donnée, pas du code**. Ajouter un jou
         ├── styles/index.css       # jetons de couleur, thème clair/sombre, base
         ├── test/                  # garde-fou RTL, utilitaire de rendu
         │
-        ├── domain/                # logique pure : course, streak, quiz, prompt, timer, dossier
+        ├── domain/                # logique pure : course, streak, quiz, prompt, timer, dossier,
+        │                          #   access (droits de compte), niveau (test de niveau)
         ├── content/               # schémas Zod, chargeur à la demande, catalogues, markdown
         ├── hooks/                 # useTimer (cadence le minuteur du domaine)
         └── export/                # model (pur) · docx · xlsx · certificate · calendar (.ics)
@@ -126,7 +128,7 @@ Principe directeur : **le contenu est une donnée, pas du code**. Ajouter un jou
 
 ## 4. Modèle de données (IndexedDB via Dexie)
 
-Base `agri28`, version 1. Tous les identifiants sont des `uuid` v4 sauf indication.
+Base `agri28`, version 5 (phase 12). Tous les identifiants sont des `uuid` v4 sauf indication.
 
 ### `profile` (une seule ligne, `id = 1`)
 ```ts
@@ -137,6 +139,15 @@ Base `agri28`, version 1. Tous les identifiants sont des `uuid` v4 sauf indicati
   reminderTime: string | null,        // 'HH:mm'
   reminderEnabled: boolean,
   onboardingDone: boolean,
+  activeProjectId: string | null,     // dossier courant (phase 9)
+
+  // Niveau de parcours (phase 12). Porté par le PROFIL, pas par le dossier :
+  // le test mesure la personne, pas l'exploitation — un second dossier ne le
+  // redemande donc pas. `null` = test non passé, et c'est ce qui l'ouvre.
+  niveauParcours: 'debutant' | 'intermediaire' | 'avance' | null,
+  niveauScores: { ia: number, maturite: number, gestion: number } | null,
+  niveauEvalueLe: number | null,
+
   createdAt: number, updatedAt: number,
   schemaVersion: number
 }

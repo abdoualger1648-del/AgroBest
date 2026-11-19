@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import type { Lesson } from '@/content/schema';
 import { LessonNotFoundError, loadLesson } from '@/content/loader';
-import { appliquerVariante } from '@/content/variantes';
+import { appliquerVariantes } from '@/content/variantes';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { GuardrailNotice } from '@/components/GuardrailNotice';
@@ -31,6 +31,7 @@ export function DayPage() {
   const navigate = useNavigate();
   const { t } = useTranslation(['day', 'common']);
   const lang = usePreferences((state) => state.lang);
+  const niveau = usePreferences((state) => state.niveauParcours);
 
   const project = useCourse((state) => state.project);
   const progress = useCourse((state) => state.progress);
@@ -53,13 +54,18 @@ export function DayPage() {
   const [confidence, setConfidence] = useState<number | undefined>(undefined);
   const [submitting, setSubmitting] = useState(false);
 
-  // La leçon affichée s'adapte au type d'activité du dossier (phase 10) :
-  // l'exemple de terrain, les questions posées et les indices changent pour
-  // un apiculteur ou un maraîcher. Le gabarit des prompts, lui, ne bouge
-  // jamais — c'est lui qui porte les garde-fous.
+  // La leçon affichée s'adapte sur DEUX axes :
+  //   — le type d'activité du dossier (phase 10) : l'exemple de terrain, les
+  //     questions posées, les indices changent pour un apiculteur ou un
+  //     maraîcher ;
+  //   — le niveau de l'utilisateur (phase 12) : une aide pas-à-pas en plus
+  //     pour un débutant, un défi en plus pour un avancé.
+  // Le gabarit des prompts, lui, ne bouge jamais sur aucun des deux axes —
+  // c'est lui qui porte les garde-fous (D81).
   const lesson = useMemo(
-    () => (leconBrute ? appliquerVariante(leconBrute, project?.type ?? null) : null),
-    [leconBrute, project?.type],
+    () =>
+      leconBrute ? appliquerVariantes(leconBrute, { type: project?.type ?? null, niveau }) : null,
+    [leconBrute, project?.type, niveau],
   );
 
   const timer = useTimer(SESSION_SECONDS, true);

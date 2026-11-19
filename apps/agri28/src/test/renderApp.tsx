@@ -12,11 +12,31 @@ import { applyLang, applyTheme } from '@/lib/appearance';
 import { getProfile, updateProfile } from '@/db/repositories/profile';
 import { usePreferences } from '@/store/preferences';
 import type { Lang } from '@/lib/lang';
+import type { NiveauParcours } from '@/domain/niveau';
+
+interface OptionsRender {
+  /**
+   * Niveau de parcours du profil (phase 12).
+   *
+   * Par défaut « intermediaire », le cran neutre, et c'est délibéré : sans
+   * niveau, la garde renvoie tout le monde vers le test, et les centaines de
+   * tests qui éprouvent le parcours, le Dossier ou le compte s'arrêteraient
+   * sur un écran de questions au lieu de ce qu'ils examinent.
+   *
+   * Passer `null` est la façon d'éprouver la garde elle-même.
+   */
+  niveau?: NiveauParcours | null;
+}
 
 /** Monte l'application complète dans la langue demandée, comme au démarrage. */
-export async function renderApp(lang: Lang = 'fr', route = '/'): Promise<RenderResult> {
+export async function renderApp(
+  lang: Lang = 'fr',
+  route = '/',
+  options: OptionsRender = {},
+): Promise<RenderResult> {
+  const niveauParcours = options.niveau === undefined ? 'intermediaire' : options.niveau;
   await getProfile();
-  const profile = await updateProfile({ lang });
+  const profile = await updateProfile({ lang, niveauParcours });
   applyLang(profile.lang);
   applyTheme(profile.theme);
   usePreferences.getState().init(profile);

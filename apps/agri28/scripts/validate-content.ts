@@ -13,11 +13,13 @@ import {
   guardrailsFileSchema,
   lessonSchema,
   templatesFileSchema,
+  testNiveauFileSchema,
   toolsFileSchema,
   wilayasFileSchema,
   type Lesson,
 } from '../src/content/schema.ts';
 import { PROJECT_TYPES } from '../src/domain/types.ts';
+import { NIVEAUX_PARCOURS } from '../src/domain/niveau.ts';
 
 const contentDir = resolve(dirname(fileURLToPath(import.meta.url)), '../content');
 
@@ -102,10 +104,31 @@ function signatureVariantes(lesson: Lesson): string[] {
     .sort();
 }
 
+/**
+ * Signature des variantes de NIVEAU : les niveaux couverts, et dans chacun
+ * les champs remplacés. Soumise à la parité AR/FR comme le reste — une aide
+ * écrite en français seulement serait un parcours à deux vitesses.
+ */
+function signatureVariantesNiveau(lesson: Lesson): string[] {
+  return Object.entries(lesson.variantesNiveau ?? {})
+    .map(([niveau, variante]) => {
+      const champs = [
+        variante.aide ? 'aide' : null,
+        variante.defi ? 'defi' : null,
+        ...Object.keys(variante.indices ?? {}).map((id) => `indice:${id}`),
+      ]
+        .filter((champ): champ is string => champ !== null)
+        .sort();
+      return `${niveau}(${champs.join(',')})`;
+    })
+    .sort();
+}
+
 function lessonIdentifiers(lesson: Lesson) {
   const { practice, quiz } = lesson.sections;
   return {
     variantes: signatureVariantes(lesson),
+    variantesNiveau: signatureVariantesNiveau(lesson),
     steps: practice.steps.map((step) => step.id).sort(),
     prompts: practice.steps.flatMap((step) => (step.prompt ? [step.prompt.id] : [])).sort(),
     captures: practice.steps.flatMap((step) => (step.capture ? [step.capture.id] : [])).sort(),
@@ -166,6 +189,28 @@ if (!templatesParsed.success) {
     }
     if (!/[\u0600-\u06ff]/.test(template.title.ar)) {
       fail(`templates.json : le modèle « ${template.id} » n'a pas de titre en arabe.`);
+    }
+  }
+}
+
+// ——— test de niveau (phase 12) ———
+const testNiveauRaw = await readJson('test-niveau.json');
+const testNiveauParsed = testNiveauFileSchema.safeParse(testNiveauRaw);
+if (!testNiveauParsed.success) {
+  for (const issue of testNiveauParsed.error.issues) {
+    fail(`test-niveau.json : ${issue.path.join('.')} — ${issue.message}`);
+  }
+}
+const questionsNiveau = testNiveauParsed.success ? testNiveauParsed.data.questions : [];
+for (const question of questionsNiveau) {
+  if (!/[\u0600-\u06ff]/.test(question.text.ar)) {
+    fail(`test-niveau.json : la question « ${question.id} » n'est pas traduite en arabe.`);
+  }
+  for (const option of question.options) {
+    if (!/[\u0600-\u06ff]/.test(option.label.ar)) {
+      fail(
+        `test-niveau.json : l'option « ${question.id}.${option.id} » n'est pas traduite en arabe.`,
+      );
     }
   }
 }
@@ -251,6 +296,33 @@ for (const file of lessonFiles) {
     }
   }
 
+  // ——— variantes par niveau (phase 12) ———
+  for (const [niveau, variante] of Object.entries(lesson.variantesNiveau ?? {})) {
+    if (variante.brouillon === true) {
+      warn(
+        `${file} : variante de niveau « ${niveau} » en brouillon — à relire, elle n'est pas affichée.`,
+      );
+    }
+    if (!NIVEAUX_PARCOURS.includes(niveau as (typeof NIVEAUX_PARCOURS)[number])) {
+      fail(`${file} : variante pour un niveau inconnu « ${niveau} ».`);
+    }
+    // « intermediaire » est le parcours standard : une variante pour lui ne
+    // ferait que dupliquer le contenu de base, donc elle est refusée.
+    if (niveau === 'intermediaire') {
+      fail(
+        `${file} : variante « intermediaire » inutile — ce niveau EST le parcours standard, il n'a rien à remplacer.`,
+      );
+    }
+    if (!variante.aide && !variante.defi && !variante.indices) {
+      fail(`${file} : variante de niveau « ${niveau} » vide — elle ne change rien.`);
+    }
+    for (const id of Object.keys(variante.indices ?? {})) {
+      if (!promptIds.has(id)) {
+        fail(`${file} : variante de niveau « ${niveau} » vise un prompt inexistant « ${id} ».`);
+      }
+    }
+  }
+
   const texts = allStrings(lesson);
   const hasSources = (lesson.sources?.length ?? 0) > 0;
   const money = texts.find((text) => MONEY.test(text));
@@ -329,6 +401,7 @@ if (errors.length > 0) {
 
 console.log(
   `\nContenu valide : ${guardrailIds.size} garde-fous, ${toolIds.size} outils, ` +
+    `${questionsNiveau.length} questions de niveau, ` +
     `${templatesParsed.success ? templatesParsed.data.templates.length : 0} modèles, ` +
     `${wilayasParsed.success ? wilayasParsed.data.wilayas.length : 0} wilayas, ` +
     `${lessons.size} fichiers de leçon (${dayIds.length} jour(s), AR + FR).`,

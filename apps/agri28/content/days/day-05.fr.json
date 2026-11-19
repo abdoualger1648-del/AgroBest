@@ -192,5 +192,13 @@
     "Aucune dose, aucun traitement et aucun produit cité par une IA ne doit être appliqué : votre vétérinaire, votre technicien et l'étiquette du produit font seuls autorité.",
     "Les prix se relèvent chez le fournisseur ou au marché, le jour de l'achat."
   ],
-  "nextTeaser": "Demain : ce qu'on ne tape jamais dans une IA — et comment poser sa question sans livrer ses papiers."
+  "nextTeaser": "Demain : ce qu'on ne tape jamais dans une IA — et comment poser sa question sans livrer ses papiers.",
+  "variantesNiveau": {
+    "debutant": {
+      "aide": "Choisissez quelque chose que vous connaissez vraiment par cœur, et qui se dit en une phrase : la durée d'un cycle, le moment d'une récolte, le nombre de passages d'eau dans une saison. Pas besoin d'un chiffre précis : ce qui compte est que vous sachiez déjà si la réponse est juste ou fausse."
+    },
+    "avance": {
+      "defi": "Refaites le test du connu avec une question dont vous savez que la bonne réponse dépend de la wilaya. Puis regardez si l'assistant pense à vous demander où vous êtes, ou s'il répond comme si l'Algérie n'avait qu'un seul climat. Cette réaction vous dira ce que vous pouvez lui confier pour le reste du parcours."
+    }
+  }
 }

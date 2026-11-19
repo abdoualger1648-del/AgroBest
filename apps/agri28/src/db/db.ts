@@ -3,9 +3,10 @@ import type { Lang } from '@/lib/lang';
 import type { ThemePreference } from '@/lib/appearance';
 import type { BadgeRecord, DayProgress, DossierItem, Project, PromptEntry } from '@/domain/types';
 import type { Niveau } from '@/domain/access';
+import type { NiveauParcours, ScoresNiveau } from '@/domain/niveau';
 
 export const DB_NAME = 'agri28';
-export const SCHEMA_VERSION = 4;
+export const SCHEMA_VERSION = 5;
 
 /** Préférences et état de l'utilisateur. Une seule ligne, id = 1. */
 export interface ProfileRecord {
@@ -16,6 +17,18 @@ export interface ProfileRecord {
   reminderTime: string | null;
   onboardingDone: boolean;
   activeProjectId: string | null;
+  /**
+   * Niveau de parcours issu du test (phase 12). `null` = test non encore
+   * passé, et c'est ce qui déclenche le test au démarrage.
+   *
+   * Porté par le PROFIL, pas par le dossier : le test mesure la personne, pas
+   * l'exploitation. Qui ouvre un second dossier (D76) ne repasse donc pas le
+   * test, et son niveau s'applique aux deux parcours.
+   */
+  niveauParcours: NiveauParcours | null;
+  /** Scores des trois axes, conservés pour l'écran de résultat. */
+  niveauScores: ScoresNiveau | null;
+  niveauEvalueLe: number | null;
   createdAt: number;
   updatedAt: number;
   schemaVersion: number;
@@ -116,6 +129,40 @@ export class Agri28Db extends Dexie {
       badges: 'id, projectId, earnedAt',
       compte: 'id',
     });
+
+    // Version 5 (phase 12) : niveau de parcours dans le profil.
+    //
+    // Aucune table nouvelle, seulement trois champs. L'important est la
+    // migration : une installation DÉJÀ EN COURS ne doit pas se retrouver
+    // devant un test obligatoire au prochain lancement, entre son jour 14 et
+    // son jour 15 (D89). Elle reçoit donc « intermediaire », le cran neutre,
+    // et peut passer le test quand elle veut depuis les réglages.
+    this.version(5)
+      .stores({
+        profile: 'id',
+        kv: 'key',
+        projects: 'id, updatedAt',
+        progress: 'id, projectId, day, status, completedAt, [projectId+day]',
+        dossierItems: 'id, projectId, day, kind, updatedAt, [projectId+kind]',
+        promptEntries: 'id, projectId, day, favorite, updatedAt, *tags',
+        badges: 'id, projectId, earnedAt',
+        compte: 'id',
+      })
+      .upgrade(async (transaction) => {
+        // « Déjà en route » = au moins un dossier créé. C'est le seul signe
+        // fiable : `onboardingDone` n'est jamais repassé à vrai dans le code.
+        const dossiers = await transaction.table('projects').count();
+        const dejaEnRoute = dossiers > 0;
+        await transaction
+          .table<ProfileRecord>('profile')
+          .toCollection()
+          .modify((profile) => {
+            profile.niveauParcours = dejaEnRoute ? 'intermediaire' : null;
+            profile.niveauScores = null;
+            profile.niveauEvalueLe = null;
+            profile.schemaVersion = SCHEMA_VERSION;
+          });
+      });
   }
 }
 

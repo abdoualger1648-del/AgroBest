@@ -16,6 +16,7 @@ Aucun codage demandé à l'utilisateur final.
 - **Cible** : exploitants et entrepreneurs agricoles, débutants en IA, sur téléphone, connexion parfois faible.
 - **Contexte par défaut** : Algérie (DA, unités locales, Chambre d'agriculture, carte de fellah, aides, aliments subventionnés).
 - **Fil rouge** : « Mon projet », créé au jour 1 ; chaque jour ajoute une brique au **Dossier de projet**, exportable en `.docx` / `.xlsx`.
+- **Avant le jour 1** : un **test de niveau** de 8 questions sur 3 axes (aisance IA, maturité du projet, gestion existante) situe l'utilisateur en débutant / intermédiaire / avancé. Le niveau change la **profondeur** de chaque journée, jamais le nombre de jours ni leur ordre.
 - **Langues** : arabe (RTL) et français en v1, anglais prévu.
 
 Structure d'une journée : Concept 3 min · Pratique guidée 7 min · Quiz 3 min · Bilan 2 min, minuteur visible.
@@ -57,11 +58,11 @@ Corriger un prix ou ajouter un jour = éditer un JSON, sans toucher à React.
 
 Chemins ci-dessous relatifs à `apps/agri28/` :
 
-- `src/domain/` : logique pure, sans DOM, testée à 100 % (parcours, minuteur, série, quiz, prompts, dossier).
+- `src/domain/` : logique pure, sans DOM, testée à 100 % (parcours, minuteur, série, quiz, prompts, dossier, droits de compte, **niveau de parcours**).
 - `src/db/repositories/` : seul endroit qui connaît Dexie.
 - `src/content/` : schémas Zod + chargeur `import()` par jour et par langue.
 - `src/export/` : modèle neutre (pur, testé), `.docx`, `.xlsx`, certificat PDF, rappel `.ics` — chargés à la demande.
-- `content/` : `days/day-NN.<lang>.json`, `templates/templates.json` (5 modèles bilingues), `tools.json`, `guardrails.json`, `wilayas.json`, `sources.json`.
+- `content/` : `days/day-NN.<lang>.json`, `templates/templates.json` (5 modèles bilingues), `tools.json`, `guardrails.json`, `wilayas.json`, `sources.json`, `test-niveau.json` (questions du test, **bilingues dans un seul fichier**).
 - `src/lib/` : langue, apparence (thème/direction), formatage `Intl`.
 - `src/hooks/` : minuteur de séance (la logique reste dans `src/domain/timer.ts`).
 - `src/store/` : état d'interface Zustand, hydraté depuis IndexedDB. Le store du parcours porte la
@@ -206,11 +207,20 @@ en FR, AR/RTL et thème sombre, clavier, cibles tactiles, hors ligne) : voir
 | D85 | Deux repères distincts : **« vu »** et **« déjà notifié »** | 2026-11-18 | la notification ne doit pas se répéter à chaque ouverture pour le même lot, mais le compteur doit rester tant que les demandes ne sont pas traitées. Un seul repère aurait forcé à choisir entre harceler et oublier |
 | D86 | Le repère « vu » retient la **date de la demande la plus récente**, jamais l'horloge | 2026-11-18 | prendre l'instant présent marquerait comme lues des demandes écrites pendant que l'écran chargeait |
 | D87 | `VITE_EMAIL_ADMIN` est câblé **aussi dans le déploiement web** | 2026-11-18 | il ne l'était que dans le workflow APK : sur le site, le bouton « Écrire à l'administrateur » ne pouvait donc jamais apparaître. C'est pourtant le seul chemin qui atteint une boîte mail sans plan payant |
+| D88 | **L'aisance avec l'IA fixe le niveau de base.** La maturité du projet et la gestion existante peuvent le relever d'**un seul cran**, jamais le faire monter depuis zéro | 2026-11-19 | le niveau décide si l'utilisateur reçoit le prompt tout écrit ou un prompt à compléter. Un éleveur chevronné qui tient ses comptes sur tableur mais n'a jamais ouvert un assistant a besoin du pas-à-pas : une simple moyenne pondérée des trois axes l'aurait envoyé en « avancé ». Deux tests figent le cas, sur le barème inventé et sur le vrai contenu |
+| D89 | La migration vers le schéma 5 donne **« intermediaire »** à une installation qui a déjà au moins un dossier, et `null` aux autres | 2026-11-19 | sans cela, quelqu'un entre son jour 14 et son jour 15 aurait trouvé un test obligatoire au lancement suivant — une fonctionnalité existante cassée. « Déjà en route » se mesure au nombre de dossiers, seul signe fiable : `onboardingDone` n'est jamais repassé à vrai dans le code. Un test ouvre une vraie base en version 4 et la fait migrer |
+| D90 | Le niveau est porté par le **profil**, pas par le dossier | 2026-11-19 | le test mesure la personne, pas l'exploitation. Qui ouvre un second dossier (D76) ne repasse donc pas le test, et son niveau s'applique aux deux parcours |
+| D91 | **Aucune variante `intermediaire`** ; et si les deux axes visent le même indice de prompt, c'est le **niveau** qui gagne | 2026-11-19 | « intermediaire » *est* le parcours standard : une variante pour lui ne ferait que dupliquer le contenu de base, et la validation la refuse. Pour l'arbitrage : le métier décide de quoi on parle, le niveau décide combien on accompagne — c'est l'accompagnement qui doit coller à la personne |
+| D92 | Les questions vivent dans **un seul fichier bilingue** (`content/test-niveau.json`) ; le **barème** est dans le contenu, les **seuils** dans `src/domain/niveau.ts` | 2026-11-19 | même parti que `templates.json` : deux langues côte à côte, donc parité AR/FR garantie par construction, sans fichier à synchroniser. Et rendre un axe plus ou moins sévère reste une édition de JSON, conformément à la règle fondatrice du projet |
+| D93 | La garde de niveau laisse **les réglages et le compte** atteignables ; un **effacement complet des données** refait passer le test | 2026-11-19 | changer de langue ou se déconnecter ne doit jamais exiger de répondre à huit questions d'abord. À l'inverse, « effacer toutes mes données » est un vrai recommencement : repartir par le test est cohérent, et un test de bout en bout fige ce comportement |
+| D94 | Les variantes de niveau de la **semaine 1** sont écrites à la main et relues ; les jours 8 à 28 passeront par `npm run variantes -- --niveau` | 2026-11-19 | 28 jours × 2 niveaux × 2 langues font 112 textes : les écrire tous à la main maintenant produirait de la matière que personne ne relirait vraiment. La semaine 1 rend la fonctionnalité réelle dès le premier jour ; le reste suit la règle D82 — écrit par l'IA, en brouillon, invisible jusqu'à relecture humaine |
+| D95 | Le test de niveau s'applique dans **toutes les éditions**, y compris `complete` | 2026-11-19 | un seul chemin de code, comme D51 pour le compte. Conséquence assumée : les tests de bout en bout le passent vraiment, par l'écran, au lieu d'écrire un niveau en base — ce chemin est maintenant la première chose que vit un utilisateur, un raccourci l'aurait laissé sans épreuve |
 
 ### Questions ouvertes
 *Aucune pour l'instant.*
 
 ### Questions tranchées
+- **Test de niveau** (choix de l'utilisateur du projet) : mesure **3 axes** — aisance IA, maturité du projet, gestion existante ; **3 niveaux** (débutant / intermédiaire / avancé) ; **mêmes 28 jours à profondeur adaptée**, pas de parcours raccourci ni réordonné ; **obligatoire au départ, refaisable à tout moment**.
 - **Nom public** : Agricole DZ 360 (D23). **Ton** : vouvoiement FR, arabe standard simple (D22).
 - **Chiffres en arabe** : occidentaux (D12, confirmé D44).
 - **Outils cités** : ChatGPT, Gemini et NotebookLM utilisables en Algérie, confirmé par l'utilisateur du projet (D43).
@@ -235,6 +245,13 @@ npm run validate:content # garde-fous ; schéma complet des leçons à la phase 
 npm run check:bundle     # budget de poids et 56 fichiers de leçon, après `npm run build`
 npm run apk:web          # build en édition APK, puis copie dans le projet Android
 npm run verify           # typecheck + lint + format + contenu + tests, en une commande
+```
+
+Écriture assistée des variantes, un seul axe par appel (`ANTHROPIC_API_KEY` requise) :
+
+```bash
+npm run variantes -- --jour 7 --type apiculture    # axe métier (phase 10)
+npm run variantes -- --jour 7 --niveau debutant    # axe niveau (phase 12)
 ```
 
 Dans `apps/agri28` uniquement : `npm run icons` (régénère les icônes PWA),
@@ -268,6 +285,7 @@ L'APK lui-même est assemblé par le workflow **APK** de GitHub Actions : voir
 | 9 | Plusieurs dossiers : niveau de compte, écran des dossiers, demande et octroi | terminée |
 | 10 | Parcours adapté au type d'activité ; écriture assistée des variantes | terminée |
 | 11 | Notifications des demandes pour l'administrateur | terminée |
+| 12 | Test de niveau avant le parcours ; profondeur des journées adaptée au niveau | terminée |
 
 ### Méthode de travail imposée
 Une phase à la fois. À la fin de chaque phase : résumé, tests, commit, puis **arrêt et attente d'un GO explicite**.

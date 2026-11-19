@@ -26,6 +26,7 @@ chargera forcément dans l'application (décision D20).
 | `content/sources.json` | les sources citées, avec leur date de consultation |
 | `content/templates/templates.json` | les cinq modèles vierges de la bibliothèque |
 | `content/wilayas.json` | les 69 wilayas |
+| `content/test-niveau.json` | les questions du test de niveau, **les deux langues dans le même fichier** |
 
 Le schéma complet d'une leçon est décrit dans [lesson-schema.md](lesson-schema.md), avec un exemple
 commenté dans [examples/day-01.fr.sample.json](examples/day-01.fr.sample.json).
@@ -102,6 +103,62 @@ drapeau est là. Relisez les deux fichiers, corrigez ce qui sonne faux, retirez 
 **deux** langues, puis `npm run validate:content && npm run test`.
 
 C'est l'écriture qui est automatisée, jamais la publication.
+
+### Adapter une leçon au niveau de l'utilisateur
+
+Second axe, indépendant du précédent : un apiculteur débutant reçoit la variante `apiculture`
+**et** la variante `debutant`. Les deux s'appliquent l'une après l'autre.
+
+```json
+"variantesNiveau": {
+  "debutant": {
+    "aide": "Appuyez sur « Copier » : le texte part dans la mémoire du téléphone…"
+  },
+  "avance": {
+    "defi": "Posez la même question à un troisième outil, puis cherchez où les trois se contredisent."
+  }
+}
+```
+
+- `aide` s'affiche **avant** les étapes : ce sont les gestes, pour quelqu'un qui n'a jamais
+  utilisé d'outil d'IA. Elle n'explique jamais le métier d'agriculteur.
+- `defi` s'affiche **après** les étapes : il suppose la pratique faite et demande un
+  approfondissement réel, pas « recommencez en mieux ».
+- `indices` fonctionne comme pour l'activité. En cas de conflit entre les deux axes sur un même
+  indice, **c'est le niveau qui gagne** : le métier décide de quoi on parle, le niveau décide
+  combien on accompagne.
+
+Il n'y a **pas** de variante `intermediaire` : ce niveau *est* le parcours standard, et la
+validation refuse une variante pour lui.
+
+Ici encore, le gabarit d'un prompt n'est pas remplaçable, et le schéma ne l'expose pas.
+
+```bash
+ANTHROPIC_API_KEY=… npm run variantes -- --jour 7 --niveau debutant
+```
+
+Même script, même garantie de parité, même drapeau `"brouillon": true` à retirer après relecture.
+Un seul axe par appel : `--type` ou `--niveau`, jamais les deux.
+
+### Changer les questions du test de niveau
+
+`content/test-niveau.json` porte les questions, leurs options et leurs **points**. Les deux
+langues sont côte à côte : il n'y a pas deux fichiers à tenir synchronisés.
+
+Trois axes, et chacun doit porter au moins une question : `ia` (aisance avec les outils),
+`maturite` (où en est le projet), `gestion` (ce qui est déjà suivi).
+
+Le barème vit dans ce fichier, pas dans le code : rendre un axe plus ou moins sévère se fait en
+changeant des `points`. Les seuils, eux, sont dans `src/domain/niveau.ts`.
+
+Deux règles que la validation impose : une question dont toutes les options valent le même nombre
+de points est refusée — elle allonge le test sans rien mesurer — et chaque question doit être
+traduite en arabe, avec des chiffres occidentaux (D44).
+
+**À savoir avant de toucher au barème** : l'aisance avec l'IA fixe un plafond. Un projet déjà en
+production et un suivi bien tenu peuvent relever le niveau d'un cran, jamais le faire monter
+depuis zéro. Quelqu'un qui n'a jamais ouvert un assistant reste débutant, quelle que soit la tenue
+de ses comptes — parce que c'est le niveau qui décide s'il reçoit le prompt tout écrit.
 
 ### Ajouter un jour
 

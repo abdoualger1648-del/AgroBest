@@ -1,6 +1,12 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import { loadLesson } from './loader';
-import { appliquerVariante, typesAvecVariante } from './variantes';
+import {
+  appliquerNiveau,
+  appliquerVariante,
+  appliquerVariantes,
+  niveauxAvecVariante,
+  typesAvecVariante,
+} from './variantes';
 import type { Lesson } from './schema';
 
 /**
@@ -125,5 +131,149 @@ describe('variante en brouillon', () => {
       text: 'Texte relu.',
     });
     expect(typesAvecVariante(relue)).toEqual(['apiculture']);
+  });
+});
+
+// ——— variantes par niveau (phase 12) ———
+
+function avecVariantesNiveau(): Lesson {
+  const premierPrompt = generique.sections.practice.steps.find((e) => e.prompt)?.prompt?.id;
+  return {
+    ...generique,
+    variantesNiveau: {
+      debutant: {
+        aide: 'Appuyez sur « Copier », puis collez dans l’assistant.',
+        ...(premierPrompt ? { indices: { [premierPrompt]: 'Tout est déjà écrit.' } } : {}),
+      },
+      avance: { defi: 'Demandez-lui maintenant de séparer les faits des suppositions.' },
+    },
+  };
+}
+
+describe('appliquerNiveau', () => {
+  it('rend la leçon inchangée sans variante, sans niveau, ou pour un niveau non couvert', () => {
+    // Le jour 1 porte de VRAIES variantes de niveau depuis la phase 12 : on
+    // fabrique donc explicitement une leçon qui n'en a aucune, au lieu de
+    // supposer que la leçon générique en est dépourvue.
+    const sansNiveau: Lesson = { ...generique, variantesNiveau: undefined };
+    expect(appliquerNiveau(sansNiveau, 'debutant')).toBe(sansNiveau);
+    expect(appliquerNiveau(avecVariantesNiveau(), null)).toEqual(avecVariantesNiveau());
+    expect(appliquerNiveau(avecVariantesNiveau(), 'intermediaire')).toEqual(avecVariantesNiveau());
+  });
+
+  it('ajoute l’aide pour un débutant, sans défi', () => {
+    const apres = appliquerNiveau(avecVariantesNiveau(), 'debutant');
+    expect(apres.sections.practice.aide).toBe(
+      'Appuyez sur « Copier », puis collez dans l’assistant.',
+    );
+    expect(apres.sections.practice.defi).toBeUndefined();
+  });
+
+  it('ajoute le défi pour un avancé, sans aide', () => {
+    const apres = appliquerNiveau(avecVariantesNiveau(), 'avance');
+    expect(apres.sections.practice.defi).toBe(
+      'Demandez-lui maintenant de séparer les faits des suppositions.',
+    );
+    expect(apres.sections.practice.aide).toBeUndefined();
+  });
+
+  it('remplace l’indice du prompt visé', () => {
+    const avant = avecVariantesNiveau();
+    const id = avant.sections.practice.steps.find((e) => e.prompt)?.prompt?.id;
+    const apres = appliquerNiveau(avant, 'debutant');
+    const etape = apres.sections.practice.steps.find((e) => e.prompt?.id === id);
+    expect(etape?.prompt?.hint).toBe('Tout est déjà écrit.');
+  });
+
+  it('ne touche JAMAIS le gabarit d’un prompt (D81 sur le second axe)', () => {
+    // Le gabarit porte les garde-fous. Le schéma ne l'expose pas aux
+    // variantes de niveau ; ce test le vérifie sur le résultat produit.
+    const avant = avecVariantesNiveau();
+    for (const niveau of ['debutant', 'avance'] as const) {
+      const apres = appliquerNiveau(avant, niveau);
+      apres.sections.practice.steps.forEach((etape, index) => {
+        expect(etape.prompt?.template).toBe(avant.sections.practice.steps[index]?.prompt?.template);
+      });
+    }
+  });
+
+  it('laisse le concept, le quiz et les garde-fous intacts', () => {
+    const avant = avecVariantesNiveau();
+    const apres = appliquerNiveau(avant, 'debutant');
+    expect(apres.sections.concept).toEqual(avant.sections.concept);
+    expect(apres.sections.quiz).toEqual(avant.sections.quiz);
+    expect(apres.guardrails).toEqual(avant.guardrails);
+  });
+
+  it('ne modifie pas la leçon d’origine', () => {
+    const avant = avecVariantesNiveau();
+    const copie = structuredClone(avant);
+    appliquerNiveau(avant, 'debutant');
+    expect(avant).toEqual(copie);
+  });
+
+  it('ignore une variante de niveau en brouillon, puis l’affiche une fois relue', () => {
+    const brouillon: Lesson = {
+      ...generique,
+      variantesNiveau: { debutant: { aide: 'Pas encore relue.', brouillon: true } },
+    };
+    expect(appliquerNiveau(brouillon, 'debutant').sections.practice.aide).toBeUndefined();
+
+    const relue: Lesson = {
+      ...generique,
+      variantesNiveau: { debutant: { aide: 'Relue.' } },
+    };
+    expect(appliquerNiveau(relue, 'debutant').sections.practice.aide).toBe('Relue.');
+  });
+
+  it('liste les niveaux couverts, hors brouillons', () => {
+    expect(niveauxAvecVariante(avecVariantesNiveau())).toEqual(['avance', 'debutant']);
+    expect(
+      niveauxAvecVariante({
+        ...generique,
+        variantesNiveau: { debutant: { aide: 'x', brouillon: true }, avance: { defi: 'y' } },
+      }),
+    ).toEqual(['avance']);
+  });
+});
+
+describe('appliquerVariantes : les deux axes', () => {
+  function lesDeux(): Lesson {
+    return { ...avecVariantes(), variantesNiveau: avecVariantesNiveau().variantesNiveau };
+  }
+
+  it('applique le métier et le niveau ensemble', () => {
+    const apres = appliquerVariantes(lesDeux(), { type: 'apiculture', niveau: 'avance' });
+    const exemple = apres.sections.concept.body.find((bloc) => bloc.type === 'example');
+    expect(exemple).toMatchObject({ text: 'Yacine conduit 40 ruches à Médéa.' });
+    expect(apres.sections.practice.defi).toContain('suppositions');
+  });
+
+  it('en cas de conflit sur un indice, le NIVEAU gagne', () => {
+    // Le métier décide de quoi on parle, le niveau décide combien on
+    // accompagne : c'est l'accompagnement qui doit coller à la personne.
+    const avant = lesDeux();
+    const id = avant.sections.practice.steps.find((e) => e.prompt)?.prompt?.id;
+    const apres = appliquerVariantes(avant, { type: 'apiculture', niveau: 'debutant' });
+    const etape = apres.sections.practice.steps.find((e) => e.prompt?.id === id);
+    expect(etape?.prompt?.hint).toBe('Tout est déjà écrit.');
+  });
+
+  it('un seul axe renseigné suffit', () => {
+    const avant = lesDeux();
+    expect(
+      appliquerVariantes(avant, { type: 'apiculture' }).sections.practice.aide,
+    ).toBeUndefined();
+    const sansType = appliquerVariantes(avant, { niveau: 'debutant' });
+    const exemple = sansType.sections.concept.body.find((bloc) => bloc.type === 'example');
+    expect(exemple).toEqual(avant.sections.concept.body.find((bloc) => bloc.type === 'example'));
+  });
+
+  it('ne touche pas les gabarits, les deux axes confondus', () => {
+    const avant = lesDeux();
+    const apres = appliquerVariantes(avant, { type: 'apiculture', niveau: 'debutant' });
+    apres.sections.practice.steps.forEach((etape, index) => {
+      expect(etape.prompt?.template).toBe(avant.sections.practice.steps[index]?.prompt?.template);
+    });
   });
 });

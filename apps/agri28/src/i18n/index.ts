@@ -16,6 +16,7 @@ import frTemplates from './locales/fr/templates.json';
 import frCompte from './locales/fr/compte.json';
 import frTelechargement from './locales/fr/telechargement.json';
 import frDossiers from './locales/fr/dossiers.json';
+import frNiveau from './locales/fr/niveau.json';
 
 import arCommon from './locales/ar/common.json';
 import arNav from './locales/ar/nav.json';
@@ -31,6 +32,7 @@ import arTemplates from './locales/ar/templates.json';
 import arCompte from './locales/ar/compte.json';
 import arTelechargement from './locales/ar/telechargement.json';
 import arDossiers from './locales/ar/dossiers.json';
+import arNiveau from './locales/ar/niveau.json';
 
 export const NAMESPACES = [
   'common',
@@ -47,6 +49,7 @@ export const NAMESPACES = [
   'compte',
   'telechargement',
   'dossiers',
+  'niveau',
 ] as const;
 export type Namespace = (typeof NAMESPACES)[number];
 
@@ -71,6 +74,7 @@ export const resources = {
     compte: frCompte,
     telechargement: frTelechargement,
     dossiers: frDossiers,
+    niveau: frNiveau,
   },
   ar: {
     common: arCommon,
@@ -87,6 +91,7 @@ export const resources = {
     compte: arCompte,
     telechargement: arTelechargement,
     dossiers: arDossiers,
+    niveau: arNiveau,
   },
 } as const;
 

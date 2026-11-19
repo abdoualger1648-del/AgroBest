@@ -87,6 +87,15 @@ if (semaine1.length !== 14) {
 }
 lines.push(`pré-cache, semaine 1  ${semaine1.length} / 14 fichiers`);
 
+// Le test de niveau est le PREMIER écran qu'un nouvel utilisateur voit, et la
+// garde ne laisse rien passer avant lui : s'il n'était pas pré-caché, une
+// première ouverture sans réseau ne mènerait nulle part.
+const testNiveau = precached.filter((url) => /TestNiveauPage-/.test(url));
+if (testNiveau.length !== 1) {
+  fail.push(`pré-cache, test de niveau : 1 fichier attendu, trouvé ${testNiveau.length}`);
+}
+lines.push(`pré-cache, test de niveau  ${testNiveau.length} / 1 fichier`);
+
 // Les 28 jours doivent être construits, dans les deux langues.
 const lecons = readdirSync(path.join(DIST, 'assets')).filter((nom) =>
   /day-\d{2}\.(?:fr|ar)[.-].*\.js$/.test(nom),

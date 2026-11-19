@@ -193,5 +193,13 @@
   "verifyLocally": [
     "Les obligations et démarches citées par une IA doivent être confirmées par la Chambre d'agriculture de votre wilaya ou la Direction des services agricoles (DSA)."
   ],
-  "nextTeaser": "Demain : le test qui révèle ce que l'IA invente — en lui posant une question dont vous connaissez déjà la réponse."
+  "nextTeaser": "Demain : le test qui révèle ce que l'IA invente — en lui posant une question dont vous connaissez déjà la réponse.",
+  "variantesNiveau": {
+    "debutant": {
+      "aide": "Vérifier une source, concrètement : appuyez sur le lien donné par l'assistant. Si une page s'ouvre, cherchez la phrase qui correspond à ce qu'il a affirmé. Si la page ne s'ouvre pas, ou si vous ne retrouvez pas la phrase, l'information compte comme non vérifiée — notez-la à l'étape suivante. Un lien qui existe ne prouve rien : c'est la phrase qu'il faut retrouver."
+    },
+    "avance": {
+      "defi": "Reprenez une affirmation que l'assistant a sourcée correctement, et demandez-lui la source de sa source. Beaucoup de réponses s'arrêtent à une page qui ne cite elle-même personne. Savoir où s'arrête la chaîne est ce qui vous permettra de défendre un chiffre devant un banquier ou un technicien."
+    }
+  }
 }

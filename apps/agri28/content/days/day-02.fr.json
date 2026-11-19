@@ -194,5 +194,13 @@
       "dossierPreview": true
     }
   },
-  "nextTeaser": "Demain : trois assistants, la même question, trois réponses différentes — et ce que cela vous apprend."
+  "nextTeaser": "Demain : trois assistants, la même question, trois réponses différentes — et ce que cela vous apprend.",
+  "variantesNiveau": {
+    "debutant": {
+      "aide": "Les quatre morceaux, dans l'ordre, pour vous y retrouver : (1) qui vous êtes et où vous êtes ; (2) ce que vous voulez obtenir ; (3) sous quelle forme vous le voulez — une liste, un tableau, dix lignes ; (4) ce que l'assistant doit éviter. Si vous ne savez pas quoi mettre dans le quatrième, écrivez simplement : « ne me donne aucun chiffre que tu ne peux pas sourcer »."
+    },
+    "avance": {
+      "defi": "Écrivez une troisième version du même prompt, en changeant un seul morceau : demandez un tableau là où vous demandiez un texte, ou l'inverse. Gardez les trois autres morceaux identiques. Vous verrez lequel des quatre pèse le plus sur la réponse — c'est celui-là qu'il faudra soigner toute l'année."
+    }
+  }
 }

@@ -1,7 +1,29 @@
 import { expect, test } from '@playwright/test';
+import { passLevelTest } from './helpers';
 
 test.describe('squelette de l’application', () => {
+  test('impose le test de niveau au premier lancement, puis ne le redemande plus', async ({
+    page,
+  }) => {
+    // La garde doit mordre sur une vraie première ouverture, pas seulement
+    // dans les tests de composants.
+    await page.goto('./');
+    await expect(page.getByRole('heading', { level: 1, name: 'Test de niveau' })).toBeVisible();
+
+    await passLevelTest(page);
+
+    await page.goto('./');
+    await expect(page.getByRole('heading', { level: 1, name: 'Test de niveau' })).toBeHidden();
+
+    // Et le niveau survit à un rechargement : il est en base, pas en mémoire.
+    await page.reload();
+    await expect(page.getByRole('heading', { level: 1, name: 'Test de niveau' })).toBeHidden();
+    await page.goto('./parametres');
+    await expect(page.getByText('Intermédiaire')).toBeVisible();
+  });
+
   test('affiche l’accueil et navigue avec la barre du bas', async ({ page }) => {
+    await passLevelTest(page);
     await page.goto('./');
 
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
@@ -45,6 +67,7 @@ test.describe('squelette de l’application', () => {
   });
 
   test('ouvre un lien profond directement (chemin de base GitHub Pages)', async ({ page }) => {
+    await passLevelTest(page);
     const response = await page.goto('./modeles');
 
     expect(response?.status()).toBeLessThan(400);

@@ -189,5 +189,13 @@
       "dossierPreview": true
     }
   },
-  "nextTeaser": "Demain : obliger l'IA à citer ses sources — et vérifier que ces sources existent vraiment."
+  "nextTeaser": "Demain : obliger l'IA à citer ses sources — et vérifier que ces sources existent vraiment.",
+  "variantesNiveau": {
+    "debutant": {
+      "aide": "Deux outils, donc deux fenêtres. Ouvrez la première, collez, lisez. N'effacez rien : ouvrez une seconde fenêtre pour le deuxième outil. Si vous travaillez sur un téléphone, une capture d'écran de chaque réponse vous évitera de passer d'une application à l'autre pendant la comparaison."
+    },
+    "avance": {
+      "defi": "Posez la même question à un troisième outil, puis cherchez le point sur lequel les trois se contredisent. Un désaccord à trois n'est jamais un hasard : c'est le signe que l'information n'est pas établie, et donc qu'elle demande une source locale avant toute décision."
+    }
+  }
 }

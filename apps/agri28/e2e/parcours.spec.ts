@@ -1,6 +1,8 @@
 import { expect, test, type Page } from '@playwright/test';
+import { passLevelTest } from './helpers';
 
 async function createProject(page: Page) {
+  await passLevelTest(page);
   await page.goto('./bienvenue');
   await page.getByLabel(/Nom du projet/).fill('Élevage ovin Aïn Defla');
   await page.getByLabel(/^Taille/).fill('60');

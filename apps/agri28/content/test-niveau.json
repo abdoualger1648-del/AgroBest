@@ -1,0 +1,252 @@
+{
+  "schema": 1,
+  "note": "Test de niveau passé une fois, avant le premier dossier (phase 12). Trois axes : aisance avec l'IA, maturité du projet, suivi déjà en place. Les points vivent ici et non dans le code : corriger un barème trop sévère = éditer ce fichier. Les deux langues sont côte à côte, la parité AR/FR est donc garantie par construction.",
+  "questions": [
+    {
+      "id": "ia_usage",
+      "axe": "ia",
+      "text": {
+        "fr": "Avez-vous déjà utilisé un outil d'intelligence artificielle, comme ChatGPT ou Gemini ?",
+        "ar": "هل استعملت من قبل أداة ذكاء اصطناعي، مثل ChatGPT أو Gemini؟"
+      },
+      "options": [
+        {
+          "id": "jamais",
+          "points": 0,
+          "label": { "fr": "Jamais", "ar": "لم أستعملها قطّ" }
+        },
+        {
+          "id": "essai",
+          "points": 1,
+          "label": { "fr": "Une ou deux fois, pour essayer", "ar": "مرّة أو مرّتين، للتجربة" }
+        },
+        {
+          "id": "parfois",
+          "points": 2,
+          "label": { "fr": "De temps en temps", "ar": "من حين إلى آخر" }
+        },
+        {
+          "id": "souvent",
+          "points": 3,
+          "label": { "fr": "Régulièrement, dans mon travail", "ar": "بصفة منتظمة، في عملي" }
+        }
+      ]
+    },
+    {
+      "id": "ia_demande",
+      "axe": "ia",
+      "text": {
+        "fr": "Quand vous demandez quelque chose à une intelligence artificielle, comment formulez-vous votre demande ?",
+        "ar": "عندما تطلب شيئًا من الذكاء الاصطناعي، كيف تصوغ طلبك؟"
+      },
+      "options": [
+        {
+          "id": "aucune",
+          "points": 0,
+          "label": { "fr": "Je n'ai jamais essayé", "ar": "لم أجرّب قطّ" }
+        },
+        {
+          "id": "courte",
+          "points": 1,
+          "label": { "fr": "J'écris une question courte", "ar": "أكتب سؤالًا قصيرًا" }
+        },
+        {
+          "id": "contexte",
+          "points": 2,
+          "label": {
+            "fr": "J'explique ma situation et ce que je veux obtenir",
+            "ar": "أشرح وضعيتي وما أريد الحصول عليه"
+          }
+        },
+        {
+          "id": "precise",
+          "points": 3,
+          "label": {
+            "fr": "Je donne le contexte et le format attendu, puis je corrige ma demande si la réponse ne convient pas",
+            "ar": "أعطي السياق والشكل المطلوب، ثمّ أصحّح طلبي إذا لم تناسبني الإجابة"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ia_copier",
+      "axe": "ia",
+      "text": {
+        "fr": "Sur votre téléphone, copier un texte d'une application vers une autre :",
+        "ar": "على هاتفك، نسخ نصّ من تطبيق إلى آخر:"
+      },
+      "options": [
+        {
+          "id": "non",
+          "points": 0,
+          "label": { "fr": "Je ne sais pas le faire", "ar": "لا أعرف كيف أفعله" }
+        },
+        {
+          "id": "aide",
+          "points": 1,
+          "label": { "fr": "J'y arrive avec de l'aide", "ar": "أنجح في ذلك بمساعدة" }
+        },
+        {
+          "id": "seul",
+          "points": 2,
+          "label": { "fr": "Je le fais sans difficulté", "ar": "أفعله دون صعوبة" }
+        }
+      ]
+    },
+    {
+      "id": "ia_verif",
+      "axe": "ia",
+      "text": {
+        "fr": "Vérifiez-vous une information donnée par une intelligence artificielle auprès d'une autre source ?",
+        "ar": "هل تتحقّق من معلومة يقدّمها الذكاء الاصطناعي لدى مصدر آخر؟"
+      },
+      "options": [
+        {
+          "id": "ignore",
+          "points": 0,
+          "label": {
+            "fr": "Je ne savais pas que c'était nécessaire",
+            "ar": "لم أكن أعلم أنّ ذلك ضروري"
+          }
+        },
+        {
+          "id": "parfois",
+          "points": 1,
+          "label": { "fr": "J'y pense parfois", "ar": "أفكّر في ذلك أحيانًا" }
+        },
+        {
+          "id": "toujours",
+          "points": 2,
+          "label": {
+            "fr": "Toujours, surtout pour un chiffre, une dose ou un texte de loi",
+            "ar": "دائمًا، خاصّة إذا تعلّق الأمر برقم أو جرعة أو نصّ قانوني"
+          }
+        }
+      ]
+    },
+    {
+      "id": "projet_etat",
+      "axe": "maturite",
+      "text": {
+        "fr": "Où en est votre projet aujourd'hui ?",
+        "ar": "في أيّ مرحلة مشروعك اليوم؟"
+      },
+      "options": [
+        {
+          "id": "idee",
+          "points": 0,
+          "label": { "fr": "C'est une idée, je n'ai rien lancé", "ar": "مجرّد فكرة، لم أبدأ شيئًا" }
+        },
+        {
+          "id": "lancement",
+          "points": 1,
+          "label": {
+            "fr": "Je prépare le lancement : démarches, terrain, financement",
+            "ar": "أحضّر الانطلاق: الإجراءات، الأرض، التمويل"
+          }
+        },
+        {
+          "id": "recent",
+          "points": 2,
+          "label": { "fr": "Je produis depuis moins de deux ans", "ar": "أنتج منذ أقلّ من سنتين" }
+        },
+        {
+          "id": "etabli",
+          "points": 3,
+          "label": { "fr": "Je produis depuis plus de deux ans", "ar": "أنتج منذ أكثر من سنتين" }
+        }
+      ]
+    },
+    {
+      "id": "projet_dossier",
+      "axe": "maturite",
+      "text": {
+        "fr": "Avez-vous déjà écrit un document qui présente votre projet ?",
+        "ar": "هل كتبت من قبل وثيقة تعرض مشروعك؟"
+      },
+      "aide": {
+        "fr": "Un dossier pour la Chambre d'agriculture, une demande de crédit, un plan écrit.",
+        "ar": "ملفّ للغرفة الفلاحية، أو طلب قرض، أو مخطّط مكتوب."
+      },
+      "options": [
+        {
+          "id": "jamais",
+          "points": 0,
+          "label": { "fr": "Jamais", "ar": "قطّ" }
+        },
+        {
+          "id": "commence",
+          "points": 1,
+          "label": { "fr": "J'ai commencé, sans le terminer", "ar": "بدأت، دون أن أُتمّه" }
+        },
+        {
+          "id": "complet",
+          "points": 2,
+          "label": { "fr": "Oui, un dossier complet", "ar": "نعم، ملفّ كامل" }
+        }
+      ]
+    },
+    {
+      "id": "gestion_argent",
+      "axe": "gestion",
+      "text": {
+        "fr": "Comment suivez-vous vos dépenses et vos recettes ?",
+        "ar": "كيف تتابع مصاريفك ومداخيلك؟"
+      },
+      "options": [
+        {
+          "id": "rien",
+          "points": 0,
+          "label": { "fr": "Je ne les note pas", "ar": "لا أدوّنها" }
+        },
+        {
+          "id": "memoire",
+          "points": 1,
+          "label": {
+            "fr": "De mémoire, ou sur des papiers épars",
+            "ar": "من الذاكرة، أو على أوراق متفرّقة"
+          }
+        },
+        {
+          "id": "cahier",
+          "points": 2,
+          "label": { "fr": "Sur un cahier tenu régulièrement", "ar": "في دفتر أمسكه بانتظام" }
+        },
+        {
+          "id": "tableur",
+          "points": 3,
+          "label": { "fr": "Sur un tableur ou un logiciel", "ar": "في جدول حسابات أو برنامج" }
+        }
+      ]
+    },
+    {
+      "id": "gestion_chiffres",
+      "axe": "gestion",
+      "text": {
+        "fr": "Relevez-vous des chiffres de production ?",
+        "ar": "هل تسجّل أرقام الإنتاج؟"
+      },
+      "aide": {
+        "fr": "Rendement, mortalité, quantités récoltées ou vendues.",
+        "ar": "المردود، النفوق، الكمّيات المحصودة أو المبيعة."
+      },
+      "options": [
+        {
+          "id": "non",
+          "points": 0,
+          "label": { "fr": "Non", "ar": "لا" }
+        },
+        {
+          "id": "approximatif",
+          "points": 1,
+          "label": { "fr": "Approximativement", "ar": "بصفة تقريبية" }
+        },
+        {
+          "id": "date",
+          "points": 2,
+          "label": { "fr": "Oui, relevés et datés", "ar": "نعم، مسجّلة ومؤرّخة" }
+        }
+      ]
+    }
+  ]
+}

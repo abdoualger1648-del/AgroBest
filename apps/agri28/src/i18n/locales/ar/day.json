@@ -32,7 +32,9 @@
     "yourAnswer": "إجابتك",
     "optional": "اختياري",
     "missingVars": "أكمل بطاقة مشروعك لملء: {{list}}",
-    "toolUnverified": "توفّر هذه الأداة في الجزائر غير مؤكّد."
+    "toolUnverified": "توفّر هذه الأداة في الجزائر غير مؤكّد.",
+    "aide": "خطوة بخطوة",
+    "defi": "لمزيد من التقدّم"
   },
   "quiz": {
     "question": "السؤال {{current}} من {{total}}",

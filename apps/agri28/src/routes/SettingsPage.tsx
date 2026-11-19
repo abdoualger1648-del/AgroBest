@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/PageHeader';
 import { Card } from '@/components/Card';
@@ -6,6 +7,7 @@ import { Button } from '@/components/Button';
 import { CheckIcon } from '@/components/Icon';
 import { inputClass } from '@/components/Field';
 import { usePreferences } from '@/store/preferences';
+import { NiveauBadge } from '@/routes/niveau/NiveauBadge';
 import { useCourse } from '@/store/course';
 import { SUPPORTED_LANGS, type Lang } from '@/lib/lang';
 import { THEME_PREFERENCES, type ThemePreference } from '@/lib/appearance';
@@ -257,6 +259,43 @@ function DataSection() {
   );
 }
 
+/**
+ * Niveau de parcours, et moyen de refaire le test (phase 12).
+ *
+ * Placé dans les réglages, hors de la garde de niveau : c'est précisément
+ * l'écran qu'on doit pouvoir atteindre sans avoir passé le test.
+ */
+function CarteNiveau() {
+  const { t } = useTranslation(['niveau', 'common']);
+  const lang = usePreferences((state) => state.lang);
+  const niveau = usePreferences((state) => state.niveauParcours);
+  const evalueLe = usePreferences((state) => state.niveauEvalueLe);
+
+  return (
+    <Card as="section" className="mb-4">
+      <h2 className="font-semibold">{t('niveau:reglages.titre')}</h2>
+      {niveau ? (
+        <>
+          <div className="mt-2">
+            <NiveauBadge niveau={niveau} />
+          </div>
+          <p className="mt-2 text-sm text-muted">{t(`niveau:niveaux.${niveau}.description`)}</p>
+          {evalueLe !== null ? (
+            <p className="mt-1 text-sm text-muted">
+              {t('niveau:reglages.evalueLe', { date: formatDate(new Date(evalueLe), lang) })}
+            </p>
+          ) : null}
+        </>
+      ) : (
+        <p className="mt-2 text-sm text-muted">{t('niveau:reglages.jamaisPasse')}</p>
+      )}
+      <Link to="/test-niveau" className="mt-3 inline-block">
+        <Button variant="secondary">{t('niveau:reglages.refaire')}</Button>
+      </Link>
+    </Card>
+  );
+}
+
 export function SettingsPage() {
   const { t } = useTranslation(['settings', 'common']);
   const { lang, theme, setLang, setTheme } = usePreferences();
@@ -282,6 +321,8 @@ export function SettingsPage() {
         </div>
         <p className="mt-2 text-sm text-muted">{t('settings:language.help')}</p>
       </Card>
+
+      <CarteNiveau />
 
       <Card as="section" className="mb-4">
         <h2 className="font-semibold">{t('settings:theme.label')}</h2>

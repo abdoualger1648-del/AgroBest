@@ -1,7 +1,14 @@
 // Extension explicite : ce module est aussi exécuté directement par Node
 // (`node --experimental-strip-types`), qui ne devine pas les extensions,
 // contrairement à Vite. Même raison que dans `validate-content.ts`.
-import { varianteSchema, type Lesson, type Variante } from './schema.ts';
+import {
+  varianteNiveauSchema,
+  varianteSchema,
+  type Lesson,
+  type Variante,
+  type VarianteNiveau,
+} from './schema.ts';
+import { NIVEAUX_PARCOURS, type NiveauParcours } from '../domain/niveau.ts';
 
 /**
  * Cœur de l'écriture assistée des variantes (phase 10).
@@ -160,6 +167,181 @@ export function verifierCoherence(lecon: Lesson, variantes: VariantesBilingues):
     const variante = variantes[langue];
     for (const id of Object.keys(variante.captures ?? {})) {
       if (!captures.includes(id)) fautes.push(`${langue} : capture inconnue « ${id} ».`);
+    }
+    for (const id of Object.keys(variante.indices ?? {})) {
+      if (!prompts.includes(id)) fautes.push(`${langue} : prompt inconnu « ${id} ».`);
+    }
+  }
+
+  return fautes;
+}
+
+// ——— variantes par niveau (phase 12) ———
+
+export interface VariantesNiveauBilingues {
+  fr: VarianteNiveau;
+  ar: VarianteNiveau;
+}
+
+/** Niveaux pour lesquels une variante a un sens : « intermediaire » est le standard. */
+export function niveauxGenerables(): NiveauParcours[] {
+  return NIVEAUX_PARCOURS.filter((niveau) => niveau !== 'intermediaire');
+}
+
+function etapes(lecon: Lesson): string {
+  return lecon.sections.practice.steps
+    .map((etape, index) => `  ${String(index + 1)}. ${etape.instruction}`)
+    .join('\n');
+}
+
+/**
+ * Instructions pour une variante de NIVEAU. Les deux langues sont demandées
+ * dans le même appel, comme pour les variantes de métier : c'est ce qui
+ * garantit la parité AR/FR par construction.
+ *
+ * Le champ attendu dépend du niveau, et c'est volontaire : on n'écrit pas
+ * « une aide ou un défi, à ton choix », on demande exactement l'un des deux.
+ */
+export function construireInstructionsNiveau(
+  leconFr: Lesson,
+  leconAr: Lesson,
+  niveau: NiveauParcours,
+): string {
+  const { prompts } = cibles(leconFr);
+  const debutant = niveau === 'debutant';
+  const champ = debutant ? 'aide' : 'defi';
+
+  const consigne = debutant
+    ? `« aide » est un paragraphe de 3 à 5 phrases, placé AVANT les étapes, pour
+quelqu'un qui n'a jamais utilisé d'outil d'IA. Il explique les GESTES :
+où appuyer, comment copier, comment coller, quoi faire si rien ne se passe.
+Il n'explique jamais le métier d'agriculteur, et n'ajoute aucune étape.`
+    : `« defi » est un paragraphe de 2 à 4 phrases, placé APRÈS les étapes, pour
+quelqu'un qui manie déjà ces outils. Il demande un approfondissement réel —
+une contre-épreuve, une comparaison, une vérification plus poussée — et non
+« recommencez en mieux ». Il suppose les étapes déjà faites.`;
+
+  return `Tu adaptes une leçon d'un parcours agricole algérien au NIVEAU de l'utilisateur.
+
+NIVEAU VISÉ : ${niveau}
+
+LEÇON : jour ${String(leconFr.day)} — « ${leconFr.title} »
+Idée de la journée : ${leconFr.subtitle}
+
+Étapes de la pratique (français) :
+${etapes(leconFr)}
+
+Étapes de la pratique (arabe) :
+${etapes(leconAr)}
+
+CE QUE TU PRODUIS — un objet JSON, et rien d'autre :
+{
+  "fr": { "${champ}": "..." },
+  "ar": { "${champ}": "..." }
+}
+
+RÈGLES, toutes impératives :
+- Tu produis le champ « ${champ} », et lui seul. Aucun autre champ.
+- ${consigne}
+- Tu peux en plus fournir « indices » pour reformuler l'indice d'un prompt.
+  Identifiants de prompt autorisés : ${prompts.join(', ') || '(aucun)'}.
+  N'invente aucun identifiant. Omets « indices » si tu ne le changes pas.
+- Tu ne réécris JAMAIS le texte d'un prompt : il porte les garde-fous du
+  parcours. Tu n'y as pas accès, et c'est voulu.
+- N'écris AUCUN prix, AUCUNE dose, AUCUN rendement chiffré, AUCUN numéro de
+  décret ni de loi. Aucun chiffre en dinars.
+- Le français vouvoie, en phrases courtes, sans anglicisme non expliqué.
+- L'arabe est standard simple, avec les mots réellement employés en Algérie,
+  sans dialecte écrit. Les chiffres s'écrivent en chiffres occidentaux.
+- Les deux langues disent la MÊME chose et portent exactement les mêmes clés.
+
+Réponds par le JSON seul, sans texte autour, sans bloc de code.`;
+}
+
+/** Lit la réponse du modèle pour une variante de niveau. */
+export function analyserReponseNiveau(
+  texte: string,
+  niveau: NiveauParcours,
+): VariantesNiveauBilingues {
+  const nettoye = texte
+    .trim()
+    .replace(/^```(?:json)?\s*/i, '')
+    .replace(/```$/, '')
+    .trim();
+
+  let brut: unknown;
+  try {
+    brut = JSON.parse(nettoye);
+  } catch {
+    throw new ReponseInvalide("la réponse n'est pas du JSON.");
+  }
+  if (typeof brut !== 'object' || brut === null || !('fr' in brut) || !('ar' in brut)) {
+    throw new ReponseInvalide('la réponse doit porter les deux clés « fr » et « ar ».');
+  }
+
+  const { fr, ar } = brut;
+  const analyseFr = varianteNiveauSchema.safeParse(fr);
+  const analyseAr = varianteNiveauSchema.safeParse(ar);
+  if (!analyseFr.success)
+    throw new ReponseInvalide(`variante française : ${analyseFr.error.issues[0]?.message ?? '?'}`);
+  if (!analyseAr.success)
+    throw new ReponseInvalide(`variante arabe : ${analyseAr.error.issues[0]?.message ?? '?'}`);
+
+  // Le champ attendu dépend du niveau : une « aide » livrée pour un avancé
+  // serait affichée au mauvais endroit de l'écran.
+  const attendu = niveau === 'debutant' ? 'aide' : 'defi';
+  for (const [langue, variante] of [
+    ['fr', analyseFr.data],
+    ['ar', analyseAr.data],
+  ] as const) {
+    if (!(attendu in variante)) {
+      throw new ReponseInvalide(`${langue} : le champ « ${attendu} » manque pour « ${niveau} ».`);
+    }
+  }
+
+  return { fr: analyseFr.data, ar: analyseAr.data };
+}
+
+/**
+ * Vérifie qu'une variante de niveau ne vise que des prompts réels, que les
+ * deux langues portent les mêmes champs, et qu'elle ne remplit pas le champ
+ * de l'autre niveau.
+ */
+export function verifierCoherenceNiveau(
+  lecon: Lesson,
+  niveau: NiveauParcours,
+  variantes: VariantesNiveauBilingues,
+): string[] {
+  const { prompts } = cibles(lecon);
+  const fautes: string[] = [];
+
+  if (niveau === 'intermediaire') {
+    fautes.push("« intermediaire » est le parcours standard : il n'a aucune variante à recevoir.");
+  }
+
+  const signature = (v: VarianteNiveau) =>
+    [
+      v.aide ? 'aide' : null,
+      v.defi ? 'defi' : null,
+      ...Object.keys(v.indices ?? {}).map((id) => `indice:${id}`),
+    ]
+      .filter((champ): champ is string => champ !== null)
+      .sort()
+      .join(',');
+
+  if (signature(variantes.fr) !== signature(variantes.ar)) {
+    fautes.push(
+      `les deux langues ne couvrent pas les mêmes champs : « ${signature(variantes.fr)} » contre « ${signature(variantes.ar)} ».`,
+    );
+  }
+
+  for (const langue of ['fr', 'ar'] as const) {
+    const variante = variantes[langue];
+    if (niveau === 'debutant' && variante.defi) {
+      fautes.push(`${langue} : un « defi » pour un débutant — champ réservé au niveau avancé.`);
+    }
+    if (niveau === 'avance' && variante.aide) {
+      fautes.push(`${langue} : une « aide » pour un avancé — champ réservé au niveau débutant.`);
     }
     for (const id of Object.keys(variante.indices ?? {})) {
       if (!prompts.includes(id)) fautes.push(`${langue} : prompt inconnu « ${id} ».`);

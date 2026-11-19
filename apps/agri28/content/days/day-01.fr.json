@@ -231,5 +231,13 @@
         "p1": "Collez la reformulation obtenue ci-dessous. Si elle se trompe de culture ou de saison, corrigez : c'est votre texte, pas celui de l'IA."
       }
     }
+  },
+  "variantesNiveau": {
+    "debutant": {
+      "aide": "Avant de commencer : ouvrez l'assistant dans une autre fenêtre et laissez-le ouvert. Vous ferez des allers-retours entre cette page et la sienne. Pour copier le prompt, appuyez sur le bouton « Copier » : le texte part dans la mémoire de votre téléphone. Dans l'assistant, appuyez longuement sur la zone de saisie, puis choisissez « Coller ». Si rien ne se colle, revenez ici et appuyez de nouveau sur « Copier »."
+    },
+    "avance": {
+      "defi": "Une fois les trois étapes faites, reprenez la réponse de l'assistant et demandez-lui de séparer ce qu'il affirme de ce qu'il suppose. Comparez sa deuxième lecture à la première : l'écart entre les deux vous apprend plus sur l'outil que la réponse elle-même."
+    }
   }
 }

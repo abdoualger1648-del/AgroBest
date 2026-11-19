@@ -215,5 +215,13 @@
   "verifyLocally": [
     "Les conditions d'obtention de la carte de fellah, les aides et les délais évoluent : la Chambre d'agriculture de votre wilaya et la Direction des services agricoles font seules foi."
   ],
-  "nextTeaser": "Semaine 2 : l'argent. Étude de faisabilité, budget avec vos prix réels, business plan et calendrier de travaux."
+  "nextTeaser": "Semaine 2 : l'argent. Étude de faisabilité, budget avec vos prix réels, business plan et calendrier de travaux.",
+  "variantesNiveau": {
+    "debutant": {
+      "aide": "Un objectif vérifiable répond à trois questions : quoi, combien, et pour quand. « Mieux produire » n'en répond à aucune. « Vendre ma récolte avant la fin de l'été sans passer par un intermédiaire » répond aux trois, et vous saurez en septembre si c'est fait. Commencez par la date : c'est la plus facile, et elle oblige le reste."
+    },
+    "avance": {
+      "defi": "Pour chaque personne que vous avez recensée, écrivez ce qu'elle attend de vous — pas ce que vous attendez d'elle. C'est l'exercice que presque personne ne fait, et c'est lui qui change un passage à la Chambre d'agriculture en rendez-vous utile."
+    }
+  }
 }

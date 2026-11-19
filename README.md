@@ -17,7 +17,14 @@ Aucune donnée ne quitte l'appareil.
 
 ## Le principe
 
-Chaque jour suit la même structure, minuteur visible à l'écran :
+Avant le premier jour, un **test de niveau** de deux minutes situe l'utilisateur sur trois axes :
+son aisance avec les outils d'IA, l'avancement de son projet, et ce qu'il suit déjà. Il en sort un
+niveau — débutant, intermédiaire ou avancé — qui ne change ni le nombre de jours ni leur ordre,
+mais la profondeur de chaque journée : une explication pas-à-pas en plus pour un débutant, un défi
+et un prompt à compléter soi-même pour un avancé. Le test se refait à tout moment depuis les
+réglages, sans rien perdre de la progression.
+
+Chaque jour suit ensuite la même structure, minuteur visible à l'écran :
 
 | Étape | Durée | Ce qu'on y fait |
 |---|---|---|
@@ -25,6 +32,10 @@ Chaque jour suit la même structure, minuteur visible à l'écran :
 | Pratique guidée | 7 min | un prompt prêt à copier, rempli avec **vos** données |
 | Quiz | 3 min | trois questions, avec l'explication de chaque réponse |
 | Bilan | 2 min | ce que vous retenez, et une note de confiance |
+
+La journée s'adapte sur deux axes indépendants : le **type d'activité** (l'exemple de terrain d'un
+apiculteur n'est pas celui d'un céréalier) et le **niveau**. Les garde-fous, eux, ne varient
+jamais : le texte des prompts qui les porte n'est modifiable par aucune variante.
 
 Le fil rouge est **« Mon projet »**, créé au premier jour. Un compte mène un dossier ; le niveau
 supérieur, demandé depuis l'application et accordé par l'administrateur, en ouvre jusqu'à cinq —

@@ -1,0 +1,49 @@
+{
+  "titre": "Test de niveau",
+  "sousTitre": "Huit questions, deux minutes. Elles servent à adapter vos 28 jours.",
+  "intro": {
+    "titre": "Avant de commencer",
+    "texte": "Ces questions ne jugent pas votre métier. Elles situent votre aisance avec les outils d'intelligence artificielle, l'avancement de votre projet, et ce que vous suivez déjà. Le parcours garde ses 28 jours : c'est la profondeur de chaque journée qui s'adapte.",
+    "duree": "Environ 2 minutes",
+    "commencer": "Commencer le test"
+  },
+  "progression": "Question {{n}} sur {{total}}",
+  "precedent": "Précédent",
+  "suivant": "Suivant",
+  "voirResultat": "Voir mon niveau",
+  "axes": {
+    "ia": "Aisance avec l'IA",
+    "maturite": "Avancement du projet",
+    "gestion": "Suivi déjà en place"
+  },
+  "niveaux": {
+    "debutant": {
+      "nom": "Débutant",
+      "description": "Chaque journée vous donne une explication pas-à-pas en plus, et le prompt est écrit pour vous : vous n'avez qu'à le copier."
+    },
+    "intermediaire": {
+      "nom": "Intermédiaire",
+      "description": "Le parcours standard : l'explication, le prompt prêt à copier, et un indice quand une étape demande une précision."
+    },
+    "avance": {
+      "nom": "Avancé",
+      "description": "Version courte : moins d'explications, un prompt à compléter vous-même, et un défi supplémentaire à la fin de la pratique."
+    }
+  },
+  "resultat": {
+    "titre": "Votre niveau",
+    "ceQueCaChange": "Ce que cela change",
+    "detail": "Détail par axe",
+    "rappel": "Vous pouvez refaire ce test à tout moment depuis les réglages : votre progression n'est jamais perdue.",
+    "continuer": "Créer mon projet",
+    "reprendre": "Revenir à l'accueil",
+    "refaire": "Refaire le test"
+  },
+  "reglages": {
+    "titre": "Niveau de parcours",
+    "actuel": "Niveau actuel : {{niveau}}",
+    "jamaisPasse": "Test non encore passé",
+    "evalueLe": "Évalué le {{date}}",
+    "refaire": "Refaire le test"
+  }
+}

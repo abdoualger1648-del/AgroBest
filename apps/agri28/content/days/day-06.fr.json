@@ -189,5 +189,13 @@
   "verifyLocally": [
     "Pour tout ce qui touche au contrat de travail, aux salaires ou à un litige, l'interlocuteur est un juriste ou l'inspection du travail — pas une IA."
   ],
-  "nextTeaser": "Demain, dernier jour de la semaine : transformer votre objectif en objectif SMART, et recenser les personnes dont dépend votre projet."
+  "nextTeaser": "Demain, dernier jour de la semaine : transformer votre objectif en objectif SMART, et recenser les personnes dont dépend votre projet.",
+  "variantesNiveau": {
+    "debutant": {
+      "aide": "Pour anonymiser sans y passer la journée : remplacez chaque nom par un rôle — « mon ouvrier », « le vétérinaire », « mon voisin ». Retirez tout numéro : téléphone, carte, compte, immatriculation. Remplacez votre lieu exact par la wilaya seule. Votre question garde tout son sens ; ce qui disparaît, c'est ce qui permet d'identifier quelqu'un."
+    },
+    "avance": {
+      "defi": "Relisez vos trois dernières conversations avec un assistant, celles d'avant ce parcours. Repérez ce que vous y avez laissé passer. Puis écrivez la règle que vous auriez voulu avoir ce jour-là : une règle née d'une vraie fuite tient mieux qu'une règle recopiée."
+    }
+  }
 }

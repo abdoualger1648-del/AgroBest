@@ -1,6 +1,8 @@
 import { expect, test, type Page } from '@playwright/test';
+import { passLevelTest } from './helpers';
 
 async function createProject(page: Page) {
+  await passLevelTest(page);
   await page.goto('./bienvenue');
   await page.getByLabel(/Nom du projet/).fill('Élevage ovin Aïn Defla');
   await page.getByLabel(/^Taille/).fill('60');
@@ -82,6 +84,14 @@ test.describe('Sauvegarde et rappel', () => {
     await page.getByRole('button', { name: 'Confirmer' }).click();
     await expect(page.getByText('Données effacées.')).toBeVisible();
 
+    // « Effacer toutes mes données » efface AUSSI le niveau : on repart donc
+    // par le test de niveau, comme une installation neuve. C'est cohérent —
+    // un effacement complet est un vrai recommencement — et c'est le
+    // comportement que ce test fige.
+    await page.goto('./');
+    await expect(page.getByRole('heading', { level: 1, name: 'Test de niveau' })).toBeVisible();
+
+    await passLevelTest(page);
     await page.goto('./');
     await expect(page.getByRole('link', { name: /Créer mon projet/ })).toBeVisible();
   });

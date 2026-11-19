@@ -11,6 +11,7 @@ import { currentDay } from '@/domain/course';
 import { toDayKey } from '@/domain/streak';
 import { useCompte } from '@/store/compte';
 import { GardeCompte } from '@/components/GardeCompte';
+import { GardeNiveau } from '@/components/GardeNiveau';
 import { useAdministration } from '@/store/administration';
 import { useAdministrateur } from '@/hooks/useAdministrateur';
 
@@ -67,6 +68,9 @@ const DossiersPage = lazy(() =>
 );
 const NouveauDossierPage = lazy(() =>
   import('@/routes/dossiers/NouveauDossierPage').then((m) => ({ default: m.NouveauDossierPage })),
+);
+const TestNiveauPage = lazy(() =>
+  import('@/routes/niveau/TestNiveauPage').then((m) => ({ default: m.TestNiveauPage })),
 );
 
 function RouteFallback() {
@@ -137,21 +141,31 @@ export default function App() {
           <Route path="telecharger" element={<TelechargerPage />} />
         </Route>
         <Route element={<GardeCompte />}>
+          {/*
+            Hors garde de niveau : le test lui-même, et les deux écrans qu'on
+            doit pouvoir atteindre sans l'avoir passé — changer de langue ou se
+            déconnecter ne doit jamais exiger de répondre à huit questions.
+          */}
           <Route element={<AppShell />}>
-            <Route index element={<HomePage />} />
-            <Route path="bienvenue" element={<OnboardingPage />} />
-            <Route path="projet" element={<ProjectPage />} />
-            <Route path="dossiers" element={<DossiersPage />} />
-            <Route path="dossiers/nouveau" element={<NouveauDossierPage />} />
-            <Route path="jour" element={<DayListPage />} />
-            <Route path="jour/:day" element={<DayPage />} />
-            <Route path="dossier" element={<DossierPage />} />
-            <Route path="carnet" element={<NotebookPage />} />
-            <Route path="modeles" element={<TemplatesPage />} />
-            <Route path="badges" element={<BadgesPage />} />
+            <Route path="test-niveau" element={<TestNiveauPage />} />
             <Route path="plus" element={<MorePage />} />
             <Route path="parametres" element={<SettingsPage />} />
-            <Route path="*" element={<NotFoundPage />} />
+          </Route>
+          <Route element={<GardeNiveau />}>
+            <Route element={<AppShell />}>
+              <Route index element={<HomePage />} />
+              <Route path="bienvenue" element={<OnboardingPage />} />
+              <Route path="projet" element={<ProjectPage />} />
+              <Route path="dossiers" element={<DossiersPage />} />
+              <Route path="dossiers/nouveau" element={<NouveauDossierPage />} />
+              <Route path="jour" element={<DayListPage />} />
+              <Route path="jour/:day" element={<DayPage />} />
+              <Route path="dossier" element={<DossierPage />} />
+              <Route path="carnet" element={<NotebookPage />} />
+              <Route path="modeles" element={<TemplatesPage />} />
+              <Route path="badges" element={<BadgesPage />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Route>
           </Route>
         </Route>
       </Routes>

@@ -126,6 +126,17 @@ export function PracticeStep({ lesson, project, captures, onCapture }: PracticeS
 
       {practice.intro ? <BlockRenderer blocks={practice.intro} /> : null}
 
+      {/* Aide pas-à-pas : vient de la variante de niveau (phase 12). Avant les
+          étapes, car c'est ce qu'un débutant doit lire en premier. */}
+      {practice.aide ? (
+        <Card className="mt-4 bg-surface-2">
+          <p className="mb-1 text-xs font-semibold tracking-wide text-muted uppercase">
+            {t('practice.aide')}
+          </p>
+          <p>{renderInline(practice.aide, 'practice-aide')}</p>
+        </Card>
+      ) : null}
+
       <ol className="mt-4 space-y-6">
         {practice.steps.map((step, index) => (
           <li key={step.id}>
@@ -167,6 +178,17 @@ export function PracticeStep({ lesson, project, captures, onCapture }: PracticeS
           </li>
         ))}
       </ol>
+
+      {/* Défi : vient de la variante de niveau (phase 12). Après les étapes,
+          car il suppose la pratique faite. */}
+      {practice.defi ? (
+        <Card className="mt-6 bg-surface-2">
+          <p className="mb-1 text-xs font-semibold tracking-wide text-muted uppercase">
+            {t('practice.defi')}
+          </p>
+          <p>{renderInline(practice.defi, 'practice-defi')}</p>
+        </Card>
+      ) : null}
     </section>
   );
 }
