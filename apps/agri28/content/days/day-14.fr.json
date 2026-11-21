@@ -197,5 +197,55 @@
       "defi": "Au bout d'un mois, un tableau de suivi ne contient plus que des colonnes qu'on ne remplit pas. Décidez dès maintenant laquelle vous supprimerez en premier si le rendez-vous déborde les dix minutes, et écrivez-le à côté du tableau. Choisir d'avance ce qu'on abandonne est ce qui permet de tenir le reste.",
       "brouillon": true
     }
+  },
+  "variantes": {
+    "ovin": {
+      "brouillon": true,
+      "captures": {
+        "c1": "Les colonnes que je retiens, et la donnée technique que je suivrai (poids, agnelages, mortalité)"
+      }
+    },
+    "bovin": {
+      "brouillon": true,
+      "captures": {
+        "c1": "Les colonnes que je retiens, et la donnée technique que je suivrai (lait livré, ration, vêlages)"
+      }
+    },
+    "avicole": {
+      "brouillon": true,
+      "captures": {
+        "c1": "Les colonnes que je retiens, et la donnée technique que je suivrai (mortalité, consommation d'aliment, poids de fin de bande)"
+      }
+    },
+    "apiculture": {
+      "brouillon": true,
+      "captures": {
+        "c1": "Les colonnes que je retiens, et la donnée technique que je suivrai (visites, récolte par ruche, essaimages)"
+      }
+    },
+    "maraichage": {
+      "brouillon": true,
+      "captures": {
+        "c1": "Les colonnes que je retiens, et la donnée technique que je suivrai (cageots récoltés, arrosages, traitements)"
+      }
+    },
+    "serre": {
+      "brouillon": true,
+      "captures": {
+        "c1": "Les colonnes que je retiens, et la donnée technique que je suivrai (récolte par serre, température, plants perdus)"
+      }
+    },
+    "cereales": {
+      "brouillon": true,
+      "captures": {
+        "c1": "Les colonnes que je retiens, et la donnée technique que je suivrai (surface semée, passages, rendement à la parcelle)"
+      }
+    },
+    "arboriculture": {
+      "brouillon": true,
+      "captures": {
+        "c1": "Les colonnes que je retiens, et la donnée technique que je suivrai (récolte par rangée, taille, irrigations)"
+      }
+    }
   }
 }

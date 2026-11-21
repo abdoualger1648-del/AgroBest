@@ -271,6 +271,16 @@
         "c1": "Ma règle d'irrigation du verger, écrite avec mes mots"
       },
       "brouillon": true
+    },
+    "ovin": {
+      "brouillon": true,
+      "terrain": {
+        "text": "« Si le troupeau rentre du parcours avant l'heure habituelle deux jours de suite et que l'abreuvoir est vide à midi, alors j'ajoute un remplissage et je sors plus tôt le matin. Sinon je garde mon rythme et je revérifie demain. » Cette phrase reste vraie toute la saison.",
+        "label": "Une règle, ce n'est pas une prévision"
+      },
+      "captures": {
+        "c1": "Ma règle d'abreuvement et de sortie, écrite avec mes mots"
+      }
     }
   }
 }
