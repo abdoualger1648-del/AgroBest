@@ -230,6 +230,71 @@
       "indices": {
         "p1": "Collez la reformulation obtenue ci-dessous. Si elle se trompe de culture ou de saison, corrigez : c'est votre texte, pas celui de l'IA."
       }
+    },
+    "bovin": {
+      "terrain": {
+        "label": "Sur le terrain",
+        "text": "Rachid élève 12 vaches laitières à Sétif. Chaque mois, il passe une soirée entière à recopier ses achats d'aliment et ses livraisons de lait sur un cahier, puis à deviner si le mois a payé. Il n'a besoin ni d'un logiciel ni d'un comptable pour commencer : il a besoin de **mettre en ordre ce qu'il sait déjà**."
+      },
+      "captures": {
+        "c1": "En une phrase : qu'est-ce que vous voulez avoir réussi dans 12 mois ? (nombre de vaches, lait livré, débouché)"
+      },
+      "indices": {
+        "p1": "Collez la reformulation obtenue ci-dessous. Si elle parle de viande au lieu de lait, corrigez : c'est votre texte, pas celui de l'IA."
+      },
+      "brouillon": true
+    },
+    "avicole": {
+      "terrain": {
+        "label": "Sur le terrain",
+        "text": "Samir conduit un bâtiment de poulets de chair à Blida. À chaque fin de bande, il passe une soirée entière à recopier ses achats d'aliment et de poussins sur un cahier, puis à deviner si la bande a payé. Il n'a besoin ni d'un logiciel ni d'un comptable pour commencer : il a besoin de **mettre en ordre ce qu'il sait déjà**."
+      },
+      "captures": {
+        "c1": "En une phrase : qu'est-ce que vous voulez avoir réussi dans 12 mois ? (taille de bande, nombre de bandes, débouché)"
+      },
+      "indices": {
+        "p1": "Collez la reformulation obtenue ci-dessous. Si elle parle de ponte au lieu de chair, corrigez : c'est votre texte, pas celui de l'IA."
+      },
+      "brouillon": true
+    },
+    "serre": {
+      "terrain": {
+        "label": "Sur le terrain",
+        "text": "Hakim conduit quatre serres de tomate à Biskra. À chaque fin de campagne, il passe une soirée entière à recopier ses achats de plants et de plastique sur un cahier, puis à deviner si la campagne a payé. Il n'a besoin ni d'un logiciel ni d'un comptable pour commencer : il a besoin de **mettre en ordre ce qu'il sait déjà**."
+      },
+      "captures": {
+        "c1": "En une phrase : qu'est-ce que vous voulez avoir réussi dans 12 mois ? (nombre de serres, cultures, débouché)"
+      },
+      "indices": {
+        "p1": "Collez la reformulation obtenue ci-dessous. Si elle parle de plein champ au lieu de serre, corrigez : c'est votre texte, pas celui de l'IA."
+      },
+      "brouillon": true
+    },
+    "cereales": {
+      "terrain": {
+        "label": "Sur le terrain",
+        "text": "Belkacem emblave 30 hectares de blé dur à Tiaret. À chaque fin de campagne, il passe une soirée entière à recopier ses achats de semences et d'engrais sur un cahier, puis à deviner si la campagne a payé. Il n'a besoin ni d'un logiciel ni d'un comptable pour commencer : il a besoin de **mettre en ordre ce qu'il sait déjà**."
+      },
+      "captures": {
+        "c1": "En une phrase : qu'est-ce que vous voulez avoir réussi dans 12 mois ? (surface, rendement visé, livraison)"
+      },
+      "indices": {
+        "p1": "Collez la reformulation obtenue ci-dessous. Si elle vous suppose irrigué alors que vous êtes en sec, corrigez : c'est votre texte, pas celui de l'IA."
+      },
+      "brouillon": true
+    },
+    "arboriculture": {
+      "terrain": {
+        "label": "Sur le terrain",
+        "text": "Fatiha conduit un verger de 300 oliviers à Jijel. À chaque fin de récolte, elle passe une soirée entière à recopier ses frais de taille et de cueillette sur un cahier, puis à deviner si l'année a payé. Elle n'a besoin ni d'un logiciel ni d'un comptable pour commencer : elle a besoin de **mettre en ordre ce qu'elle sait déjà**."
+      },
+      "captures": {
+        "c1": "En une phrase : qu'est-ce que vous voulez avoir réussi dans 12 mois ? (nombre d'arbres, récolte visée, débouché)"
+      },
+      "indices": {
+        "p1": "Collez la reformulation obtenue ci-dessous. Si elle parle de culture annuelle au lieu de verger, corrigez : c'est votre texte, pas celui de l'IA."
+      },
+      "brouillon": true
     }
   },
   "variantesNiveau": {

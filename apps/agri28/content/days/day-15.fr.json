@@ -194,5 +194,84 @@
       "defi": "Pour chaque ligne de votre liste, demandez-vous qui vous appellerez si le signe apparaît, et vérifiez que vous avez son numéro. Une surveillance qui débouche sur « il faudrait que je trouve quelqu'un » a perdu les trois jours qui comptaient.",
       "brouillon": true
     }
+  },
+  "variantes": {
+    "bovin": {
+      "terrain": {
+        "label": "La différence",
+        "text": "« Mes vaches donnent moins de lait, pourquoi ? » ne mène nulle part. « Depuis 5 jours, 4 vaches sur 12 ont perdu environ un quart de leur traite du matin, même ration depuis trois semaines, aucune boiterie visible : quelles questions dois-je préparer pour le vétérinaire ? » vous fait gagner une visite."
+      },
+      "captures": {
+        "c1": "Ma liste de surveillance (une ligne par chose à regarder : mamelle, ration, boiterie, eau — avec sa fréquence)",
+        "c2": "Mes questions prêtes pour le vétérinaire"
+      },
+      "brouillon": true
+    },
+    "avicole": {
+      "terrain": {
+        "label": "La différence",
+        "text": "« Mes poulets meurent, qu'est-ce qu'ils ont ? » ne mène nulle part. « Depuis 3 jours, la mortalité du matin a doublé sur une bande de 20 jours, litière humide côté nord du bâtiment, même aliment depuis le départ : quelles questions dois-je préparer pour le vétérinaire ? » vous fait gagner une visite."
+      },
+      "captures": {
+        "c1": "Ma liste de surveillance (une ligne par chose à regarder : mortalité, litière, ventilation, consommation d'eau — avec sa fréquence)",
+        "c2": "Mes questions prêtes pour le vétérinaire"
+      },
+      "brouillon": true
+    },
+    "apiculture": {
+      "terrain": {
+        "label": "La différence",
+        "text": "« Mes abeilles sont faibles, pourquoi ? » ne mène nulle part. « Depuis deux visites, 5 ruches sur 40 ont peu de couvain et des abeilles aux ailes déformées devant la planche d'envol, même rucher et même emplacement depuis le printemps : quelles questions dois-je préparer pour le technicien ? » vous fait gagner une visite."
+      },
+      "captures": {
+        "c1": "Ma liste de surveillance (une ligne par chose à regarder : couvain, provisions, activité à la planche d'envol, mortalité — avec sa fréquence)",
+        "c2": "Mes questions prêtes pour le technicien apicole ou le vétérinaire"
+      },
+      "brouillon": true
+    },
+    "maraichage": {
+      "terrain": {
+        "label": "La différence",
+        "text": "« Mes plants jaunissent, qu'est-ce que c'est ? » ne mène nulle part. « Depuis 6 jours, les feuilles du bas jaunissent sur une planche de tomates sur quatre, toujours la même, arrosage identique partout, taches brunes au revers : quelles questions dois-je préparer pour le technicien ? » vous fait gagner une visite."
+      },
+      "captures": {
+        "c1": "Ma liste de surveillance (une ligne par chose à regarder : feuillage, sol, arrosage, ravageurs — avec sa fréquence)",
+        "c2": "Mes questions prêtes pour le technicien de la Chambre d'agriculture"
+      },
+      "brouillon": true
+    },
+    "serre": {
+      "terrain": {
+        "label": "La différence",
+        "text": "« Ça ne pousse pas comme l'an dernier » ne mène nulle part. « Depuis 10 jours, la serre du fond a des plants plus courts que les trois autres, même variété et même date de plantation, condensation le matin sur le plastique : quelles questions dois-je préparer pour le technicien ? » vous fait gagner une visite."
+      },
+      "captures": {
+        "c1": "Ma liste de surveillance (une ligne par chose à regarder : température, condensation, aération, état des plants — avec sa fréquence)",
+        "c2": "Mes questions prêtes pour le technicien"
+      },
+      "brouillon": true
+    },
+    "cereales": {
+      "terrain": {
+        "label": "La différence",
+        "text": "« Mon blé est clairsemé, pourquoi ? » ne mène nulle part. « Depuis la levée, deux parcelles sur cinq ont des zones nues d'un mètre, même semence et même date de semis, sol plus tassé à ces endroits : quelles questions dois-je préparer pour le technicien ? » vous fait gagner une visite."
+      },
+      "captures": {
+        "c1": "Ma liste de surveillance (une ligne par chose à regarder : levée, enherbement, état du sol, stade de la culture — avec sa fréquence)",
+        "c2": "Mes questions prêtes pour le technicien"
+      },
+      "brouillon": true
+    },
+    "arboriculture": {
+      "terrain": {
+        "label": "La différence",
+        "text": "« Mes oliviers donnent moins, pourquoi ? » ne mène nulle part. « Depuis deux campagnes, la rangée du bas porte deux fois moins que les autres, même taille et même irrigation, écoulement de sève sur trois troncs : quelles questions dois-je préparer pour le technicien ? » vous fait gagner une visite."
+      },
+      "captures": {
+        "c1": "Ma liste de surveillance (une ligne par chose à regarder : charge en fruits, état des troncs, taille, irrigation — avec sa fréquence)",
+        "c2": "Mes questions prêtes pour le technicien"
+      },
+      "brouillon": true
+    }
   }
 }

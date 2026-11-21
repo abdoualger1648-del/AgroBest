@@ -200,5 +200,77 @@
       "defi": "Écrivez à côté de votre règle les deux situations où vous accepterez de ne pas la suivre, et pourquoi. Une règle sans exception prévue se contourne en silence dès la première semaine difficile ; une règle avec deux exceptions écrites survit à la saison.",
       "brouillon": true
     }
+  },
+  "variantes": {
+    "bovin": {
+      "terrain": {
+        "label": "Une règle, ce n'est pas une prévision",
+        "text": "« Si l'abreuvoir du parc est vide avant midi deux jours de suite et qu'aucun rafraîchissement n'est annoncé, alors je passe à deux remplissages par jour jusqu'à la fin de la vague de chaleur. Sinon je garde un remplissage et je revérifie demain. » Cette phrase reste vraie toute la saison."
+      },
+      "captures": {
+        "c1": "Ma règle d'abreuvement, écrite avec mes mots"
+      },
+      "brouillon": true
+    },
+    "avicole": {
+      "terrain": {
+        "label": "Une règle, ce n'est pas une prévision",
+        "text": "« Si la consommation d'eau du bâtiment baisse d'un jour à l'autre sans changement de température, alors je vérifie les pipettes et la pression avant toute autre chose. Sinon je note le relevé et je revérifie demain. » Cette phrase reste vraie toute la bande."
+      },
+      "captures": {
+        "c1": "Ma règle sur l'eau du bâtiment, écrite avec mes mots"
+      },
+      "brouillon": true
+    },
+    "apiculture": {
+      "terrain": {
+        "label": "Une règle, ce n'est pas une prévision",
+        "text": "« Si l'abreuvoir du rucher est à sec et qu'aucun point d'eau ne coule à proximité, alors je le remplis le matin, avant la sortie des butineuses. Sinon je laisse et je revérifie dans deux jours. » Cette phrase reste vraie toute la saison."
+      },
+      "captures": {
+        "c1": "Ma règle sur l'eau du rucher, écrite avec mes mots"
+      },
+      "brouillon": true
+    },
+    "maraichage": {
+      "terrain": {
+        "label": "Une règle, ce n'est pas une prévision",
+        "text": "« Si le sol est sec sur la profondeur du doigt entre deux rangs, qu'aucune pluie n'est annoncée dans les 48 heures et que les plants sont en floraison ou en grossissement, alors j'arrose le soir. Sinon j'attends et je revérifie demain. » Cette phrase reste vraie toute la campagne."
+      },
+      "captures": {
+        "c1": "Ma règle d'irrigation, écrite avec mes mots"
+      },
+      "brouillon": true
+    },
+    "serre": {
+      "terrain": {
+        "label": "Une règle, ce n'est pas une prévision",
+        "text": "« Si la terre est sèche au doigt sous le goutteur et que la condensation du matin a disparu avant dix heures, alors j'arrose et j'aère dans la foulée. Sinon j'attends et je revérifie demain. » Cette phrase reste vraie toute la campagne."
+      },
+      "captures": {
+        "c1": "Ma règle d'irrigation sous serre, écrite avec mes mots"
+      },
+      "brouillon": true
+    },
+    "cereales": {
+      "terrain": {
+        "label": "Une règle, ce n'est pas une prévision",
+        "text": "En sec, la règle ne porte pas sur l'arrosage mais sur le moment d'intervenir. « Si le sol est ressuyé, qu'aucune pluie n'est annoncée dans les 48 heures et que la culture est au stade visé, alors je passe. Sinon j'attends et je revérifie demain. » Cette phrase reste vraie toute la campagne."
+      },
+      "captures": {
+        "c1": "Ma règle d'intervention selon l'état du sol, écrite avec mes mots"
+      },
+      "brouillon": true
+    },
+    "arboriculture": {
+      "terrain": {
+        "label": "Une règle, ce n'est pas une prévision",
+        "text": "« Si la terre est sèche à vingt centimètres au pied de l'arbre, qu'aucune pluie n'est annoncée dans les 48 heures et que les fruits sont en grossissement, alors j'irrigue la rangée. Sinon j'attends et je revérifie dans trois jours. » Cette phrase reste vraie toute la campagne."
+      },
+      "captures": {
+        "c1": "Ma règle d'irrigation du verger, écrite avec mes mots"
+      },
+      "brouillon": true
+    }
   }
 }

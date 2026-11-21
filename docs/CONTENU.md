@@ -84,6 +84,12 @@ quiz, gabarits de prompt — ne bouge pas.
 ```
 
 Un type sans variante lit le texte générique : une variante absente n'est jamais une page vide.
+C'est d'ailleurs pourquoi **le type `ovin` n'a pas de variante** — le texte générique est déjà
+écrit pour lui.
+
+**Limite à connaître** : `terrain` remplace le bloc `example` du concept. Seuls les jours
+1, 2, 4, 6, 7, 9, 14, 15, 17 et 19 en portent un. Sur les dix-huit autres, une variante de métier
+ne peut changer que les libellés de capture et les indices de prompt.
 
 **Le gabarit d'un prompt n'est pas remplaçable**, et le schéma ne l'autorise même pas. C'est lui
 qui porte les garde-fous, et il interpole déjà `{{project.type}}` : l'IA reçoit l'activité sans
