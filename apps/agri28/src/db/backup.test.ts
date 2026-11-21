@@ -1,10 +1,11 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { db } from './db';
+import { db, SCHEMA_VERSION, type ProfileRecord } from './db';
 import {
   BACKUP_APP,
   InvalidBackupError,
   eraseEverything,
   exportBackup,
+  normaliserProfil,
   parseBackup,
   restoreBackup,
   summarizeBackup,
@@ -122,5 +123,73 @@ describe('sauvegarde', () => {
     expect(await db.projects.count()).toBe(0);
     expect(await db.promptEntries.count()).toBe(0);
     expect(localStorage.getItem('agri28.theme')).toBeNull();
+  });
+});
+
+describe('restaurer une sauvegarde faite avant une migration', () => {
+  /** Profil tel que le schéma 4 l'écrivait : aucun champ de niveau. */
+  const profilV4 = {
+    id: 1,
+    lang: 'fr',
+    theme: 'system',
+    reminderEnabled: false,
+    reminderTime: null,
+    onboardingDone: false,
+    activeProjectId: 'p',
+    createdAt: 1000,
+    updatedAt: 1000,
+    schemaVersion: 4,
+  };
+
+  it('rend « null » et non « undefined » pour un champ ajouté depuis', () => {
+    // Le cas qui a motivé la correction. `undefined` n'est ni un niveau ni le
+    // `null` que la garde attend — elle teste `=== null` — donc la personne
+    // n'était jamais envoyée au test, tout en lisant « test non encore
+    // passé » dans ses réglages.
+    const normalise = normaliserProfil(profilV4);
+
+    expect(normalise.niveauParcours).toBeNull();
+    expect(normalise.niveauParcours).not.toBeUndefined();
+    expect(normalise.niveauScores).toBeNull();
+    expect(normalise.niveauEvalueLe).toBeNull();
+  });
+
+  it('remet la version de schéma à jour', () => {
+    // Sinon la ligne restaurée resterait marquée « 4 » pour toujours :
+    // l'`upgrade` de Dexie ne rejoue pas sur une ligne écrite à la main.
+    expect(normaliserProfil(profilV4).schemaVersion).toBe(SCHEMA_VERSION);
+  });
+
+  it('garde ce que la sauvegarde contenait vraiment', () => {
+    const normalise = normaliserProfil({ ...profilV4, lang: 'ar', theme: 'dark' });
+
+    expect(normalise.lang).toBe('ar');
+    expect(normalise.theme).toBe('dark');
+    expect(normalise.activeProjectId).toBe('p');
+    expect(normalise.createdAt).toBe(1000);
+  });
+
+  it('ne laisse pas une clé explicitement « undefined » écraser le défaut', () => {
+    // Un fichier JSON n'en produit jamais, mais un appel direct, si.
+    const normalise = normaliserProfil({ ...profilV4, niveauParcours: undefined });
+    expect(normalise.niveauParcours).toBeNull();
+  });
+
+  it('se voit de bout en bout : après restauration, le profil est complet', async () => {
+    await restoreBackup({
+      app: BACKUP_APP,
+      schemaVersion: 4,
+      exportedAt: new Date(0).toISOString(),
+      profile: profilV4 as unknown as ProfileRecord,
+      projects: [],
+      progress: [],
+      dossierItems: [],
+      promptEntries: [],
+      badges: [],
+    });
+
+    const profil = await getProfile();
+    expect(profil.niveauParcours).toBeNull();
+    expect(profil.schemaVersion).toBe(SCHEMA_VERSION);
   });
 });

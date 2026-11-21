@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { db, SCHEMA_VERSION } from './db';
 import type { ProfileRecord } from './db';
+import { buildDefaultProfile } from './repositories/profile';
 import type { BadgeRecord, DayProgress, DossierItem, Project, PromptEntry } from '@/domain/types';
 
 /**
@@ -107,6 +108,39 @@ export async function readBackupFile(file: File): Promise<BackupFile> {
   return parseBackup(raw);
 }
 
+/**
+ * Pose le profil sauvegardé SUR un profil par défaut, au lieu de l'écrire tel
+ * quel.
+ *
+ * Une sauvegarde faite avant une migration ne porte pas les champs ajoutés
+ * depuis, et l'`upgrade` de Dexie ne rejoue pas sur une ligne écrite à la
+ * main : elle ne se déclenche qu'au changement de version de la BASE. Le
+ * champ manquant restait donc `undefined`.
+ *
+ * Le cas réel, trouvé en relisant ce fichier : un profil d'avant la phase 12
+ * revenait sans `niveauParcours`. Ni un niveau, ni le `null` que la garde
+ * attend — elle teste `=== null` — donc la personne n'était jamais envoyée au
+ * test de niveau, tout en lisant « test non encore passé » dans ses réglages.
+ *
+ * La correction vaut pour toutes les migrations à venir, pas seulement
+ * celle-là : tout champ ajouté plus tard reprendra sa valeur par défaut.
+ */
+export function normaliserProfil(
+  sauvegarde: ProfileRecord | Record<string, unknown>,
+): ProfileRecord {
+  // Une clé explicitement `undefined` écraserait la valeur par défaut. Un
+  // fichier JSON n'en produit jamais, mais un appel direct, si.
+  const renseignes = Object.fromEntries(
+    Object.entries(sauvegarde).filter(([, valeur]) => valeur !== undefined),
+  );
+  return {
+    ...buildDefaultProfile(),
+    ...renseignes,
+    id: 1,
+    schemaVersion: SCHEMA_VERSION,
+  };
+}
+
 /** Restaure une sauvegarde en REMPLAÇANT les données actuelles. */
 export async function restoreBackup(backup: BackupFile): Promise<void> {
   await db.transaction(
@@ -122,7 +156,7 @@ export async function restoreBackup(backup: BackupFile): Promise<void> {
         db.badges.clear(),
       ]);
 
-      if (backup.profile) await db.profile.put({ ...backup.profile, id: 1 });
+      if (backup.profile) await db.profile.put(normaliserProfil(backup.profile));
       await db.projects.bulkPut(backup.projects);
       await db.progress.bulkPut(backup.progress);
       await db.dossierItems.bulkPut(backup.dossierItems);

@@ -267,3 +267,69 @@ describe('accès à l’écran', () => {
     expect(screen.queryByRole('heading', { name: 'Tous les comptes' })).not.toBeInTheDocument();
   });
 });
+
+describe('ce qu’une fermeture fait à la personne', () => {
+  /**
+   * La promesse centrale de la phase 13 : un accès fermé par l'administrateur
+   * se referme vraiment chez l'utilisateur. Éprouvée au niveau du store, là où
+   * la décision se prend, plutôt qu'à travers deux écrans.
+   */
+  async function compteActifPuisFerme(): Promise<void> {
+    await service.sInscrire('brahim@example.dz', MDP);
+    service.confirmerEmail('brahim@example.dz');
+    service.activer('brahim@example.dz');
+
+    await service.sInscrire(ADMIN, MDP);
+    service.confirmerEmail(ADMIN);
+    service.nommerAdministrateur(ADMIN);
+    await service.seConnecter(ADMIN, MDP);
+
+    const comptes = await serviceCompte.listerComptes();
+    const brahim = comptes.find((compte) => compte.email === 'brahim@example.dz');
+    if (!brahim) throw new Error('compte introuvable');
+    await serviceCompte.desactiverCompte(brahim.uid);
+  }
+
+  it('referme les leçons à la connexion suivante', async () => {
+    await compteActifPuisFerme();
+
+    // La personne se reconnecte : le service dit « inactif », et le store
+    // l'applique. C'est toute la promesse de la fonctionnalité.
+    await useCompte.getState().seConnecter('brahim@example.dz', MDP);
+    expect(useCompte.getState().etat.statut).not.toBe('actif');
+  });
+
+  it('un échec réseau ne retire JAMAIS un accès déjà ouvert (D52)', async () => {
+    await service.sInscrire('brahim@example.dz', MDP);
+    service.confirmerEmail('brahim@example.dz');
+    service.activer('brahim@example.dz');
+    await useCompte.getState().seConnecter('brahim@example.dz', MDP);
+    expect(useCompte.getState().etat.statut).toBe('actif');
+
+    service.horsLigne = true;
+    const relu = await useCompte.getState().rafraichir();
+    service.horsLigne = false;
+
+    expect(relu).toBe(false);
+    expect(useCompte.getState().etat.statut).toBe('actif');
+  });
+
+  it('rouvrir rend l’accès, et efface la date de retrait', async () => {
+    await compteActifPuisFerme();
+
+    const avant = await serviceCompte.listerComptes();
+    const ferme = avant.find((compte) => compte.email === 'brahim@example.dz');
+    expect(ferme?.actif).toBe(false);
+    expect(ferme?.desactiveLe).not.toBeNull();
+    // La date d'ouverture reste : elle distingue « jamais ouvert » de
+    // « ouvert puis retiré » (D102).
+    expect(ferme?.activeLe).not.toBeNull();
+
+    await serviceCompte.activerCompte(ferme!.uid);
+    const apres = (await serviceCompte.listerComptes()).find(
+      (compte) => compte.email === 'brahim@example.dz',
+    );
+    expect(apres?.actif).toBe(true);
+    expect(apres?.desactiveLe).toBeNull();
+  });
+});
