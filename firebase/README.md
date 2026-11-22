@@ -92,3 +92,55 @@ Deux changements attendent aujourd'hui une republication :
 
 Les autres actions (lister, activer, accorder le niveau) fonctionnent déjà avec les règles de la
 phase 9.
+
+
+## Activer Google et Facebook (phase 14)
+
+Les boutons « Continuer avec… » n'apparaissent que sur le **site web**. Dans l'APK ils sont
+volontairement absents : Google refuse l'OAuth depuis une WebView embarquée, et le bouton
+échouerait sur un message incompréhensible. Le chemin natif reste à faire.
+
+### Google — quelques minutes
+
+1. [Console → Authentication → Sign-in method](https://console.firebase.google.com/project/agricole360-4a470/authentication/providers)
+2. **Google** → *Activer* → choisissez une adresse d'assistance → *Enregistrer*.
+3. Onglet **Settings → Authorized domains** : vérifiez que `abdoualger1648-del.github.io`
+   y figure. Sans lui, la connexion échoue avec « unauthorized-domain », que
+   l'application traduit par « cette façon de se connecter n'est pas disponible ici ».
+
+C'est tout. Aucun compte développeur, aucune revue.
+
+### Facebook — plus long, mais sans revue d'application
+
+1. Créez une application sur [developers.facebook.com](https://developers.facebook.com/apps/),
+   de type **Consumer**. Ce type reçoit automatiquement l'accès avancé à `email` et
+   `public_profile` : **aucune revue n'est nécessaire** pour ces deux permissions, et
+   l'application n'en demande pas d'autres.
+2. Ajoutez le produit **Facebook Login**.
+3. Dans la console Firebase, activez **Facebook** et collez l'**App ID** et l'**App Secret**.
+4. Firebase affiche alors une **URI de redirection OAuth**. Copiez-la dans votre application
+   Facebook, sous *Facebook Login → Settings → Valid OAuth Redirect URIs*.
+5. Passez l'application Facebook en **mode Live**. Tant qu'elle est en développement, seuls
+   vous et les testeurs déclarés peuvent s'en servir.
+6. Facebook exige une **adresse de politique de confidentialité** publique. Celle du site
+   convient : `https://abdoualger1648-del.github.io/AgroBest/`.
+
+### Ce que l'application demande, et rien d'autre
+
+Uniquement l'adresse email. Ni les contacts, ni les amis, ni le profil étendu. Le texte de
+l'écran de compte le dit, dans les deux langues, et il dit aussi que le fournisseur apprend
+que la personne utilise l'application — ce qui est le prix de la connexion en un geste.
+
+### À republier : les règles
+
+La règle de création tolère désormais un jeton **sans adresse email**. Facebook n'en renvoie
+aucune si la personne s'est inscrite chez lui avec un numéro de téléphone. Sans cette
+tolérance, la création du compte serait refusée sans que rien ne dise pourquoi.
+
+### Ce qui reste hors d'atteinte
+
+| Demandé | Pourquoi ce n'est pas fait |
+|---|---|
+| WhatsApp | Aucun fournisseur OAuth WhatsApp n'existe. L'entreprise authentifie ses propres utilisateurs mais ne délègue rien. |
+| X (Twitter) | Firebase le propose encore, mais l'accès développeur X est payant depuis 2023, pour un public qui n'utilise pas X. |
+| Numéro de téléphone | Firebase n'envoie plus de SMS sans compte de facturation depuis septembre 2024. Le plan Spark en est incapable. À rouvrir le jour où un plan Blaze existe. |

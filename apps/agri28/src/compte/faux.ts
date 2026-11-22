@@ -1,4 +1,10 @@
-import { ErreurCompte, type DemandeEnAttente, type ServiceCompte } from './port';
+import {
+  ErreurCompte,
+  type CodeErreurCompte,
+  type DemandeEnAttente,
+  type Fournisseur,
+  type ServiceCompte,
+} from './port';
 import type { CompteAdministre } from '@/domain/comptes';
 import type { CompteDistantInfos } from '@/db/repositories/compte';
 
@@ -237,6 +243,44 @@ export class FauxServiceCompte implements ServiceCompte {
     });
   }
 
+  /**
+   * Connexion par fournisseur, en mémoire.
+   *
+   * Reproduit le comportement réel : le compte est créé s'il n'existe pas, et
+   * l'adresse est déjà confirmée — Google et Facebook ne rendent la main
+   * qu'après avoir vérifié l'adresse eux-mêmes.
+   */
+  connecterAvecFournisseur(fournisseur: Fournisseur): Promise<CompteDistantInfos> {
+    return this.appel(() => {
+      if (this.fournisseurRefuse === fournisseur) {
+        throw new ErreurCompte(this.motifRefus);
+      }
+      const email = this.adressesFournisseur[fournisseur];
+      const existant = this.comptes.get(email);
+      if (existant) {
+        this.connecte = email;
+        return FauxServiceCompte.projeter(existant);
+      }
+
+      const compte: CompteStocke = {
+        uid: `uid-${String(this.comptes.size + 1)}`,
+        email,
+        emailVerifie: true,
+        actif: false,
+        demandeLe: null,
+        activeLe: null,
+        niveau: 'standard',
+        demandeNiveauLe: null,
+        niveauLe: null,
+        desactiveLe: null,
+        motDePasse: '',
+      };
+      this.comptes.set(email, compte);
+      this.connecte = email;
+      return FauxServiceCompte.projeter(compte);
+    });
+  }
+
   private exigerAdministrateur(): void {
     if (!this.administrateurs.has(this.courant().uid)) throw new ErreurCompte('non_connecte');
   }
@@ -246,6 +290,16 @@ export class FauxServiceCompte implements ServiceCompte {
   }
 
   // ——— Leviers de test : ce que fait le monde extérieur ———
+
+  /** Adresse que chaque fournisseur rendra. Modifiable par les tests. */
+  adressesFournisseur: Record<Fournisseur, string> = {
+    google: 'google@example.dz',
+    facebook: 'facebook@example.dz',
+  };
+
+  /** Fait échouer un fournisseur précis, pour éprouver les messages d'erreur. */
+  fournisseurRefuse: Fournisseur | null = null;
+  motifRefus: CodeErreurCompte = 'connexion_annulee';
 
   /** Désigne un compte comme administrateur, comme on le ferait dans la console. */
   nommerAdministrateur(email: string): void {
@@ -275,5 +329,11 @@ export class FauxServiceCompte implements ServiceCompte {
     this.reinitialisationsEnvoyees.length = 0;
     this.connecte = null;
     this.horsLigne = false;
+    this.fournisseurRefuse = null;
+    this.motifRefus = 'connexion_annulee';
+    this.adressesFournisseur = {
+      google: 'google@example.dz',
+      facebook: 'facebook@example.dz',
+    };
   }
 }

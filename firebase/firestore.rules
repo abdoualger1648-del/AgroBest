@@ -46,11 +46,23 @@ service cloud.firestore {
       // porte l'adresse réellement authentifiée : on ne s'active pas soi-même,
       // on ne se donne pas de niveau, et on ne s'inscrit pas sous l'adresse
       // d'un autre.
+      //
+      // Un fournisseur d'identité ne renvoie pas toujours d'adresse — Facebook
+      // n'en donne aucune si la personne s'est inscrite chez lui avec un
+      // numéro de téléphone, ou si elle a refusé la permission. Le jeton n'a
+      // alors pas de champ `email`, et l'application enregistre une chaîne
+      // vide. Sans ce cas, la création serait refusée et la connexion par
+      // Facebook échouerait sans que rien ne dise pourquoi.
+      //
+      // La protection tient toujours : avec une adresse dans le jeton, elle
+      // doit correspondre exactement ; sans adresse, on n'en écrit aucune.
       allow create: if estLeSien(uid)
         && request.resource.data.actif == false
         && request.resource.data.activeLe == null
         && request.resource.data.get('niveau', 'standard') == 'standard'
-        && request.resource.data.email == request.auth.token.email;
+        && (request.auth.token.email == null
+              ? request.resource.data.email == ''
+              : request.resource.data.email == request.auth.token.email);
 
       // L'utilisateur ne peut toucher QUE les dates de ses demandes, et ni son
       // activation ni son niveau n'ont le droit de bouger au passage.

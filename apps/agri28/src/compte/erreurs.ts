@@ -25,6 +25,18 @@ const TABLE: Record<string, CodeErreurCompte> = {
   'auth/user-token-expired': 'non_connecte',
   'auth/null-user': 'non_connecte',
 
+  // Fournisseurs d'identité (phase 14). Fermer la fenêtre, ou en ouvrir une
+  // seconde, n'est pas une panne : l'écran doit se taire, pas alarmer.
+  'auth/popup-closed-by-user': 'connexion_annulee',
+  'auth/cancelled-popup-request': 'connexion_annulee',
+  'auth/user-cancelled': 'connexion_annulee',
+  'auth/popup-blocked': 'fournisseur_indisponible',
+  'auth/operation-not-allowed': 'fournisseur_indisponible',
+  'auth/operation-not-supported-in-this-environment': 'fournisseur_indisponible',
+  'auth/unauthorized-domain': 'fournisseur_indisponible',
+  'auth/account-exists-with-different-credential': 'autre_methode',
+  'auth/credential-already-in-use': 'autre_methode',
+
   // Firestore
   unavailable: 'hors_ligne',
   'deadline-exceeded': 'hors_ligne',

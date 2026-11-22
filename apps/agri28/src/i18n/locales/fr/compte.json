@@ -23,7 +23,10 @@
     "hors_ligne": "Pas de connexion. Rapprochez-vous du réseau et réessayez.",
     "trop_de_tentatives": "Trop d'essais. Attendez quelques minutes.",
     "non_connecte": "Votre session a expiré. Reconnectez-vous.",
-    "inconnue": "Quelque chose n'a pas fonctionné. Réessayez."
+    "inconnue": "Quelque chose n'a pas fonctionné. Réessayez.",
+    "connexion_annulee": "Connexion interrompue. Vous pouvez réessayer.",
+    "autre_methode": "Cette adresse a déjà un compte, créé autrement. Connectez-vous avec le mot de passe, ou avec le fournisseur que vous aviez utilisé la première fois.",
+    "fournisseur_indisponible": "Cette façon de se connecter n'est pas disponible ici. Utilisez votre adresse email et votre mot de passe."
   },
   "actions": {
     "creerCompte": "Créer mon compte",
@@ -71,7 +74,7 @@
   },
   "confidentialite": {
     "titre": "Ce qui quitte votre téléphone",
-    "texte": "Seuls votre adresse email et l'état de votre compte sont envoyés. Votre projet, vos réponses, vos prompts et votre Dossier restent sur votre téléphone, et ne sont transmis à personne."
+    "texte": "Seuls votre adresse email et l'état de votre compte sont envoyés. Votre projet, vos réponses, vos prompts et votre Dossier restent sur votre téléphone, et ne sont transmis à personne. Si vous passez par Google ou Facebook, cette entreprise sait que vous utilisez cette application — c'est le prix de la connexion en un geste."
   },
   "etat": {
     "connecteComme": "Connecté : {{email}}",
@@ -135,5 +138,12 @@
     "confirmerRetirerNiveau": "Ramener {{email}} à un seul dossier ? Ses dossiers existants ne sont pas supprimés, mais il ne pourra plus en créer.",
     "protectionSoi": "Vous ne pouvez pas retirer vos propres droits depuis cet écran.",
     "demandesTitre": "Demandes en attente"
+  },
+  "fournisseurs": {
+    "titre": "Ou connectez-vous en un geste",
+    "google": "Continuer avec Google",
+    "facebook": "Continuer avec Facebook",
+    "separateur": "ou",
+    "aide": "Pas de mot de passe à retenir. Nous ne demandons que votre adresse email — ni vos contacts, ni vos amis, ni votre profil."
   }
 }

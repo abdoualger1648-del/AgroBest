@@ -15,6 +15,18 @@ export type { CompteAdministre };
  * Une demande en attente, telle que la voit l'administrateur. Deux natures :
  * ouvrir les 28 leçons, ou passer au niveau multi-dossiers.
  */
+/**
+ * Fournisseurs d'identité acceptés (phase 14).
+ *
+ * Pas de WhatsApp : il n'existe aucun fournisseur OAuth WhatsApp — l'entreprise
+ * authentifie ses propres utilisateurs mais ne délègue rien aux applications
+ * tierces. Pas de X non plus : son accès développeur est payant pour un public
+ * qui ne l'utilise pas. Pas de téléphone : Firebase n'envoie plus de SMS sans
+ * compte de facturation depuis septembre 2024, et le projet est sur Spark.
+ */
+export const FOURNISSEURS = ['google', 'facebook'] as const;
+export type Fournisseur = (typeof FOURNISSEURS)[number];
+
 export type NatureDemande = 'activation' | 'niveau';
 
 export interface DemandeEnAttente {
@@ -56,6 +68,14 @@ export interface ServiceCompte extends ServiceAdministration {
   relire(): Promise<CompteDistantInfos | null>;
   sInscrire(email: string, motDePasse: string): Promise<CompteDistantInfos>;
   seConnecter(email: string, motDePasse: string): Promise<CompteDistantInfos>;
+  /**
+   * Connecte — ou inscrit, c'est le même geste — par un fournisseur d'identité.
+   *
+   * Le document Firestore est créé à la volée s'il n'existe pas : `etatComplet`
+   * le fait déjà pour rattraper une inscription interrompue, et une première
+   * connexion par Google se trouve exactement dans ce cas.
+   */
+  connecterAvecFournisseur(fournisseur: Fournisseur): Promise<CompteDistantInfos>;
   seDeconnecter(): Promise<void>;
   renvoyerVerification(): Promise<void>;
   /**
@@ -79,6 +99,13 @@ export type CodeErreurCompte =
   | 'hors_ligne'
   | 'trop_de_tentatives'
   | 'non_connecte'
+  // ——— fournisseurs d'identité (phase 14) ———
+  /** La fenêtre du fournisseur a été fermée avant la fin. Ce n'est pas une panne. */
+  | 'connexion_annulee'
+  /** Cette adresse existe déjà, mais rattachée à une autre méthode de connexion. */
+  | 'autre_methode'
+  /** Le fournisseur n'est pas activé côté Firebase, ou pas disponible ici. */
+  | 'fournisseur_indisponible'
   | 'inconnue';
 
 export class ErreurCompte extends Error {
@@ -94,4 +121,26 @@ export class ErreurCompte extends Error {
 /** Vrai pour les erreurs qu'un simple nouvel essai peut résoudre. */
 export function estTemporaire(code: CodeErreurCompte): boolean {
   return code === 'hors_ligne' || code === 'trop_de_tentatives';
+}
+
+/**
+ * Codes qui viennent d'une connexion par fournisseur, et de nulle part ailleurs.
+ *
+ * L'écran de compte porte un formulaire ET des boutons de fournisseur, mais
+ * le store n'a qu'une seule `derniereErreur`. Sans cette distinction, fermer
+ * la fenêtre de Google affichait un message rouge sous le champ email — au
+ * mauvais endroit, et pour un geste délibéré.
+ */
+export function estErreurFournisseur(code: CodeErreurCompte): boolean {
+  return (
+    code === 'connexion_annulee' || code === 'autre_methode' || code === 'fournisseur_indisponible'
+  );
+}
+
+/**
+ * Une annulation n'est pas une erreur : fermer la fenêtre du fournisseur est
+ * un geste délibéré, et afficher un message rouge pour cela serait absurde.
+ */
+export function estAnnulation(code: CodeErreurCompte): boolean {
+  return code === 'connexion_annulee';
 }

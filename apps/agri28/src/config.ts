@@ -1,4 +1,5 @@
 import type { EtatCompte, Niveau } from '@/domain/access';
+import { FOURNISSEURS, type Fournisseur } from '@/compte/port';
 
 /**
  * Édition de l'application. Un même code source, trois distributions :
@@ -46,6 +47,19 @@ export function proposeApk(): boolean {
  * Vide tant qu'elle n'est pas fournie au build : l'écran de demande le
  * signale plutôt que d'ouvrir un email sans destinataire.
  */
+/**
+ * Fournisseurs d'identité proposés par cette édition (phase 14).
+ *
+ * **Vides dans l'APK, et c'est délibéré.** Google refuse l'OAuth depuis une
+ * WebView embarquée — c'est exactement ce qu'est un APK Capacitor — et la
+ * tentative échoue sur un « disallowed_useragent » que l'utilisateur ne peut
+ * pas comprendre. Les boutons n'y apparaissent donc pas tant que le chemin
+ * natif n'existe pas. Mieux vaut pas de bouton qu'un bouton qui échoue.
+ */
+export function fournisseursDisponibles(): readonly Fournisseur[] {
+  return edition() === 'apk' ? [] : FOURNISSEURS;
+}
+
 export function emailAdmin(): string {
   return import.meta.env.VITE_EMAIL_ADMIN ?? '';
 }

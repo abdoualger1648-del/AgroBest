@@ -10,6 +10,7 @@ import {
 import { ErreurCompte, type CodeErreurCompte, type ServiceCompte } from '@/compte/port';
 import { serviceCompte } from '@/compte';
 import { oublierDroits } from '@/compte/droits';
+import type { Fournisseur } from '@/compte/port';
 import { reinitialiserAdministration } from './administration';
 
 interface CompteState {
@@ -30,6 +31,8 @@ interface CompteState {
   charger: () => Promise<void>;
   sInscrire: (email: string, motDePasse: string) => Promise<boolean>;
   seConnecter: (email: string, motDePasse: string) => Promise<boolean>;
+  /** Connexion — ou inscription, c'est le même geste — par Google ou Facebook. */
+  connecterAvecFournisseur: (fournisseur: Fournisseur) => Promise<boolean>;
   seDeconnecter: () => Promise<void>;
   /** Relit l'état auprès du service ; sans réseau, garde le cache local. */
   rafraichir: () => Promise<boolean>;
@@ -119,6 +122,13 @@ export function creerStoreCompte(service: ServiceCompte = serviceCompte) {
         const infos = await operation(set, () =>
           service.sInscrire(normaliserEmail(email), motDePasse),
         );
+        if (!infos) return false;
+        await appliquer(infos);
+        return true;
+      },
+
+      connecterAvecFournisseur: async (fournisseur) => {
+        const infos = await operation(set, () => service.connecterAvecFournisseur(fournisseur));
         if (!infos) return false;
         await appliquer(infos);
         return true;

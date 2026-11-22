@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
+import { BoutonsFournisseurs } from './BoutonsFournisseurs';
+import { estErreurFournisseur } from '@/compte/port';
 import { Field, inputClass } from '@/components/Field';
 import { PageHeader } from '@/components/PageHeader';
 import {
@@ -148,7 +150,10 @@ export function ComptePage() {
           />
         </Field>
 
-        {derniereErreur ? (
+        {/* Une erreur venue des boutons de fournisseur s'affiche AVEC eux,
+            pas sous le champ email : le store ne porte qu'une erreur, c'est
+            donc ici qu'on décide à qui elle appartient. */}
+        {derniereErreur && !estErreurFournisseur(derniereErreur) ? (
           <p role="alert" className="mb-4 text-sm font-medium text-danger">
             {t(`erreurs.${derniereErreur}`)}
           </p>
@@ -176,6 +181,8 @@ export function ComptePage() {
           </p>
         ) : null}
       </form>
+
+      <BoutonsFournisseurs />
 
       <Card className="mt-6 bg-surface-2">
         <h2 className="mb-1 font-semibold">{t('confidentialite.titre')}</h2>

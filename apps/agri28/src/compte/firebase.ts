@@ -1,4 +1,4 @@
-import { ErreurCompte, type DemandeEnAttente, type ServiceCompte } from './port';
+import { ErreurCompte, type DemandeEnAttente, type Fournisseur, type ServiceCompte } from './port';
 import { traduireErreurFirebase } from './erreurs';
 import {
   COLLECTION_ADMINS,
@@ -167,6 +167,34 @@ export class ServiceFirebase implements ServiceCompte {
       demandeNiveauLe: enMillisecondes(donnees.demandeNiveauLe),
       niveauLe: enMillisecondes(donnees.niveauLe),
     };
+  }
+
+  /**
+   * Connexion par fournisseur d'identité (phase 14).
+   *
+   * Connecter et inscrire sont le MÊME geste ici : Firebase crée le compte
+   * d'authentification à la première visite, et `etatComplet` crée le document
+   * Firestore s'il manque — ce qu'il faisait déjà pour rattraper une
+   * inscription interrompue.
+   *
+   * `signInWithPopup` ne fonctionne pas dans une WebView embarquée : Google y
+   * refuse l'OAuth. C'est pourquoi `fournisseursDisponibles()` ne propose rien
+   * en édition APK, où il faudra un chemin natif.
+   */
+  connecterAvecFournisseur(fournisseur: Fournisseur): Promise<CompteDistantInfos> {
+    return this.appel(async (modules) => {
+      const { auth, instanceAuth } = modules;
+      const outil =
+        fournisseur === 'google' ? new auth.GoogleAuthProvider() : new auth.FacebookAuthProvider();
+
+      // On ne demande RIEN de plus que l'identité. Pas les contacts, pas les
+      // amis, pas le profil étendu : la promesse de confidentialité doit
+      // rester courte et vérifiable (D48, révisée en D112).
+      outil.addScope('email');
+
+      const resultat = await auth.signInWithPopup(instanceAuth, outil);
+      return this.etatComplet(modules, resultat.user);
+    });
   }
 
   relire(): Promise<CompteDistantInfos | null> {
