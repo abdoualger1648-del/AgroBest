@@ -207,12 +207,10 @@
   "nextTeaser": "Demain : assembler tout cela en un business plan de deux pages, qu'un banquier lit jusqu'au bout.",
   "variantesNiveau": {
     "debutant": {
-      "aide": "L'étape du milieu est celle qui compte, et elle ne se fait pas devant l'écran : il faut téléphoner, ou passer voir. Préparez une feuille à quatre colonnes — le poste, le prix, l'unité, la date du jour — et remplissez-la en parlant. Notez le prix tel qu'on vous le donne, sans l'arrondir. Revenez ensuite ici pour la dernière étape.",
-      "brouillon": true
+      "aide": "L'étape du milieu est celle qui compte, et elle ne se fait pas devant l'écran : il faut téléphoner, ou passer voir. Préparez une feuille à quatre colonnes — le poste, le prix, l'unité, la date du jour — et remplissez-la en parlant. Notez le prix tel qu'on vous le donne, sans l'arrondir. Revenez ensuite ici pour la dernière étape."
     },
     "avance": {
-      "defi": "Reprenez vos trois prix relevés et demandez-en l'ordre de grandeur annuel : combien de fois par an ce poste revient, et ce qu'il pèse sur l'année entière. Un prix unitaire acceptable devient parfois le premier poste du budget une fois multiplié par sa fréquence — et c'est rarement celui qu'on surveille.",
-      "brouillon": true
+      "defi": "Reprenez vos trois prix relevés et demandez-en l'ordre de grandeur annuel : combien de fois par an ce poste revient, et ce qu'il pèse sur l'année entière. Un prix unitaire acceptable devient parfois le premier poste du budget une fois multiplié par sa fréquence — et c'est rarement celui qu'on surveille."
     }
   },
   "variantes": {

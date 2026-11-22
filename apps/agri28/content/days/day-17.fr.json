@@ -193,12 +193,10 @@
   "nextTeaser": "Demain : l'énergie. Ce que le solaire change à une facture de pompage, et ce qu'il ne change pas.",
   "variantesNiveau": {
     "debutant": {
-      "aide": "Une règle utile ne contient que des choses que vous pouvez constater vous-même : la couleur de la terre à dix centimètres, le poids d'une poignée, la date du dernier arrosage, ce qu'annonce la météo. Si la réponse vous parle d'un appareil que vous n'avez pas, demandez-lui de réécrire la règle sans cet appareil. Une règle qu'on ne peut pas appliquer n'est pas une règle.",
-      "brouillon": true
+      "aide": "Une règle utile ne contient que des choses que vous pouvez constater vous-même : la couleur de la terre à dix centimètres, le poids d'une poignée, la date du dernier arrosage, ce qu'annonce la météo. Si la réponse vous parle d'un appareil que vous n'avez pas, demandez-lui de réécrire la règle sans cet appareil. Une règle qu'on ne peut pas appliquer n'est pas une règle."
     },
     "avance": {
-      "defi": "Écrivez à côté de votre règle les deux situations où vous accepterez de ne pas la suivre, et pourquoi. Une règle sans exception prévue se contourne en silence dès la première semaine difficile ; une règle avec deux exceptions écrites survit à la saison.",
-      "brouillon": true
+      "defi": "Écrivez à côté de votre règle les deux situations où vous accepterez de ne pas la suivre, et pourquoi. Une règle sans exception prévue se contourne en silence dès la première semaine difficile ; une règle avec deux exceptions écrites survit à la saison."
     }
   },
   "variantes": {

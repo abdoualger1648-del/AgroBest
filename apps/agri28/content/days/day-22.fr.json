@@ -186,12 +186,10 @@
   "nextTeaser": "Demain : les quatre chiffres qui suffisent à piloter une exploitation, et le seuil qui doit vous faire réagir.",
   "variantesNiveau": {
     "debutant": {
-      "aide": "Avant de coller vos lignes, retirez les noms de personnes et gardez les montants. Si votre cahier n'est pas complet, collez ce que vous avez et dites-le : « il manque le mois de mars ». Un coût de revient calculé sur deux mois sur trois reste bien plus utile qu'un chiffre attendu toute l'année. Demandez le calcul étape par étape, et refaites l'addition vous-même sur un papier.",
-      "brouillon": true
+      "aide": "Avant de coller vos lignes, retirez les noms de personnes et gardez les montants. Si votre cahier n'est pas complet, collez ce que vous avez et dites-le : « il manque le mois de mars ». Un coût de revient calculé sur deux mois sur trois reste bien plus utile qu'un chiffre attendu toute l'année. Demandez le calcul étape par étape, et refaites l'addition vous-même sur un papier."
     },
     "avance": {
-      "defi": "Refaites le calcul en y ajoutant ce que presque personne ne compte : votre propre travail, valorisé à ce que vous paieriez quelqu'un pour le faire. Le coût de revient obtenu est celui qui décide si votre activité vous paie vraiment, ou si elle vous emploie gratuitement.",
-      "brouillon": true
+      "defi": "Refaites le calcul en y ajoutant ce que presque personne ne compte : votre propre travail, valorisé à ce que vous paieriez quelqu'un pour le faire. Le coût de revient obtenu est celui qui décide si votre activité vous paie vraiment, ou si elle vous emploie gratuitement."
     }
   }
 }

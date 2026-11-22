@@ -191,12 +191,10 @@
   "nextTeaser": "Demain : les stocks. Savoir ce qu'on a, où, depuis quand — et pouvoir le prouver.",
   "variantesNiveau": {
     "debutant": {
-      "aide": "La grille sert à rendre comparables des offres qui ne le sont pas. Une colonne compte plus que les autres : le prix rendu chez vous, transport compris. Beaucoup d'offres paraissent moins chères parce qu'elles laissent le transport de côté. Ajoutez aussi la date de validité annoncée — sans elle, vous comparerez dans un mois des chiffres qui ne valent plus.",
-      "brouillon": true
+      "aide": "La grille sert à rendre comparables des offres qui ne le sont pas. Une colonne compte plus que les autres : le prix rendu chez vous, transport compris. Beaucoup d'offres paraissent moins chères parce qu'elles laissent le transport de côté. Ajoutez aussi la date de validité annoncée — sans elle, vous comparerez dans un mois des chiffres qui ne valent plus."
     },
     "avance": {
-      "defi": "Envoyez votre demande de prix à trois fournisseurs le même jour, avec exactement le même texte. C'est la seule façon d'obtenir des réponses comparables : une demande reformulée entre deux appels produit des offres qui portent sur des choses différentes, et aucune grille ne rattrape cela.",
-      "brouillon": true
+      "defi": "Envoyez votre demande de prix à trois fournisseurs le même jour, avec exactement le même texte. C'est la seule façon d'obtenir des réponses comparables : une demande reformulée entre deux appels produit des offres qui portent sur des choses différentes, et aucune grille ne rattrape cela."
     }
   }
 }

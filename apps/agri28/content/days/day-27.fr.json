@@ -188,12 +188,10 @@
   "nextTeaser": "Demain, dernier jour : relire tout votre dossier, repérer les trous, et écrire votre plan des 90 prochains jours.",
   "variantesNiveau": {
     "debutant": {
-      "aide": "Commencez par la fréquence réelle, pas par celle qui vous vient à l'esprit : comptez sur le mois écoulé. Une tâche pénible faite deux fois par an ne mérite aucune automatisation. Les modèles de messages de la seconde étape sont le gain le plus sûr : enregistrez-les dans les messages types de votre téléphone, et vous les retrouverez en deux appuis.",
-      "brouillon": true
+      "aide": "Commencez par la fréquence réelle, pas par celle qui vous vient à l'esprit : comptez sur le mois écoulé. Une tâche pénible faite deux fois par an ne mérite aucune automatisation. Les modèles de messages de la seconde étape sont le gain le plus sûr : enregistrez-les dans les messages types de votre téléphone, et vous les retrouverez en deux appuis."
     },
     "avance": {
-      "defi": "Avant d'automatiser une tâche, demandez ce qui se passe quand l'automatisation se trompe sans prévenir : un message envoyé au mauvais moment, un rappel qui ne part pas. N'automatisez que ce dont l'échec reste visible. Le reste gagne à rester fait à la main, même si c'est plus long.",
-      "brouillon": true
+      "defi": "Avant d'automatiser une tâche, demandez ce qui se passe quand l'automatisation se trompe sans prévenir : un message envoyé au mauvais moment, un rappel qui ne part pas. N'automatisez que ce dont l'échec reste visible. Le reste gagne à rester fait à la main, même si c'est plus long."
     }
   }
 }

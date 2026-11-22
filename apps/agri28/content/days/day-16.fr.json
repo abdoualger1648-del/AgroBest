@@ -194,12 +194,10 @@
   "nextTeaser": "Demain : la météo et l'eau. Construire sa règle d'arrosage au lieu de décider au jugé.",
   "variantesNiveau": {
     "debutant": {
-      "aide": "Trois photos, trois distances : une de loin qui montre l'animal ou la plante entière, une à un mètre, une tout près du symptôme. Avant chaque déclenchement, regardez ce qu'il y a dans le cadre : un visage, une plaque, un papier portant un nom n'ont rien à y faire. Essuyez l'objectif, et photographiez à la lumière du jour, jamais au flash.",
-      "brouillon": true
+      "aide": "Trois photos, trois distances : une de loin qui montre l'animal ou la plante entière, une à un mètre, une tout près du symptôme. Avant chaque déclenchement, regardez ce qu'il y a dans le cadre : un visage, une plaque, un papier portant un nom n'ont rien à y faire. Essuyez l'objectif, et photographiez à la lumière du jour, jamais au flash."
     },
     "avance": {
-      "defi": "Envoyez d'abord les photos sans aucun texte, et voyez ce que l'IA propose toute seule ; puis envoyez-les avec votre description. L'écart entre les deux réponses vous dit à quel point c'est votre texte, et non l'image, qui a guidé le diagnostic. C'est un réflexe à garder avant de croire une lecture d'image.",
-      "brouillon": true
+      "defi": "Envoyez d'abord les photos sans aucun texte, et voyez ce que l'IA propose toute seule ; puis envoyez-les avec votre description. L'écart entre les deux réponses vous dit à quel point c'est votre texte, et non l'image, qui a guidé le diagnostic. C'est un réflexe à garder avant de croire une lecture d'image."
     }
   }
 }

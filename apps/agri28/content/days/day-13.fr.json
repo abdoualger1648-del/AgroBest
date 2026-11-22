@@ -191,12 +191,10 @@
   "nextTeaser": "Demain, dernier jour de la semaine : le tableau de suivi qui se remplit en deux minutes, et qui vous dira où vous en êtes.",
   "variantesNiveau": {
     "debutant": {
-      "aide": "Le registre arrive long, et c'est normal : il couvre large pour ne rien oublier. Votre travail n'est pas de tout garder. Lisez chaque ligne et posez-vous une seule question : « est-ce que ça m'est déjà arrivé, ou est-ce que ça peut m'arriver ici ? » Barrez le reste sans hésiter. Un registre de six lignes qu'on relit vaut mieux qu'un registre de trente qu'on range.",
-      "brouillon": true
+      "aide": "Le registre arrive long, et c'est normal : il couvre large pour ne rien oublier. Votre travail n'est pas de tout garder. Lisez chaque ligne et posez-vous une seule question : « est-ce que ça m'est déjà arrivé, ou est-ce que ça peut m'arriver ici ? » Barrez le reste sans hésiter. Un registre de six lignes qu'on relit vaut mieux qu'un registre de trente qu'on range."
     },
     "avance": {
-      "defi": "Pour chacune de vos trois parades, écrivez le signe qui vous dira qu'il est temps de l'enclencher — pas la date, le signe. Une parade sans déclencheur part toujours trop tard, parce qu'on attend d'être sûr avant d'agir.",
-      "brouillon": true
+      "defi": "Pour chacune de vos trois parades, écrivez le signe qui vous dira qu'il est temps de l'enclencher — pas la date, le signe. Une parade sans déclencheur part toujours trop tard, parce qu'on attend d'être sûr avant d'agir."
     }
   }
 }

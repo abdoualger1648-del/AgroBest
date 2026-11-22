@@ -187,12 +187,10 @@
   "nextTeaser": "Demain : le registre des risques. Ce qui peut mal tourner, et ce que vous faites avant que cela arrive.",
   "variantesNiveau": {
     "debutant": {
-      "aide": "Deux précautions avant d'envoyer. D'abord, remplacez la période d'exemple par votre vrai pic : sinon vous obtiendrez un plan pour quelqu'un d'autre. Ensuite, ne tapez aucun nom : écrivez « mon ouvrier permanent », « un saisonnier », « un membre de ma famille ». Vous verrez demain pourquoi — prenez l'habitude dès aujourd'hui.",
-      "brouillon": true
+      "aide": "Deux précautions avant d'envoyer. D'abord, remplacez la période d'exemple par votre vrai pic : sinon vous obtiendrez un plan pour quelqu'un d'autre. Ensuite, ne tapez aucun nom : écrivez « mon ouvrier permanent », « un saisonnier », « un membre de ma famille ». Vous verrez demain pourquoi — prenez l'habitude dès aujourd'hui."
     },
     "avance": {
-      "defi": "Repérez dans votre semaine type les moments où une seule personne porte tout, puis demandez ce qui se passe si elle manque trois jours. Vous obtiendrez la liste de ce qui s'arrête vraiment. C'est la base d'une consigne écrite que quelqu'un d'autre pourra suivre sans vous.",
-      "brouillon": true
+      "defi": "Repérez dans votre semaine type les moments où une seule personne porte tout, puis demandez ce qui se passe si elle manque trois jours. Vous obtiendrez la liste de ce qui s'arrête vraiment. C'est la base d'une consigne écrite que quelqu'un d'autre pourra suivre sans vous."
     }
   }
 }

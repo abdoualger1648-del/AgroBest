@@ -185,12 +185,10 @@
   "nextTeaser": "Demain, fin de la semaine : écrire à l'administration, en arabe et en français, sans y passer la soirée.",
   "variantesNiveau": {
     "debutant": {
-      "aide": "La fiche de stock ne vaut que si elle se remplit au moment du mouvement, pas le soir. Posez-la — ou posez le cahier — là où les choses entrent et sortent, avec un stylo attaché. Une seule ligne par mouvement : la date, ce qui entre ou sort, la quantité, le lot. Si vous devez vous déplacer pour l'écrire, elle ne sera pas écrite.",
-      "brouillon": true
+      "aide": "La fiche de stock ne vaut que si elle se remplit au moment du mouvement, pas le soir. Posez-la — ou posez le cahier — là où les choses entrent et sortent, avec un stylo attaché. Une seule ligne par mouvement : la date, ce qui entre ou sort, la quantité, le lot. Si vous devez vous déplacer pour l'écrire, elle ne sera pas écrite."
     },
     "avance": {
-      "defi": "Prenez un produit vendu le mois dernier et remontez-le : quel lot, entré quand, venu d'où. Si vous n'y arrivez pas en deux minutes avec vos fiches actuelles, c'est votre règle de lot qu'il faut changer aujourd'hui, pas votre fiche. C'est exactement l'exercice qu'on vous demandera en cas de réclamation.",
-      "brouillon": true
+      "defi": "Prenez un produit vendu le mois dernier et remontez-le : quel lot, entré quand, venu d'où. Si vous n'y arrivez pas en deux minutes avec vos fiches actuelles, c'est votre règle de lot qu'il faut changer aujourd'hui, pas votre fiche. C'est exactement l'exercice qu'on vous demandera en cas de réclamation."
     }
   },
   "variantes": {

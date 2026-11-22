@@ -177,12 +177,10 @@
   "nextTeaser": "Demain : automatiser sans coder — ce qui mérite d'être automatisé, et ce qui n'en vaut pas la peine.",
   "variantesNiveau": {
     "debutant": {
-      "aide": "Le bloc de contexte est un texte court que vous garderez pour toujours. Enregistrez-le là où vous le retrouverez sans chercher : une note sur le téléphone, épinglée en haut de la liste. Vous le collerez au début de chaque conversation, avant votre question. C'est ce qui vous évite de réexpliquer votre exploitation à chaque fois.",
-      "brouillon": true
+      "aide": "Le bloc de contexte est un texte court que vous garderez pour toujours. Enregistrez-le là où vous le retrouverez sans chercher : une note sur le téléphone, épinglée en haut de la liste. Vous le collerez au début de chaque conversation, avant votre question. C'est ce qui vous évite de réexpliquer votre exploitation à chaque fois."
     },
     "avance": {
-      "defi": "Faites deux versions de votre bloc : une complète, et une de trois lignes pour les questions rapides. Puis posez la même question avec chacune. Vous verrez ce que le contexte supplémentaire apporte vraiment — souvent moins qu'on ne croit, et jamais sur les mêmes points.",
-      "brouillon": true
+      "defi": "Faites deux versions de votre bloc : une complète, et une de trois lignes pour les questions rapides. Puis posez la même question avec chacune. Vous verrez ce que le contexte supplémentaire apporte vraiment — souvent moins qu'on ne croit, et jamais sur les mêmes points."
     }
   }
 }

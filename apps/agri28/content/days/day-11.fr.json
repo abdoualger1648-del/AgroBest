@@ -182,12 +182,10 @@
   "nextTeaser": "Demain : les bras. Qui travaille, quand, et comment tenir un pic sans épuiser son monde.",
   "variantesNiveau": {
     "debutant": {
-      "aide": "Le calendrier sort d'un coup, et il paraît impressionnant. Ne le prenez pas pour argent comptant : lisez-le mois par mois et comparez avec ce que vous avez réellement fait l'an dernier. Mettez une croix à côté de chaque mois qui vous paraît faux, sans chercher tout de suite la bonne date. Vous corrigerez les mois cochés ensuite, un par un.",
-      "brouillon": true
+      "aide": "Le calendrier sort d'un coup, et il paraît impressionnant. Ne le prenez pas pour argent comptant : lisez-le mois par mois et comparez avec ce que vous avez réellement fait l'an dernier. Mettez une croix à côté de chaque mois qui vous paraît faux, sans chercher tout de suite la bonne date. Vous corrigerez les mois cochés ensuite, un par un."
     },
     "avance": {
-      "defi": "Superposez votre calendrier corrigé et le trou de trésorerie du jour 8. Repérez les mois où un pic de travail tombe sur un creux de caisse : ce sont les seuls qui vous obligeront à arbitrer, et mieux vaut les voir maintenant qu'au moment de payer.",
-      "brouillon": true
+      "defi": "Superposez votre calendrier corrigé et le trou de trésorerie du jour 8. Repérez les mois où un pic de travail tombe sur un creux de caisse : ce sont les seuls qui vous obligeront à arbitrer, et mieux vaut les voir maintenant qu'au moment de payer."
     }
   }
 }

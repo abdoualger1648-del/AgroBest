@@ -191,12 +191,10 @@
   "nextTeaser": "Demain : le budget. Pas celui de l'IA — le vôtre, avec les prix que vous aurez relevés vous-même.",
   "variantesNiveau": {
     "debutant": {
-      "aide": "Une longue conversation, deux prompts qui se suivent. Ouvrez l'assistant une seule fois et restez dans la même conversation du début à la fin : le second prompt s'appuie sur le premier. Quand l'IA vous renvoie des questions, répondez-lui dans la même fenêtre, en une ou deux phrases — c'est à ce moment que l'exercice devient le vôtre. Si vous ne savez pas répondre, écrivez-le : « je ne sais pas encore ». Une réponse honnête vaut mieux qu'un chiffre inventé.",
-      "brouillon": true
+      "aide": "Une longue conversation, deux prompts qui se suivent. Ouvrez l'assistant une seule fois et restez dans la même conversation du début à la fin : le second prompt s'appuie sur le premier. Quand l'IA vous renvoie des questions, répondez-lui dans la même fenêtre, en une ou deux phrases — c'est à ce moment que l'exercice devient le vôtre. Si vous ne savez pas répondre, écrivez-le : « je ne sais pas encore ». Une réponse honnête vaut mieux qu'un chiffre inventé."
     },
     "avance": {
-      "defi": "Reprenez votre mois le plus bas et demandez ce qui le déplacerait d'un mois, dans un sens ou dans l'autre : un paiement retardé, une vente avancée, un achat groupé. Vous verrez lesquels de vos leviers pèsent réellement, et lesquels ne font que décaler le problème plus loin.",
-      "brouillon": true
+      "defi": "Reprenez votre mois le plus bas et demandez ce qui le déplacerait d'un mois, dans un sens ou dans l'autre : un paiement retardé, une vente avancée, un achat groupé. Vous verrez lesquels de vos leviers pèsent réellement, et lesquels ne font que décaler le problème plus loin."
     }
   }
 }
