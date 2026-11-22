@@ -30,10 +30,16 @@ lequel s'applique**, dans le résumé de l'exécution :
 | Secrets de signature | Résultat |
 |---|---|
 | présents | APK signé avec votre clé — **distribuable**, et remplaçable par une mise à jour |
-| absents | APK signé en « debug » — installable pour essayer, **à ne pas distribuer** |
+| absents | le build **échoue**, sauf si vous cochez « autoriser_debug » au lancement |
 
 La différence compte : une version signée en debug ne peut pas être remplacée plus tard par une
-version signée avec votre clé. L'utilisateur devrait désinstaller, donc **tout perdre**.
+version signée avec votre clé. L'utilisateur devrait désinstaller, donc **tout perdre**. C'est
+pourquoi le workflow refuse désormais de produire un APK de debug sans qu'on le lui demande
+explicitement — la case existe pour un essai, pas pour une distribution.
+
+Le résumé d'un build signé affiche l'**empreinte du certificat** (SHA-1 et SHA-256). C'est elle,
+et non le numéro de version, qui décide si une mise à jour s'installera par-dessus la précédente.
+Gardez-la sous les yeux : la même empreinte d'une version à l'autre, et rien à désinstaller.
 
 ### Créer le magasin de clés
 
@@ -102,6 +108,40 @@ Assembler l'APK demande le SDK Android ; c'est le rôle de GitHub Actions.
 | Service worker | oui | **non** — les fichiers sont déjà locaux |
 | Cartes de source | oui | **non** — elles pèsent plus que le code |
 | Compte | aucun | obligatoire, essai sur 3 leçons |
+
+## Mettre à jour sans rien perdre
+
+Android installe une nouvelle version **par-dessus** l'ancienne, en conservant toutes les données
+de l'application — donc le Dossier, la progression, les prompts et le compte — à trois conditions,
+toutes les trois réunies :
+
+1. **même identifiant de paquet** : `dz.agricole360.app`. Il est écrit dans le dépôt et ne change
+   pas.
+2. **même clé de signature**, c'est-à-dire la même empreinte de certificat. C'est la seule des
+   trois qui peut être cassée par erreur : changer de magasin de clés, ou passer d'un APK de debug
+   à un APK signé, rend la mise à jour impossible. Android répond alors « application non
+   installée », et la seule issue est de désinstaller — ce qui efface tout.
+3. **`versionCode` croissant**. Le workflow le prend sur `github.run_number`, qui ne redescend
+   jamais : cette condition est tenue d'office.
+
+Dit autrement : **la clé de signature se choisit une fois et ne change plus jamais.** La perdre
+interdit toute mise à jour future. Sauvegardez le fichier `.jks` et ses deux mots de passe hors de
+GitHub.
+
+Côté base de données, rien à faire : la base locale se met à jour toute seule depuis n'importe
+quelle version passée du schéma, et deux tests l'éprouvent sur de vraies bases
+(`src/db/migration-chaine.test.ts` depuis le tout premier schéma, `src/db/migration5.test.ts`
+pour le dernier saut). L'édition APK n'embarque par ailleurs aucun service worker (D61) : il n'y a
+donc pas de cache à vider après une mise à jour.
+
+### Si vos utilisateurs ont déjà un APK de debug
+
+Les versions distribuées avant la mise en place des secrets de signature sont signées en debug.
+Le premier APK signé avec votre clé **ne pourra pas** s'installer par-dessus : c'est une rupture
+unique, inévitable, et elle ne se reproduira plus ensuite. Prévenez-les, et dites-leur
+d'exporter leurs données avant de désinstaller — **Paramètres → Mes données → « Exporter une
+sauvegarde (.json) »** — puis de les restaurer après, par « Restaurer une sauvegarde ». La
+restauration remet le profil à niveau au passage, quelle que soit la version d'origine (D109).
 
 ## Installer l'APK sur un téléphone
 

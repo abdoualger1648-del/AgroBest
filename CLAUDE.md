@@ -241,9 +241,23 @@ en FR, AR/RTL et thème sombre, clavier, cibles tactiles, hors ligne) : voir
 | D119 | Au jour 20, **les types d'élevage gardent le texte générique** ; seuls les végétaux et l'apiculture reçoivent une variante | 2026-11-22 | la question porte sur les délais d'attente avant de vendre le lait ou la viande : elle est juste telle quelle pour l'ovin, le bovin et l'avicole. Pour une culture elle devient une question sur les délais avant récolte, et pour l'apiculture sur les résidus dans le miel. Appliquer D105 par jour, plutôt que par réflexe, évite d'écrire quatre variantes qui ne diraient rien de neuf |
 | D120 | Le jour 5 **ne reçoit aucune variante de quiz**, bien qu'il nomme le troupeau | 2026-11-22 | son choix dit « une dose de traitement pour mon troupeau **ou ma culture** » : il couvre déjà les deux, et son explication parle de « tue des animaux, détruit une récolte ». Il n'est faux pour personne. D107 s'applique — une variante n'y changerait qu'un mot, et gonflerait la matière à relire |
 | D121 | **Plus aucune variante en brouillon** : les 226 sont affichées | 2026-11-22 | l'utilisateur du projet a levé les drapeaux des deux axes, 142 de métier puis 84 de niveau. Le mécanisme de D82 reste entier et reprendra pour toute variante écrite ensuite : `validate:content` avertit, et `variantes:valider` exige des jours nommés. Ce qui change, c'est l'état du contenu, pas la règle. Chaque jour reste révocable en remettant `"brouillon": true` dans les deux langues |
+| D122 | Le workflow APK **refuse** de produire un APK de debug, sauf case « autoriser_debug » cochée ; et le résumé d'un build signé affiche l'**empreinte du certificat** | 2026-11-22 | signalé par l'utilisateur du projet : installer une nouvelle version avait exigé de désinstaller, donc de tout perdre. La cause n'est pas le `versionCode` — il vient de `github.run_number`, qui ne redescend jamais — mais la **signature** : les versions 1.2.0 à 1.6.0 sont signées en debug, et le premier APK signé pour de bon ne peut pas s'installer par-dessus. Un garde-fou écrit dans un commentaire n'avait rien empêché ; un build qui échoue, si. L'empreinte rend la condition lisible depuis la page du build, au lieu d'être une affirmation à croire — et c'est la même valeur que Firebase réclame pour la connexion Google native |
+| D123 | La chaîne de migrations est éprouvée **depuis le schéma 1**, pas seulement du cran 4 au cran 5 | 2026-11-22 | `migration5.test.ts` ne couvrait que le dernier saut, alors que quelqu'un peut installer la nouvelle version par-dessus n'importe quelle ancienne. Le nouveau test ouvre de vraies bases en version 1 et en version 3, y écrit dossier, progression, briques, prompts et badges, puis vérifie qu'aucun n'a disparu. Contre-épreuve faite : un `clear()` glissé dans l'`upgrade` fait échouer le test. Conclusion vérifiée, et non supposée : la base survit à une mise à jour ; ce qui ne survit pas à une désinstallation, c'est Android qui le décide |
+| D124 | Là où aucun bouton de fournisseur n'existe — donc dans l'APK (D113) — une phrase **nomme la sortie** pour un compte créé avec Google ou Facebook | 2026-11-22 | impasse réelle et atteignable : un compte créé sur le web avec Google n'a aucun mot de passe, et l'APK ne propose que le formulaire. La connexion répondait « adresse ou mot de passe incorrect » et l'inscription « adresse déjà utilisée » — deux messages contradictoires, aucune issue indiquée. L'issue existait pourtant depuis D75. La règle vit dans `impasseFournisseur`, fonction pure : la phrase ne s'affiche jamais sur le web, où le bouton est juste là |
 
 ### Questions ouvertes
-*Aucune pour l'instant.*
+- **Connexion Google/Facebook *native* dans l'APK.** Elle est aujourd'hui absente par décision
+  (D113) : Google refuse l'OAuth en WebView. La rendre possible demande le plugin
+  `@capacitor-firebase/authentication` (version 8, compatible Capacitor 8), et surtout trois
+  éléments que je ne peux pas produire :
+  1. l'**empreinte SHA-1** de la clé de signature — le prochain build signé l'affiche (D122) ;
+  2. **`android/app/google-services.json`**, téléchargé de la console Firebase après y avoir
+     déclaré l'application Android `dz.agricole360.app` avec cette empreinte. Sans ce fichier, le
+     plugin fait **planter l'application au lancement** : il ne peut donc pas être installé
+     d'avance ;
+  3. pour Facebook : App ID, *client token*, et l'empreinte de clé déclarée côté Facebook.
+  À décider par l'utilisateur du projet : on le fait, ou l'APK reste sur l'email et le mot de
+  passe (avec la sortie désormais nommée, D124).
 
 ### Questions tranchées
 - **Connexion par fournisseur** (choix de l'utilisateur du projet) : **Google et Facebook**, sur le web seulement. WhatsApp n'existe pas comme fournisseur d'identité, X est payant, le téléphone exige le plan Blaze. Le fournisseur apprend l'usage de l'application, et le texte de confidentialité le dit (D114).

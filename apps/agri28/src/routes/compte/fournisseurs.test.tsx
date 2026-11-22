@@ -179,3 +179,36 @@ describe('le texte de confidentialité', () => {
     expect(await screen.findByText(/تعلم أنّك تستعمل هذا التطبيق/)).toBeInTheDocument();
   });
 });
+
+describe('un compte créé chez un fournisseur, ouvert là où les boutons manquent', () => {
+  /** Échoue une connexion par le formulaire, et rend le texte de l'écran. */
+  async function connexionRatee(edition: 'apk' | 'web'): Promise<void> {
+    vi.stubEnv('VITE_EDITION', edition);
+    const user = userEvent.setup();
+    await renderApp('fr', '/compte');
+
+    await user.click(await screen.findByRole('tab', { name: /déjà un compte/ }));
+    await user.type(screen.getByLabelText('Adresse email'), 'hamid@example.com');
+    await user.type(screen.getByLabelText('Mot de passe'), 'au-hasard');
+    await user.click(screen.getByRole('button', { name: 'Me connecter' }));
+
+    await screen.findByRole('alert');
+  }
+
+  it('dans l’APK, nomme la sortie au lieu de laisser l’utilisateur bloqué', async () => {
+    // Le compte a pu être créé sur le web avec Google : il n'a donc pas de
+    // mot de passe, et l'APK n'offre aucun bouton de fournisseur (D113).
+    await connexionRatee('apk');
+
+    expect(screen.getByRole('alert')).toHaveTextContent('Adresse ou mot de passe incorrect.');
+    expect(screen.getByText(/aucun mot de passe/)).toBeInTheDocument();
+  });
+
+  it('sur le web, se tait : le bouton du fournisseur est juste là', async () => {
+    await connexionRatee('web');
+
+    expect(screen.getByRole('alert')).toHaveTextContent('Adresse ou mot de passe incorrect.');
+    expect(screen.queryByText(/aucun mot de passe/)).toBeNull();
+    expect(screen.getByRole('button', { name: 'Continuer avec Google' })).toBeInTheDocument();
+  });
+});

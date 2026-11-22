@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { traduireErreurFirebase } from './erreurs';
+import { FOURNISSEURS, impasseFournisseur } from './port';
 
 /** Reproduit la forme d'une erreur Firebase : un objet portant un `code`. */
 function erreurFirebase(code: string) {
@@ -55,5 +56,28 @@ describe('traduireErreurFirebase', () => {
     expect(traduireErreurFirebase(undefined)).toBe('inconnue');
     expect(traduireErreurFirebase({ code: 42 })).toBe('inconnue');
     expect(traduireErreurFirebase({ code: 'auth/jamais-vu' })).toBe('inconnue');
+  });
+});
+
+describe('impasse d’un compte créé chez un fournisseur', () => {
+  it('se signale là où aucun bouton de fournisseur n’existe (APK)', () => {
+    // Sans boutons, « identifiants incorrects » et « adresse déjà utilisée »
+    // n'ont aucune suite visible : c'est là que la phrase d'aide sert.
+    expect(impasseFournisseur('identifiants_invalides', [])).toBe(true);
+    expect(impasseFournisseur('email_deja_utilise', [])).toBe(true);
+  });
+
+  it('se tait quand les boutons sont là : l’utilisateur n’a qu’à cliquer', () => {
+    expect(impasseFournisseur('identifiants_invalides', FOURNISSEURS)).toBe(false);
+    expect(impasseFournisseur('email_deja_utilise', FOURNISSEURS)).toBe(false);
+    expect(impasseFournisseur('identifiants_invalides', ['google'])).toBe(false);
+  });
+
+  it('ne s’invite pas sur les erreurs qui n’ont rien à voir', () => {
+    expect(impasseFournisseur('hors_ligne', [])).toBe(false);
+    expect(impasseFournisseur('mot_de_passe_faible', [])).toBe(false);
+    expect(impasseFournisseur('email_invalide', [])).toBe(false);
+    expect(impasseFournisseur('trop_de_tentatives', [])).toBe(false);
+    expect(impasseFournisseur('inconnue', [])).toBe(false);
   });
 });

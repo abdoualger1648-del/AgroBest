@@ -144,6 +144,7 @@
     "google": "Continuer avec Google",
     "facebook": "Continuer avec Facebook",
     "separateur": "ou",
-    "aide": "Pas de mot de passe à retenir. Nous ne demandons que votre adresse email — ni vos contacts, ni vos amis, ni votre profil."
+    "aide": "Pas de mot de passe à retenir. Nous ne demandons que votre adresse email — ni vos contacts, ni vos amis, ni votre profil.",
+    "impasse": "Ce compte a peut-être été créé avec Google ou Facebook : dans ce cas il n'a aucun mot de passe. Dans l'onglet « J'ai déjà un compte », touchez « Mot de passe oublié ? » pour en choisir un."
   }
 }

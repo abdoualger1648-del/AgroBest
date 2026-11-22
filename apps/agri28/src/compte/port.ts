@@ -138,6 +138,30 @@ export function estErreurFournisseur(code: CodeErreurCompte): boolean {
 }
 
 /**
+ * Vrai quand l'erreur affichée est probablement due à un compte créé chez un
+ * fournisseur, sur un écran qui n'offre AUCUN bouton de fournisseur.
+ *
+ * Le cas est réel et sans issue visible : quelqu'un crée son compte sur le
+ * web avec Google — ce compte n'a donc pas de mot de passe — puis installe
+ * l'APK, où les boutons de fournisseur sont absents (D113). Le formulaire
+ * répond alors « identifiants incorrects » à la connexion et « adresse déjà
+ * utilisée » à l'inscription : deux messages contradictoires, et rien qui
+ * indique la sortie. La sortie existe pourtant — « Mot de passe oublié »
+ * donne un mot de passe au compte — mais il fallait le dire.
+ *
+ * Les deux codes ont d'autres causes bien plus fréquentes (une faute de
+ * frappe, une adresse déjà prise), d'où une phrase d'aide en complément du
+ * message, et jamais à sa place.
+ */
+export function impasseFournisseur(
+  code: CodeErreurCompte,
+  fournisseurs: readonly Fournisseur[],
+): boolean {
+  if (fournisseurs.length > 0) return false;
+  return code === 'identifiants_invalides' || code === 'email_deja_utilise';
+}
+
+/**
  * Une annulation n'est pas une erreur : fermer la fenêtre du fournisseur est
  * un geste délibéré, et afficher un message rouge pour cela serait absurde.
  */

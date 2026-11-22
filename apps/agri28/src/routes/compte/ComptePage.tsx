@@ -4,7 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { BoutonsFournisseurs } from './BoutonsFournisseurs';
-import { estErreurFournisseur } from '@/compte/port';
+import { estErreurFournisseur, impasseFournisseur } from '@/compte/port';
+import { fournisseursDisponibles } from '@/config';
 import { Field, inputClass } from '@/components/Field';
 import { PageHeader } from '@/components/PageHeader';
 import {
@@ -154,9 +155,17 @@ export function ComptePage() {
             pas sous le champ email : le store ne porte qu'une erreur, c'est
             donc ici qu'on décide à qui elle appartient. */}
         {derniereErreur && !estErreurFournisseur(derniereErreur) ? (
-          <p role="alert" className="mb-4 text-sm font-medium text-danger">
-            {t(`erreurs.${derniereErreur}`)}
-          </p>
+          <>
+            <p role="alert" className="mb-2 text-sm font-medium text-danger">
+              {t(`erreurs.${derniereErreur}`)}
+            </p>
+            {/* Sans boutons de fournisseur — donc dans l'APK — un compte créé
+                avec Google n'a pas de mot de passe, et le message d'erreur
+                seul ne mène nulle part. La phrase nomme la sortie. */}
+            {impasseFournisseur(derniereErreur, fournisseursDisponibles()) ? (
+              <p className="mb-4 text-sm text-muted">{t('fournisseurs.impasse')}</p>
+            ) : null}
+          </>
         ) : null}
 
         <Button type="submit" block disabled={enCours}>

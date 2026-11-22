@@ -5,13 +5,21 @@ name: APK
 # Lancement : onglet Actions → « APK » → Run workflow.
 # Le fichier produit est attaché à l'exécution, dans « Artifacts ».
 #
-# SIGNATURE — deux cas, et le workflow dit lequel s'applique :
+# SIGNATURE — ce qui décide si une mise à jour s'installera par-dessus :
 #
-#   • Les quatre secrets ci-dessous sont présents → APK signé pour de bon,
-#     installable et surtout **remplaçable** par une mise à jour ultérieure.
-#   • Ils sont absents → APK signé en « debug ». Il s'installe et fonctionne,
-#     c'est parfait pour essayer, mais il ne doit pas être distribué : une
-#     version signée plus tard ne pourra pas s'installer par-dessus.
+#   • Les quatre secrets ci-dessous sont présents → APK signé avec la clé de
+#     release. Distribuable, et **remplaçable** par toute version ultérieure
+#     signée de la même clé, sans désinstallation et sans perte de données.
+#     Le résumé du build affiche l'empreinte du certificat : deux APK de même
+#     empreinte se remplacent, deux empreintes différentes non.
+#   • Ils sont absents → le build **échoue**, sauf si « autoriser_debug » est
+#     coché. Un APK de debug s'installe et fonctionne, mais le distribuer
+#     condamne ses utilisateurs à désinstaller — donc à perdre leur Dossier —
+#     le jour où une version signée arrive. Le garde-fou est là pour ça.
+#
+# La clé de signature se choisit UNE FOIS et ne change plus jamais. La perdre
+# interdit toute mise à jour : la sauvegarder hors de GitHub n'est pas une
+# précaution, c'est une condition.
 #
 # Secrets à créer dans Settings → Secrets and variables → Actions :
 #   APK_KEYSTORE_BASE64    le fichier .jks encodé en base64
@@ -29,6 +37,11 @@ on:
         description: 'Numéro de version affiché dans Android (ex. 1.0.0)'
         required: false
         default: '0.1.0'
+      autoriser_debug:
+        description: "Accepter un APK signé en debug (NON distribuable : une version signée plus tard ne s'installera pas par-dessus)"
+        type: boolean
+        required: false
+        default: false
 
 permissions:
   contents: read
@@ -82,9 +95,16 @@ jobs:
             echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/signature.jks"
             echo "chemin=$RUNNER_TEMP/signature.jks" >> "$GITHUB_OUTPUT"
             echo "signe=oui" >> "$GITHUB_OUTPUT"
-          else
+          elif [ "${{ inputs.autoriser_debug }}" = "true" ]; then
             echo "chemin=" >> "$GITHUB_OUTPUT"
             echo "signe=non" >> "$GITHUB_OUTPUT"
+            echo "::warning::APK signé en debug, à la demande. Ne pas le distribuer."
+          else
+            # Garde-fou : un APK de debug distribué condamne ses utilisateurs à
+            # désinstaller — donc à perdre leur Dossier — le jour où une version
+            # signée arrive. Mieux vaut un build qui échoue qu'un APK piégé.
+            echo "::error::Aucun secret de signature (APK_KEYSTORE_BASE64). Ajoutez les quatre secrets, ou relancez en cochant « autoriser_debug » si cet APK ne sera pas distribué."
+            exit 1
           fi
 
       - name: Assembler l'APK
@@ -126,6 +146,19 @@ jobs:
             echo "- Version : $VERSION (code ${{ github.run_number }})"
             if [ "$SIGNE" = "oui" ]; then
               echo "- Signature : **clé de release**. Distribuable."
+              echo ""
+              APKSIGNER=$(find "$ANDROID_HOME/build-tools" -name apksigner -type f 2>/dev/null | sort | tail -1)
+              if [ -n "$APKSIGNER" ]; then
+                echo "<details><summary>Empreinte du certificat</summary>"
+                echo ""
+                echo '```'
+                "$APKSIGNER" verify --print-certs "$NOM" 2>/dev/null \
+                  | grep -iE 'SHA-1|SHA-256' || echo 'empreinte illisible'
+                echo '```'
+                echo ""
+                echo "Une mise à jour ne s'installe par-dessus celle-ci que si cette empreinte est identique."
+                echo "</details>"
+              fi
             else
               echo "- Signature : **debug**, faute de secrets de signature."
               echo "  Installable pour essayer, mais **à ne pas distribuer** :"
