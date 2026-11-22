@@ -104,6 +104,32 @@ try {
     echecs.push('le routage côté client ne répond pas sur un lien profond');
   }
 
+  // 5. Les boutons de fournisseur suivent ce que le BUILD a déclaré
+  //    (phase 16). C'est le seul moyen, sans téléphone, d'éprouver que
+  //    VITE_FOURNISSEURS_APK traverse vraiment toute la chaîne : define de
+  //    Vite, `cap sync`, puis les fichiers servis. Une faute de frappe dans
+  //    le nom de la variable côté workflow passerait inaperçue autrement.
+  await onglet.goto(base, { waitUntil: 'networkidle' });
+  const declares = (process.env.VITE_FOURNISSEURS_APK ?? '')
+    .split(',')
+    .map((nom) => nom.trim().toLowerCase())
+    .filter((nom) => nom.length > 0);
+
+  for (const [nom, libelle] of [
+    ['google', 'Continuer avec Google'],
+    ['facebook', 'Continuer avec Facebook'],
+  ]) {
+    const visible = await onglet.getByRole('button', { name: libelle }).isVisible();
+    const attendu = declares.includes(nom);
+    if (visible !== attendu) {
+      echecs.push(
+        attendu
+          ? `« ${libelle} » est déclaré au build mais absent de l'écran`
+          : `« ${libelle} » n'est pas déclaré au build mais s'affiche quand même`,
+      );
+    }
+  }
+
   if (problemes.length > 0) echecs.push(`erreurs de console : ${problemes.join(' | ')}`);
 
   await onglet.goto(base, { waitUntil: 'networkidle' });
@@ -121,5 +147,11 @@ if (echecs.length > 0) {
   for (const echec of echecs) console.error(`  - ${echec}`);
   process.exit(1);
 }
+const fournisseurs = process.env.VITE_FOURNISSEURS_APK?.trim();
 console.log('APK : écran de compte, aucun service worker, aucun appel réseau au démarrage,');
 console.log('liens profonds fonctionnels. Capture : docs/images/apk-accueil.png');
+console.log(
+  fournisseurs
+    ? `Fournisseurs déclarés au build et affichés : ${fournisseurs}.`
+    : 'Aucun fournisseur déclaré au build, et aucun bouton affiché.',
+);

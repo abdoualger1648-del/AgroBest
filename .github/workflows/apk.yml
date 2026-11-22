@@ -114,7 +114,16 @@ jobs:
           # Déclare ce que le projet Android sait réellement faire. Facebook
           # n'y est pas : son SDK natif n'est pas configuré (D127).
           VITE_FOURNISSEURS_APK: ${{ steps.firebase.outputs.fournisseurs }}
-        run: npm run apk:web -w agri28
+        run: |
+          # Si le nom de la sortie ci-dessus était mal orthographié, la
+          # variable arriverait vide : l'APK se construirait sans aucun
+          # bouton de fournisseur, soit un retour silencieux à l'état
+          # d'avant la phase 16. Mieux vaut échouer.
+          if [ -z "$VITE_FOURNISSEURS_APK" ]; then
+            echo "::error::VITE_FOURNISSEURS_APK est vide alors que la configuration Firebase est déposée. Aucun bouton de connexion n'apparaîtrait dans l'APK."
+            exit 1
+          fi
+          npm run apk:web -w agri28
 
       - name: Préparer la clé de signature
         id: cle

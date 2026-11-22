@@ -251,6 +251,7 @@ en FR, AR/RTL et thème sombre, clavier, cibles tactiles, hors ligne) : voir
 | D128 | **`firebase` rétrogradé de 13.4 à 12.19** | 2026-11-22 | choix de l'utilisateur du projet entre trois options. Le plugin déclare `firebase: ^12.6.0` en dépendance de pair ; garder la 13 imposait d'affaiblir la résolution des dépendances du dépôt. Le typecheck passe contre la 12 — donc aucune API utilisée n'a disparu — et les 795 tests aussi. Mais les tests n'atteignent jamais le vrai service Firebase (D59) : le chemin réseau réel ne sera éprouvé que sur un téléphone |
 | D129 | Le pont natif est **déclaré par `registerPlugin`**, au lieu d'importer le point d'entrée JS du plugin | 2026-11-22 | défaut réel, attrapé par le build : importer `@capacitor-firebase/authentication` fait entrer son implémentation **web**, qui importe `firebase/auth` en dépendance de pair *optionnelle*. npm garde `firebase` dans `apps/agri28/node_modules` alors que le plugin est à la racine du monorepo, donc Vite ne le résout pas depuis le plugin et le remplace par un bouchon vide : **44 exports manquants**, build cassé. Régénérer le verrou n'a rien changé, npm maintenant l'imbrication. Or cette implémentation web ne sert à rien — le web garde la fenêtre du navigateur. `registerPlugin` sans implémentation web déclare exactement ce dont l'APK a besoin, le paquet npm restant installé pour que `cap sync` embarque le code Android. Les types viennent du paquet et sont effacés à la compilation |
 | D130 | `GOOGLE_SERVICES_JSON` est un secret **obligatoire** du workflow APK ; sans lui le build **échoue** | 2026-11-22 | vérifié dans le source du plugin : `load()` appelle `FirebaseAuth.getInstance()` au démarrage du pont Capacitor, donc avant toute action de l'utilisateur. Sans `google-services.json`, cet appel lève une exception et l'application plante **au lancement**. Un APK livré ainsi serait inutilisable : mieux vaut un build qui échoue avec un message qui nomme le secret et renvoie à `docs/APK.md`. Le workflow contrôle en outre que le fichier est du JSON valide, parce qu'un collage tronqué casserait Gradle plus loin, avec un message qui ne désignerait pas la cause |
+| D131 | `apk:verifier` contrôle en plus que les **boutons de fournisseur suivent ce que le build a déclaré** | 2026-11-22 | sans téléphone, c'est la seule façon d'éprouver que `VITE_FOURNISSEURS_APK` traverse toute la chaîne — define de Vite, `cap sync`, fichiers servis. Les tests unitaires couvrent la règle, pas le trajet : une faute de frappe sur le nom de la variable côté workflow aurait rétabli en silence l'absence de bouton d'avant la phase 16. Contre-épreuve faite — un build sans la variable, contrôlé avec elle, échoue en nommant le bouton manquant — et le workflow refuse en plus une déclaration vide |
 
 ### Questions ouvertes
 *Aucune pour l'instant.*
@@ -305,7 +306,8 @@ npm run variantes:valider -- --jours 21 --type apiculture
 Dans `apps/agri28` uniquement : `npm run icons` (régénère les icônes PWA),
 `npm run screenshots` (régénère les captures du README, `preview` devant tourner),
 `npm run icons:android` (icônes et écran de démarrage Android),
-`npm run apk:verifier` (sert les fichiers comme Capacitor et contrôle le comportement),
+`npm run apk:verifier` (sert les fichiers comme Capacitor et contrôle le comportement,
+boutons de fournisseur compris — le déclarer : `VITE_FOURNISSEURS_APK=google npm run apk:web`),
 `npm run format` / `npm run format:check`.
 
 L'APK lui-même est assemblé par le workflow **APK** de GitHub Actions : voir
