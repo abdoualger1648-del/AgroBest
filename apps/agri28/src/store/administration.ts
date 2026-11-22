@@ -149,3 +149,22 @@ export const useAdministration = create<AdministrationState>((set, get) => ({
     return montree;
   },
 }));
+
+/**
+ * Vide l'état d'administration. Appelé à la déconnexion.
+ *
+ * Un téléphone passe de main en main : la liste de TOUS les comptes, avec
+ * leurs adresses, n'a aucune raison de survivre au départ de celui qui
+ * administre. Les repères « vu » et « déjà notifié » restent dans
+ * `localStorage`, eux : ils décrivent l'appareil, pas la session.
+ */
+export function reinitialiserAdministration(): void {
+  useAdministration.setState({
+    phase: 'inconnu',
+    demandes: [],
+    comptes: [],
+    resume: RESUME_VIDE,
+    resumeComptes: COMPTES_VIDE,
+    code: null,
+  });
+}

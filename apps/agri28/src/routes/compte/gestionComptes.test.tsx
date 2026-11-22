@@ -333,3 +333,18 @@ describe('ce qu’une fermeture fait à la personne', () => {
     expect(apres?.desactiveLe).toBeNull();
   });
 });
+
+describe('ce que la déconnexion doit emporter', () => {
+  it('ne laisse pas la liste des comptes en mémoire pour la personne suivante', async () => {
+    // Un téléphone peut passer de main en main. Les adresses de tous les
+    // comptes ne doivent pas survivre à la déconnexion de l'administrateur.
+    await ouvrirAdministration();
+    expect(useAdministration.getState().comptes.length).toBeGreaterThan(0);
+
+    await useCompte.getState().seDeconnecter();
+
+    expect(useAdministration.getState().comptes).toEqual([]);
+    expect(useAdministration.getState().demandes).toEqual([]);
+    expect(useAdministration.getState().resume.total).toBe(0);
+  });
+});

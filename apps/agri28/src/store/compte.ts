@@ -10,6 +10,7 @@ import {
 import { ErreurCompte, type CodeErreurCompte, type ServiceCompte } from '@/compte/port';
 import { serviceCompte } from '@/compte';
 import { oublierDroits } from '@/compte/droits';
+import { reinitialiserAdministration } from './administration';
 
 interface CompteState {
   /** État dérivé, recalculé à chaque écriture — jamais pendant le rendu (D19). */
@@ -135,6 +136,7 @@ export function creerStoreCompte(service: ServiceCompte = serviceCompte) {
       seDeconnecter: async () => {
         await operation(set, () => service.seDeconnecter());
         oublierDroits();
+        reinitialiserAdministration();
         await oublierCompte();
         set({
           etat: ANONYME,
