@@ -25,7 +25,25 @@ function fichier(options: { paquet?: string; clientsOauth?: unknown[] } = {}): s
 
 describe('contrôle de google-services.json', () => {
   it('accepte un fichier complet', () => {
-    expect(controlerGoogleServices(fichier())).toEqual({ defaut: null, message: '' });
+    expect(controlerGoogleServices(fichier())).toEqual({
+      defaut: null,
+      message: '',
+      typesTrouves: [3],
+    });
+  });
+
+  it('dit ce qu’il a trouvé, pas seulement ce qui manque', () => {
+    // Sans cela, chaque échec coûtait un aller-retour pour savoir si le
+    // fichier était incomplet ou si le secret n'avait pas été remplacé.
+    const resultat = controlerGoogleServices(
+      fichier({ clientsOauth: [{ client_id: 'a', client_type: 1 }] }),
+    );
+    expect(resultat.typesTrouves).toEqual([1]);
+    expect(resultat.message).toContain('client_type présents dans le fichier : 1');
+  });
+
+  it('signale « aucun » quand le tableau des clients est vide', () => {
+    expect(controlerGoogleServices(fichier({ clientsOauth: [] })).message).toContain('aucun');
   });
 
   it('refuse un fichier sans client OAuth web — le défaut de l’APK 1.7.0', () => {

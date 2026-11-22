@@ -27,6 +27,15 @@ export interface ControleGoogleServices {
   defaut: DefautGoogleServices | null;
   /** Message prêt à afficher, vide quand tout va bien. */
   message: string;
+  /**
+   * Les `client_type` réellement trouvés dans le fichier, triés.
+   *
+   * Dire ce qu'on a trouvé, et pas seulement ce qui manque, rend le
+   * diagnostic autonome : `[1]` seul désigne un client web absent (Google
+   * non activé), `[3]` seul une empreinte de signature non déclarée, `[1,3]`
+   * un fichier correct — et donc un secret qui n'a pas été remplacé.
+   */
+  typesTrouves: readonly number[];
 }
 
 const MESSAGES: Record<DefautGoogleServices, string> = {
@@ -61,18 +70,22 @@ export function controlerGoogleServices(brut: string): ControleGoogleServices {
   try {
     contenu = JSON.parse(brut);
   } catch {
-    return { defaut: 'illisible', message: MESSAGES.illisible };
+    return { defaut: 'illisible', message: MESSAGES.illisible, typesTrouves: [] };
   }
 
   const clients = listeOuVide((contenu as { client?: unknown })?.client);
-  if (clients.length === 0) return { defaut: 'aucun_client', message: MESSAGES.aucun_client };
+  if (clients.length === 0) {
+    return { defaut: 'aucun_client', message: MESSAGES.aucun_client, typesTrouves: [] };
+  }
 
   const notre = clients.find((client) => {
     const info = (client as { client_info?: { android_client_info?: { package_name?: unknown } } })
       .client_info;
     return info?.android_client_info?.package_name === PAQUET_ANDROID;
   });
-  if (!notre) return { defaut: 'paquet_absent', message: MESSAGES.paquet_absent };
+  if (!notre) {
+    return { defaut: 'paquet_absent', message: MESSAGES.paquet_absent, typesTrouves: [] };
+  }
 
   // Le client web peut être déclaré à deux endroits selon l'âge du fichier :
   // dans `oauth_client` de l'application, ou dans
@@ -85,9 +98,23 @@ export function controlerGoogleServices(brut: string): ControleGoogleServices {
         .services?.appinvite_service?.other_platform_oauth_client,
     ),
   ];
+  const typesTrouves = [
+    ...new Set(
+      candidats
+        .map((entree) => (entree as { client_type?: unknown }).client_type)
+        .filter((type): type is number => typeof type === 'number'),
+    ),
+  ].sort((a, b) => a - b);
+
   if (!candidats.some(estClientWeb)) {
-    return { defaut: 'aucun_client_web', message: MESSAGES.aucun_client_web };
+    return {
+      defaut: 'aucun_client_web',
+      message: `${MESSAGES.aucun_client_web} (client_type présents dans le fichier : ${
+        typesTrouves.length > 0 ? typesTrouves.join(', ') : 'aucun'
+      })`,
+      typesTrouves,
+    };
   }
 
-  return { defaut: null, message: '' };
+  return { defaut: null, message: '', typesTrouves };
 }
