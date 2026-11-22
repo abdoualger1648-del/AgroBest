@@ -124,8 +124,13 @@ jobs:
           printf '%s' "$GOOGLE_SERVICES_JSON" > apps/agri28/android/app/google-services.json
           # Un fichier tronqué ou mal collé casserait Gradle plus loin, avec
           # un message qui ne désignerait pas la cause.
-          node -e "JSON.parse(require('fs').readFileSync('apps/agri28/android/app/google-services.json','utf8'))" \
-            || { echo "::error::GOOGLE_SERVICES_JSON n'est pas du JSON valide. Recollez le fichier entier."; exit 1; }
+          # Contrôle complet : JSON valide, application dz.agricole360.app
+          # déclarée, et surtout CLIENT OAUTH WEB présent. Sans ce dernier, le
+          # plugin garde son identifiant factice « WILL_BE_OVERRIDDEN » : le
+          # build réussit, l'APK s'installe, et la connexion Google échoue sur
+          # le téléphone. C'est ce qui est arrivé à l'APK 1.7.0 (D134).
+          npm run verifier:google-services -w agri28 --silent -- \
+            android/app/google-services.json || exit 1
           echo "fournisseurs=google" >> "$GITHUB_OUTPUT"
 
       - name: Construire l'application web (édition APK)

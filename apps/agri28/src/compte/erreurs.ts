@@ -92,6 +92,16 @@ export function traduireErreurNative(erreur: unknown): CodeErreurCompte {
   // « No credentials available ». Sans cette règle, l'écran affichait
   // « quelque chose n'a pas fonctionné » là où l'action utile est simple.
   if (message.includes('no credential')) return 'aucun_compte_appareil';
+  // Configuration incomplète côté Google : identifiant de client web absent
+  // (le plugin garde alors son « WILL_BE_OVERRIDDEN »), ou empreinte de
+  // signature non déclarée dans Firebase. Google renvoie « 28444 » ou
+  // « Developer console is not set up correctly ». C'est exactement ce qui a
+  // cassé l'APK 1.7.0, et ce qui s'affichait alors était « quelque chose n'a
+  // pas fonctionné » — un message qui n'aide personne.
+  if (message.includes('28444')) return 'configuration_fournisseur';
+  if (message.includes('developer console')) return 'configuration_fournisseur';
+  if (message.includes('not set up correctly')) return 'configuration_fournisseur';
+  if (message.includes('will_be_overridden')) return 'configuration_fournisseur';
   if (message.includes('no browser is available')) return 'fournisseur_indisponible';
   // Services Google Play absents ou trop anciens : rien à faire côté
   // utilisateur, l'email et le mot de passe restent la voie.

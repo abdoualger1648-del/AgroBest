@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { traduireErreurFirebase, traduireErreurNative } from './erreurs';
-import { FOURNISSEURS, impasseFournisseur } from './port';
+import { FOURNISSEURS, estAnnulation, estErreurFournisseur, impasseFournisseur } from './port';
 
 /** Reproduit la forme d'une erreur Firebase : un objet portant un `code`. */
 function erreurFirebase(code: string) {
@@ -146,5 +146,27 @@ describe('erreurs du plugin natif (phase 16)', () => {
     expect(traduireErreurNative({ message: 42 })).toBe('inconnue');
     expect(traduireErreurNative(new Error('boum'))).toBe('inconnue');
     expect(traduireErreurNative('Sign in canceled.')).toBe('connexion_annulee');
+  });
+});
+
+describe('configuration de fournisseur incomplète (le défaut de l’APK 1.7.0)', () => {
+  it('nomme la configuration au lieu de dire « quelque chose n’a pas fonctionné »', () => {
+    // Google renvoie ces formes quand l'identifiant de client web manque, ou
+    // quand l'empreinte de signature n'est pas déclarée dans Firebase.
+    expect(
+      traduireErreurNative(new Error('[28444] Developer console is not set up correctly.')),
+    ).toBe('configuration_fournisseur');
+    expect(traduireErreurNative(new Error('Error code 28444'))).toBe('configuration_fournisseur');
+    expect(traduireErreurNative(new Error('invalid client: WILL_BE_OVERRIDDEN'))).toBe(
+      'configuration_fournisseur',
+    );
+  });
+
+  it('reste rangé du côté des boutons, pas du formulaire', () => {
+    // L'erreur vient du bouton de fournisseur : l'afficher sous le champ
+    // email serait au mauvais endroit (D116).
+    expect(estErreurFournisseur('configuration_fournisseur')).toBe(true);
+    // Mais ce n'est pas une annulation : le message doit s'afficher.
+    expect(estAnnulation('configuration_fournisseur')).toBe(false);
   });
 });

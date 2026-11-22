@@ -27,7 +27,8 @@
     "connexion_annulee": "Connexion interrompue. Vous pouvez réessayer.",
     "autre_methode": "Cette adresse a déjà un compte, créé autrement. Connectez-vous avec le mot de passe, ou avec le fournisseur que vous aviez utilisé la première fois.",
     "fournisseur_indisponible": "Cette façon de se connecter n'est pas disponible ici. Utilisez votre adresse email et votre mot de passe.",
-    "aucun_compte_appareil": "Ce téléphone n'a aucun compte Google enregistré. Ajoutez-en un dans les réglages Android, ou créez votre compte avec une adresse email et un mot de passe."
+    "aucun_compte_appareil": "Ce téléphone n'a aucun compte Google enregistré. Ajoutez-en un dans les réglages Android, ou créez votre compte avec une adresse email et un mot de passe.",
+    "configuration_fournisseur": "La connexion Google n'est pas encore configurée correctement pour cette version de l'application. Ce n'est pas de votre fait : signalez-le à l'administrateur. En attendant, créez votre compte avec une adresse email et un mot de passe."
   },
   "actions": {
     "creerCompte": "Créer mon compte",

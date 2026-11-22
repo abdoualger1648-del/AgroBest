@@ -120,7 +120,7 @@ Cela exige **une configuration déposée dans le projet Android**, et le build �
 le plugin initialise Firebase au démarrage, donc un APK construit sans cette configuration
 planterait au lancement, pas à l'appui sur le bouton.
 
-### Les deux choses à faire, une seule fois
+### Les trois choses à faire, une seule fois, dans cet ordre
 
 **1. Récupérer l'empreinte SHA-1 de votre clé de signature.** Deux moyens :
 
@@ -130,7 +130,18 @@ keytool -list -v -keystore agricole360.jks -alias agricole360 | grep SHA1
 
 ou bien le résumé du premier build signé, qui l'affiche (D122).
 
-**2. Déclarer l'application Android dans la console Firebase**, puis déposer le fichier obtenu :
+**2. Activer Google AVANT de télécharger quoi que ce soit.**
+
+> **L'ordre n'est pas négociable**, et s'y tromper coûte un APK entier. Le client OAuth « web »
+> dont le plugin a besoin n'est créé par Firebase **qu'au moment où on active Google** dans
+> Authentication. Un `google-services.json` téléchargé avant cette activation ne le contient pas —
+> et rien ne le signale : le build Android réussit, l'APK s'installe, puis la connexion échoue sur
+> le téléphone. C'est arrivé à l'APK 1.7.0. Depuis, `npm run verifier:google-services` refuse un
+> tel fichier au build (D134), mais autant ne pas provoquer l'échec.
+
+Dans *Build → Authentication → Sign-in method*, activez **Google**. Puis seulement :
+
+**3. Déclarer l'application Android**, et déposer le fichier obtenu :
 
 1. [Console Firebase](https://console.firebase.google.com/) → projet `agricole360-4a470` →
    *Paramètres du projet* → *Vos applications* → **Ajouter une application** → Android ;
@@ -139,9 +150,14 @@ ou bien le résumé du premier build signé, qui l'affiche (D122).
    « signature de débogage », ce qui prête à confusion : c'est bien là que va l'empreinte de
    votre clé de **release**, et le champ accepte plusieurs empreintes ;
 4. téléchargez le **`google-services.json`** proposé à l'étape suivante ;
-5. dans *Authentication → Sign-in method*, activez **Google** s'il ne l'est pas déjà ;
-6. GitHub → *Settings → Secrets and variables → Actions* → nouveau secret
+5. GitHub → *Settings → Secrets and variables → Actions* → nouveau secret
    **`GOOGLE_SERVICES_JSON`**, dont le contenu est le fichier entier, collé tel quel.
+
+Pour contrôler un fichier avant de le coller, depuis `apps/agri28` :
+
+```bash
+npm run verifier:google-services -- chemin/vers/google-services.json
+```
 
 Le fichier n'est pas un secret au sens strict — il ne contient que des identifiants publics, comme
 la clé d'API web (D58) — mais il désigne un projet Firebase précis, et le passer par un secret

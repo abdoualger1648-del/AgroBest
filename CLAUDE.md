@@ -254,6 +254,8 @@ en FR, AR/RTL et thème sombre, clavier, cibles tactiles, hors ligne) : voir
 | D131 | `apk:verifier` contrôle en plus que les **boutons de fournisseur suivent ce que le build a déclaré** | 2026-11-22 | sans téléphone, c'est la seule façon d'éprouver que `VITE_FOURNISSEURS_APK` traverse toute la chaîne — define de Vite, `cap sync`, fichiers servis. Les tests unitaires couvrent la règle, pas le trajet : une faute de frappe sur le nom de la variable côté workflow aurait rétabli en silence l'absence de bouton d'avant la phase 16. Contre-épreuve faite — un build sans la variable, contrôlé avec elle, échoue en nommant le bouton manquant — et le workflow refuse en plus une déclaration vide |
 | D132 | Un téléphone **sans compte Google** reçoit son propre message (`aucun_compte_appareil`), distinct de « fournisseur indisponible » | 2026-11-22 | trou trouvé en lisant le source du plugin, sur un chemin qu'aucun test ni aucun build ne couvre : Android Credential Manager lève `NoCredentialException`, sans code, avec le seul message « No credentials available ». Aucune de mes règles ne le reconnaissait, donc l'agriculteur lisait « quelque chose n'a pas fonctionné » alors que l'action utile tient en une phrase — ajouter un compte au téléphone, ou passer par l'email. Les deux cas restent distincts parce que l'action diffère : avec les services Google Play absents, il n'y a rien à faire |
 | D133 | Les contrôles de secrets passent **en tête du workflow**, avant `npm ci` et `npm run verify` | 2026-11-22 | défaut observé à la première exécution réelle : le garde-fou de D130 a mis deux minutes à annoncer un secret absent, parce qu'il était placé après l'installation et la vérification. Un secret manquant doit se dire en quelques secondes. Les étapes qui écrivent réellement les fichiers restent où elles sont |
+| D134 | Le build **contrôle que `google-services.json` contient un client OAuth web** (`client_type: 3`), et refuse sinon | 2026-11-22 | **défaut réel, qui a cassé l'APK 1.7.0 sur le téléphone de l'utilisateur du projet, et dont la cause est une faute dans mes instructions.** Le plugin embarque un `default_web_client_id` factice (`WILL_BE_OVERRIDDEN`) que le greffon Gradle ne remplace que si ce client web existe. Or Firebase ne le crée **qu'à l'activation de Google** dans Authentication : mon pas à pas faisait télécharger le fichier avant cette activation. Rien ne le signalait — le build réussissait, l'APK s'installait, et la connexion échouait en affichant « quelque chose n'a pas fonctionné ». La décision vit dans `controlerGoogleServices`, pure et testée sur le fichier exact que Firebase livre dans ce cas, et `docs/APK.md` impose désormais l'ordre : activer Google **avant** de télécharger |
+| D135 | Une **configuration de fournisseur incomplète** a son propre code (`configuration_fournisseur`) | 2026-11-22 | corollaire de D134 : tant qu'une telle erreur est possible, elle doit se lire. Google renvoie « 28444 » ou « Developer console is not set up correctly » — sans code Firebase — pour un client web absent comme pour une empreinte de signature non déclarée. Le message dit que la panne n'est pas du fait de l'utilisateur, à qui signaler, et quelle autre voie prendre. D134 doit rendre le cas impossible ; D135 existe pour le jour où il surviendrait quand même |
 
 ### Questions ouvertes
 *Aucune pour l'instant.*
@@ -308,7 +310,8 @@ npm run variantes:valider -- --jours 21 --type apiculture
 Dans `apps/agri28` uniquement : `npm run icons` (régénère les icônes PWA),
 `npm run screenshots` (régénère les captures du README, `preview` devant tourner),
 `npm run icons:android` (icônes et écran de démarrage Android),
-`npm run apk:verifier` (sert les fichiers comme Capacitor et contrôle le comportement,
+`npm run verifier:google-services -- <fichier>` (contrôle un `google-services.json` avant de le coller
+dans le secret), `npm run apk:verifier` (sert les fichiers comme Capacitor et contrôle le comportement,
 boutons de fournisseur compris — le déclarer : `VITE_FOURNISSEURS_APK=google npm run apk:web`),
 `npm run format` / `npm run format:check`.
 
@@ -341,7 +344,7 @@ L'APK lui-même est assemblé par le workflow **APK** de GitHub Actions : voir
 | 13 | Gestion des comptes par l'administrateur : liste complète, ouverture et fermeture d'accès, niveau accordé ou retiré | terminée |
 | 14 | Connexion par Google et Facebook (édition web) ; texte de confidentialité révisé | terminée |
 | 15 | Le quiz s'adapte aussi au métier ; D80 corrigée sur sa prémisse | terminée |
-| 16 | Connexion Google **native** dans l'APK ; mise à jour sans désinstallation garantie et prouvée | terminée — **APK 1.7.0 signé** construit le 2026-11-22 (run 16, `versionCode` 16, empreinte SHA-1 `11:91:67:D0:…:59:5E`). Android compile avec le plugin. Reste à éprouver sur un téléphone : la connexion Google elle-même |
+| 16 | Connexion Google **native** dans l'APK ; mise à jour sans désinstallation garantie et prouvée | APK **1.7.0** signé et installable (run 16, SHA-1 `11:91:67:D0:…:59:5E`), mais sa **connexion Google échoue** : `google-services.json` sans client OAuth web (D134). Corrigé au build ; une 1.8.0 reste à construire avec le fichier retéléchargé |
 
 ### Méthode de travail imposée
 Une phase à la fois. À la fin de chaque phase : résumé, tests, commit, puis **arrêt et attente d'un GO explicite**.

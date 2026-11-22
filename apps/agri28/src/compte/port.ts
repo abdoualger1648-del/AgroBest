@@ -114,6 +114,14 @@ export type CodeErreurCompte =
    * téléphone — ou de passer par l'email et le mot de passe.
    */
   | 'aucun_compte_appareil'
+  /**
+   * La connexion par fournisseur n'est pas configurée correctement pour cette
+   * version de l'application (phase 16) : client OAuth web absent de
+   * `google-services.json`, ou empreinte de signature non déclarée dans
+   * Firebase. Rien que l'utilisateur puisse corriger — mais il doit savoir
+   * que la panne n'est pas de son fait, et qu'une autre voie existe.
+   */
+  | 'configuration_fournisseur'
   | 'inconnue';
 
 export class ErreurCompte extends Error {
@@ -144,7 +152,8 @@ export function estErreurFournisseur(code: CodeErreurCompte): boolean {
     code === 'connexion_annulee' ||
     code === 'autre_methode' ||
     code === 'fournisseur_indisponible' ||
-    code === 'aucun_compte_appareil'
+    code === 'aucun_compte_appareil' ||
+    code === 'configuration_fournisseur'
   );
 }
 
