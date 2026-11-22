@@ -62,6 +62,16 @@ function LigneCompte({
         {soiMeme ? <Etiquette texte={t('compte:admin.moi')} fort /> : null}
       </div>
 
+      {/* L'identifiant est ici, et nulle part ailleurs : c'est lui qui
+          désigne un administrateur dans la console Firestore (D56). Le
+          montrer sur cette liste permet d'en désigner un second sans que la
+          personne ait à lire le sien dans son propre écran de compte — où il
+          ne lui dirait rien (D137). La donnée était déjà chargée. */}
+      <p className="mt-1 font-mono text-xs break-all text-muted">
+        <span className="sr-only">{t('compte:admin.identifiantDe')} </span>
+        {compte.uid}
+      </p>
+
       <div className="mt-2 flex flex-wrap gap-2">
         <Etiquette
           texte={compte.actif ? t('compte:admin.etatActif') : t('compte:admin.etatInactif')}

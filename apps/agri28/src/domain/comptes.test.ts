@@ -4,6 +4,7 @@ import {
   actionsPossibles,
   attendUneReponse,
   filtrerComptes,
+  montrerIdentifiant,
   resumerComptes,
   type CompteAdministre,
 } from './comptes';
@@ -146,5 +147,53 @@ describe('actionsPossibles', () => {
     const actions = actionsPossibles(compte({ actif: true, niveau: 'multi' }), null);
     expect(actions.desactiver).toBe(true);
     expect(actions.retirerNiveau).toBe(true);
+  });
+});
+
+describe('montrer l’identifiant de compte', () => {
+  const admin = 'patron@example.com';
+
+  it('le montre à un administrateur déjà désigné', () => {
+    expect(montrerIdentifiant({ estAdministrateur: true, email: 'x@y.z', emailAdmin: admin })).toBe(
+      true,
+    );
+  });
+
+  it('le montre à l’adresse déclarée au build, qui n’a pas encore les droits', () => {
+    // Sans cette seconde porte, le tout premier administrateur ne pourrait
+    // jamais lire son identifiant : il faudrait déjà être administrateur pour
+    // obtenir ce qui sert à le devenir.
+    expect(montrerIdentifiant({ estAdministrateur: false, email: admin, emailAdmin: admin })).toBe(
+      true,
+    );
+  });
+
+  it('ignore la casse et les espaces autour de l’adresse', () => {
+    expect(
+      montrerIdentifiant({
+        estAdministrateur: false,
+        email: '  Patron@Example.COM ',
+        emailAdmin: admin,
+      }),
+    ).toBe(true);
+  });
+
+  it('ne le montre pas à un agriculteur', () => {
+    expect(
+      montrerIdentifiant({
+        estAdministrateur: false,
+        email: 'hamid@example.com',
+        emailAdmin: admin,
+      }),
+    ).toBe(false);
+  });
+
+  it('n’ouvre pas à tout le monde quand aucune adresse n’est fournie au build', () => {
+    // Deux chaînes vides ne doivent pas se « correspondre » : c'est le cas de
+    // l'édition `complete`, où emailAdmin() rend ''.
+    expect(montrerIdentifiant({ estAdministrateur: false, email: '', emailAdmin: '' })).toBe(false);
+    expect(
+      montrerIdentifiant({ estAdministrateur: false, email: 'hamid@example.com', emailAdmin: '' }),
+    ).toBe(false);
   });
 });

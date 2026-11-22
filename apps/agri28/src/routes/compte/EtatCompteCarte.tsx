@@ -6,6 +6,9 @@ import { CopyButton } from '@/components/CopyButton';
 import { PageHeader } from '@/components/PageHeader';
 import { useCompte } from '@/store/compte';
 import { useEtatCompte } from '@/hooks/useAcces';
+import { useAdministrateur } from '@/hooks/useAdministrateur';
+import { montrerIdentifiant } from '@/domain/comptes';
+import { emailAdmin } from '@/config';
 
 /** Résumé du compte, affiché à la place du formulaire une fois connecté. */
 export function EtatCompteCarte() {
@@ -14,8 +17,17 @@ export function EtatCompteCarte() {
   const uid = useCompte((state) => state.uid);
   const seDeconnecter = useCompte((state) => state.seDeconnecter);
   const enCours = useCompte((state) => state.enCours);
+  const administrateur = useAdministrateur();
 
   if (etat.statut === 'anonyme') return null;
+
+  const identifiantVisible =
+    uid !== null &&
+    montrerIdentifiant({
+      estAdministrateur: administrateur,
+      email: etat.email,
+      emailAdmin: emailAdmin(),
+    });
 
   return (
     <>
@@ -29,8 +41,11 @@ export function EtatCompteCarte() {
 
       {/* L'identifiant du compte est ce qui désigne un administrateur
           (D56). Sans cet affichage, il fallait aller le chercher dans la
-          console Firebase ; on le lit maintenant depuis le téléphone. */}
-      {uid ? (
+          console Firebase ; on le lit maintenant depuis le téléphone.
+          Mais il ne concerne QUE l'administrateur : pour un agriculteur,
+          c'étaient 28 caractères et une phrase sur des « droits
+          particuliers » qui ne lui disent rien (D137). */}
+      {identifiantVisible ? (
         <Card className="mt-4 bg-surface-2">
           <p className="font-semibold">{t('etat.identifiant')}</p>
           <p className="mt-1 font-mono text-sm break-all">{uid}</p>

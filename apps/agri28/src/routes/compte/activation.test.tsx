@@ -243,7 +243,25 @@ describe('édition APK : accès au parcours', () => {
     await rouvrir('/');
     expect(screen.queryByText(/leçon\(s\) d'essai/)).not.toBeInTheDocument();
   });
-  it('affiche l’identifiant du compte, et permet de le copier', async () => {
+  it('ne montre PAS l’identifiant du compte à un agriculteur', async () => {
+    // Signalé par l'utilisateur du projet : l'identifiant s'affichait pour
+    // tout le monde. Ce n'était pas une fuite — chacun ne voit que le sien —
+    // mais 28 caractères et une phrase sur des « droits particuliers » que
+    // personne d'autre que l'administrateur n'a à lire (D137).
+    const user = userEvent.setup();
+    await allerJusquALEssai(user);
+
+    await rouvrir('/compte');
+    await screen.findByText(/Vous êtes connecté|kamal@example.dz/);
+
+    expect(screen.queryByText('Identifiant du compte')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Copier l'identifiant/ })).not.toBeInTheDocument();
+  });
+
+  it('le montre à l’adresse déclarée au build, qui désignera le premier administrateur', async () => {
+    // La seconde porte de `montrerIdentifiant` : sans elle, il faudrait déjà
+    // être administrateur pour obtenir ce qui sert à le devenir.
+    vi.stubEnv('VITE_EMAIL_ADMIN', EMAIL);
     const user = userEvent.setup();
     await allerJusquALEssai(user);
 
@@ -251,8 +269,6 @@ describe('édition APK : accès au parcours', () => {
     const uid = useCompte.getState().uid;
     expect(uid).toBeTruthy();
 
-    // C'est cet identifiant qui désigne un administrateur (D56) : sans cet
-    // affichage, il fallait aller le chercher dans la console Firebase.
     expect(await screen.findByText('Identifiant du compte')).toBeInTheDocument();
     expect(screen.getByText(uid ?? '')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Copier l'identifiant/ })).toBeInTheDocument();

@@ -84,7 +84,7 @@
     "essai": "Compte en essai",
     "horsLigneAvertissement": "Pas de connexion : votre accès reste celui de la dernière vérification.",
     "identifiant": "Identifiant du compte",
-    "identifiantAide": "C'est cet identifiant qu'il faut donner à l'administrateur pour ouvrir des droits particuliers.",
+    "identifiantAide": "C'est cet identifiant qui désigne un administrateur : créez un document `admins/<identifiant>` dans Firestore. Il n'est visible que par vous.",
     "copier": "Copier l'identifiant",
     "copie": "Identifiant copié"
   },
@@ -139,7 +139,8 @@
     "confirmerDesactiver": "Fermer l'accès de {{email}} ? Les 28 leçons se refermeront à sa prochaine connexion. Son Dossier reste sur son téléphone.",
     "confirmerRetirerNiveau": "Ramener {{email}} à un seul dossier ? Ses dossiers existants ne sont pas supprimés, mais il ne pourra plus en créer.",
     "protectionSoi": "Vous ne pouvez pas retirer vos propres droits depuis cet écran.",
-    "demandesTitre": "Demandes en attente"
+    "demandesTitre": "Demandes en attente",
+    "identifiantDe": "Identifiant du compte :"
   },
   "fournisseurs": {
     "titre": "Ou connectez-vous en un geste",

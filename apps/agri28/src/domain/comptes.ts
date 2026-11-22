@@ -120,3 +120,38 @@ export function actionsPossibles(
     retirerNiveau: compte.niveau === 'multi' && !soiMeme,
   };
 }
+
+/**
+ * Faut-il montrer à cette personne son identifiant de compte ?
+ *
+ * Il ne sert qu'à **une** chose : créer le document `admins/{uid}` dans la
+ * console Firestore, qui désigne un administrateur (D56, D73). Aucun
+ * utilisateur ordinaire n'en a jamais besoin — une demande d'activation ou de
+ * niveau s'écrit sur son propre document, et l'écran d'administration la voit
+ * apparaître seule, avec l'adresse email. Personne n'a à transmettre son
+ * identifiant à qui que ce soit.
+ *
+ * L'afficher à tout le monde n'était donc pas une fuite — chacun ne voit que
+ * le sien, et un identifiant n'autorise rien — mais du bruit : 28 caractères
+ * et une phrase parlant d'« administrateur » et de « droits particuliers »,
+ * là où D22 demande le vocabulaire de terrain.
+ *
+ * Deux portes, et la seconde évite de tourner en rond : un administrateur
+ * déjà désigné le voit, et la personne dont l'adresse est celle du build
+ * (`VITE_EMAIL_ADMIN`) aussi — c'est elle, par construction, qui désignera le
+ * tout premier administrateur, avant d'en avoir les droits.
+ */
+export function montrerIdentifiant(options: {
+  estAdministrateur: boolean;
+  /** Adresse du compte connecté. */
+  email: string;
+  /** Adresse fournie au build, vide si elle ne l'a pas été. */
+  emailAdmin: string;
+}): boolean {
+  if (options.estAdministrateur) return true;
+  const attendue = options.emailAdmin.trim().toLowerCase();
+  // Sans adresse d'administrateur au build, cette seconde porte n'existe pas :
+  // deux chaînes vides ne doivent pas ouvrir à tout le monde.
+  if (attendue === '') return false;
+  return options.email.trim().toLowerCase() === attendue;
+}
