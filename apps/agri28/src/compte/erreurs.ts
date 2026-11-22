@@ -87,7 +87,16 @@ export function traduireErreurNative(erreur: unknown): CodeErreurCompte {
   const message = messageBrut(erreur).toLowerCase();
   // « canceled » et « cancelled » contiennent tous deux « cancel ».
   if (message.includes('cancel')) return 'connexion_annulee';
+  // Android Credential Manager : le téléphone n'a aucun compte Google à
+  // proposer. `NoCredentialException` ne porte pas de code, seulement
+  // « No credentials available ». Sans cette règle, l'écran affichait
+  // « quelque chose n'a pas fonctionné » là où l'action utile est simple.
+  if (message.includes('no credential')) return 'aucun_compte_appareil';
   if (message.includes('no browser is available')) return 'fournisseur_indisponible';
+  // Services Google Play absents ou trop anciens : rien à faire côté
+  // utilisateur, l'email et le mot de passe restent la voie.
+  if (message.includes('provider configuration')) return 'fournisseur_indisponible';
+  if (message.includes('unsupported')) return 'fournisseur_indisponible';
   // Configuration absente : google-services.json manquant dans l'APK.
   if (message.includes('firebaseapp is not initialized')) return 'fournisseur_indisponible';
   if (message.includes('network')) return 'hors_ligne';

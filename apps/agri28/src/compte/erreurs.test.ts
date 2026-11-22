@@ -95,6 +95,30 @@ describe('erreurs du plugin natif (phase 16)', () => {
     expect(traduireErreurNative(new Error('Sign in cancelled'))).toBe('connexion_annulee');
   });
 
+  it('distingue « aucun compte sur ce téléphone » d’une panne du fournisseur', () => {
+    // Android Credential Manager, quand le téléphone n'a pas de compte
+    // Google : NoCredentialException, sans code, « No credentials available ».
+    // Avant cette règle l'écran disait « quelque chose n'a pas fonctionné »,
+    // alors que l'action utile tient en une phrase.
+    expect(traduireErreurNative(new Error('No credentials available'))).toBe(
+      'aucun_compte_appareil',
+    );
+    expect(traduireErreurNative(new Error('androidx.credentials: No credential found'))).toBe(
+      'aucun_compte_appareil',
+    );
+  });
+
+  it('traite l’absence des services Google Play comme un fournisseur indisponible', () => {
+    // Là, rien à faire côté utilisateur : l'email et le mot de passe restent
+    // la voie, et c'est ce que dit déjà ce message.
+    expect(
+      traduireErreurNative(new Error('Provider configuration error: no provider dependency')),
+    ).toBe('fournisseur_indisponible');
+    expect(traduireErreurNative(new Error('Unsupported credential type'))).toBe(
+      'fournisseur_indisponible',
+    );
+  });
+
   it('nomme une configuration absente au lieu de dire « inconnue »', () => {
     // Exactement ce qui arrive si google-services.json manque dans l'APK.
     expect(

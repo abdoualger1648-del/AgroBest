@@ -106,6 +106,14 @@ export type CodeErreurCompte =
   | 'autre_methode'
   /** Le fournisseur n'est pas activé côté Firebase, ou pas disponible ici. */
   | 'fournisseur_indisponible'
+  /**
+   * L'appareil n'a aucun compte du fournisseur à proposer (phase 16).
+   *
+   * Distinct de `fournisseur_indisponible` parce que l'action utile n'est pas
+   * la même : là il n'y a rien à faire, ici il suffit d'ajouter un compte au
+   * téléphone — ou de passer par l'email et le mot de passe.
+   */
+  | 'aucun_compte_appareil'
   | 'inconnue';
 
 export class ErreurCompte extends Error {
@@ -133,7 +141,10 @@ export function estTemporaire(code: CodeErreurCompte): boolean {
  */
 export function estErreurFournisseur(code: CodeErreurCompte): boolean {
   return (
-    code === 'connexion_annulee' || code === 'autre_methode' || code === 'fournisseur_indisponible'
+    code === 'connexion_annulee' ||
+    code === 'autre_methode' ||
+    code === 'fournisseur_indisponible' ||
+    code === 'aucun_compte_appareil'
   );
 }
 
