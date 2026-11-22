@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { compteRequis, edition, emailAdmin, proposeApk } from './config';
+import capacitor from '../capacitor.config';
 
 afterEach(() => {
   vi.unstubAllEnvs();
@@ -41,5 +42,19 @@ describe('adresse de l’administrateur', () => {
   it('est lue depuis la configuration de build', () => {
     vi.stubEnv('VITE_EMAIL_ADMIN', 'admin@example.dz');
     expect(emailAdmin()).toBe('admin@example.dz');
+  });
+});
+
+describe("l'origine de la vue web de l'APK", () => {
+  it('reste https://localhost, sinon toutes les bases installées deviennent orphelines', () => {
+    // IndexedDB est rattachée à l'ORIGINE de la vue web. Changer le schéma ou
+    // le nom d'hôte de Capacitor ne casse rien de visible : l'application se
+    // lance, mais sur une base vide. L'utilisateur y lit la perte de son
+    // Dossier, sans aucun message d'erreur, et une mise à jour correctement
+    // signée suffirait à la provoquer. D'où ce verrou, qui n'autorise pas de
+    // changement silencieux.
+    expect(capacitor.server?.androidScheme).toBe('https');
+    expect(capacitor.server?.hostname).toBe('localhost');
+    expect(capacitor.appId).toBe('dz.agricole360.app');
   });
 });
