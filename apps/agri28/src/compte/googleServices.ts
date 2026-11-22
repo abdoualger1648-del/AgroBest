@@ -20,7 +20,7 @@
  */
 
 export type DefautGoogleServices =
-  'illisible' | 'aucun_client' | 'paquet_absent' | 'aucun_client_web';
+  'illisible' | 'aucun_client' | 'paquet_absent' | 'aucun_client_web' | 'aucun_client_android';
 
 export interface ControleGoogleServices {
   /** `null` quand tout va bien. */
@@ -44,21 +44,30 @@ const MESSAGES: Record<DefautGoogleServices, string> = {
   paquet_absent:
     'google-services.json ne contient pas l’application dz.agricole360.app. ' +
     'Déclarez-la dans la console Firebase, puis téléchargez le fichier à nouveau.',
-  aucun_client_web:
-    'google-services.json ne contient aucun client OAuth « web » (client_type 3). ' +
-    'Cela arrive quand le fichier a été téléchargé AVANT d’avoir activé Google dans ' +
-    'Authentication. Activez Google, puis téléchargez le fichier à nouveau et ' +
-    'remplacez le secret : sans ce client, la connexion Google échoue sur le téléphone ' +
-    'alors que le build réussit.',
+  aucun_client_web: '', // composé plus bas : le message énumère tout ce qui manque
+  aucun_client_android: '',
+};
+
+/** Ce qui manque, dit en une phrase actionnable par manque. */
+const MANQUES = {
+  web:
+    'le client OAuth « web » (client_type 3) — sans lui le plugin garde son identifiant ' +
+    'factice et Google refuse. Il n’apparaît que quand « ID client Web » est renseigné dans ' +
+    'Authentication → Sign-in method → Google. Un écran de consentement OAuth non configuré ' +
+    'dans Google Cloud empêche Firebase de le créer, même avec Google affiché « Activé »',
+  android:
+    'le client OAuth « Android » (client_type 1) — il n’existe que si l’empreinte SHA-1 de la ' +
+    'clé de signature est déclarée sur la fiche de l’application Android. Sans lui, Google ne ' +
+    'peut pas vérifier l’application qui appelle, et refuse de la même façon',
 };
 
 /** Le paquet Android de l'application. */
 export const PAQUET_ANDROID = 'dz.agricole360.app';
 
-/** Vrai pour un client OAuth de type web, où qu'il soit déclaré. */
-function estClientWeb(entree: unknown): boolean {
+/** Vrai pour un client OAuth du type demandé (3 = web, 1 = Android). */
+function clientDeType(entree: unknown, type: number): boolean {
   if (typeof entree !== 'object' || entree === null) return false;
-  return (entree as { client_type?: unknown }).client_type === 3;
+  return (entree as { client_type?: unknown }).client_type === type;
 }
 
 function listeOuVide(valeur: unknown): readonly unknown[] {
@@ -106,12 +115,23 @@ export function controlerGoogleServices(brut: string): ControleGoogleServices {
     ),
   ].sort((a, b) => a - b);
 
-  if (!candidats.some(estClientWeb)) {
+  const aWeb = candidats.some((entree) => clientDeType(entree, 3));
+  const aAndroid = candidats.some((entree) => clientDeType(entree, 1));
+
+  if (!aWeb || !aAndroid) {
+    const manques: string[] = [];
+    if (!aWeb) manques.push(MANQUES.web);
+    if (!aAndroid) manques.push(MANQUES.android);
+    const trouves = typesTrouves.length > 0 ? typesTrouves.join(', ') : 'aucun';
     return {
-      defaut: 'aucun_client_web',
-      message: `${MESSAGES.aucun_client_web} (client_type présents dans le fichier : ${
-        typesTrouves.length > 0 ? typesTrouves.join(', ') : 'aucun'
-      })`,
+      // Le web d'abord : c'est le manque qui laisse l'identifiant factice en
+      // place, donc celui qui prime quand les deux manquent.
+      defaut: aWeb ? 'aucun_client_android' : 'aucun_client_web',
+      message:
+        `google-services.json est incomplet. Il manque ${manques.join(' ; et ')}. ` +
+        `client_type présents dans le fichier : ${trouves}. ` +
+        `Corrigez dans la console Firebase, retéléchargez le fichier et remplacez le secret ` +
+        `GOOGLE_SERVICES_JSON — voir docs/APK.md.`,
       typesTrouves,
     };
   }
