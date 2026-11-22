@@ -226,7 +226,6 @@
   },
   "variantes": {
     "bovin": {
-      "brouillon": true,
       "terrain": {
         "text": "Avant : « améliorer mon troupeau ». Après : « livrer un volume de lait régulier d'octobre à mai, en connaissant le coût de l'aliment par vache, sans dépasser le budget que je me suis fixé ». La seconde phrase se vérifie en mai, un carnet à la main.",
         "label": "Avant / après"
@@ -244,7 +243,6 @@
       }
     },
     "avicole": {
-      "brouillon": true,
       "terrain": {
         "text": "Avant : « faire mieux sur mes bandes ». Après : « sortir quatre bandes dans l'année en connaissant le coût de revient de chacune, avec une mortalité que je note bande après bande ». La seconde phrase se vérifie en fin d'année, un carnet à la main.",
         "label": "Avant / après"
@@ -262,7 +260,6 @@
       }
     },
     "apiculture": {
-      "brouillon": true,
       "terrain": {
         "text": "Avant : « avoir plus de miel ». Après : « récolter sur 40 ruches entre avril et juin, en connaissant le coût de chaque ruche conduite, sans dépasser le budget que je me suis fixé ». La seconde phrase se vérifie en juin, un carnet à la main.",
         "label": "Avant / après"
@@ -280,7 +277,6 @@
       }
     },
     "maraichage": {
-      "brouillon": true,
       "terrain": {
         "text": "Avant : « mieux vendre mes légumes ». Après : « écouler ma récolte d'été avant fin août sans passer par un intermédiaire, en connaissant mon coût de revient au cageot ». La seconde phrase se vérifie en août, un carnet à la main.",
         "label": "Avant / après"
@@ -298,7 +294,6 @@
       }
     },
     "serre": {
-      "brouillon": true,
       "terrain": {
         "text": "Avant : « améliorer mes serres ». Après : « tenir une production continue de novembre à avril sur quatre serres, en connaissant le coût de revient au plant ». La seconde phrase se vérifie en avril, un carnet à la main.",
         "label": "Avant / après"
@@ -316,7 +311,6 @@
       }
     },
     "cereales": {
-      "brouillon": true,
       "terrain": {
         "text": "Avant : « faire un meilleur rendement ». Après : « livrer ma récolte avant fin juillet en connaissant mon coût de revient au quintal, sans dépasser le budget d'intrants que je me suis fixé ». La seconde phrase se vérifie en juillet, un carnet à la main.",
         "label": "Avant / après"
@@ -334,7 +328,6 @@
       }
     },
     "arboriculture": {
-      "brouillon": true,
       "terrain": {
         "text": "Avant : « améliorer mon verger ». Après : « récolter et vendre avant fin décembre en connaissant mon coût de revient au litre, sans dépasser le budget de taille et de cueillette que je me suis fixé ». La seconde phrase se vérifie en décembre, un carnet à la main.",
         "label": "Avant / après"

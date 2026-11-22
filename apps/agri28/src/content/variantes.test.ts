@@ -96,10 +96,22 @@ describe('appliquerVariante', () => {
     expect(avant).toEqual(copie);
   });
 
-  it('liste les types couverts', () => {
-    // Le jour 1 réel couvre l'apiculture et le maraîchage.
-    expect(typesAvecVariante(generique)).toEqual(['apiculture', 'maraichage']);
+  it('liste les types couverts, triés, et écarte les brouillons', () => {
+    // On éprouve le COMPORTEMENT, pas l'état du contenu à un instant donné :
+    // la version précédente figeait « apiculture, maraichage » parce que
+    // c'étaient les deux seules variantes relues du jour 1, et elle a cassé
+    // le jour où les autres ont été publiées.
     expect(typesAvecVariante(avecVariantes())).toEqual(['apiculture']);
+
+    const melange: Lesson = {
+      ...generique,
+      variantes: {
+        serre: { terrain: { text: 'relue' } },
+        apiculture: { terrain: { text: 'relue' } },
+        ovin: { terrain: { text: 'encore en brouillon' }, brouillon: true },
+      },
+    };
+    expect(typesAvecVariante(melange)).toEqual(['apiculture', 'serre']);
   });
 });
 

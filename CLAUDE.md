@@ -274,17 +274,19 @@ npm run apk:web          # build en édition APK, puis copie dans le projet Andr
 npm run verify           # typecheck + lint + format + contenu + tests, en une commande
 ```
 
-Écriture assistée des variantes, un seul axe par appel (`ANTHROPIC_API_KEY` requise) :
+Écriture assistée des variantes, **depuis `apps/agri28`**, un seul axe par appel
+(`ANTHROPIC_API_KEY` requise) :
 
 ```bash
 npm run variantes -- --jour 7 --type apiculture    # axe métier (phase 10)
-npm run variantes -- --jour 7 --niveau debutant    # axe niveau (phase 12)
 ```
 
-Après relecture, lever le drapeau `brouillon` sur les jours nommés (jamais « tous les jours ») :
+Après relecture, lever le drapeau `brouillon` sur les jours nommés (jamais « tous les jours »).
+**Depuis `apps/agri28`** : ces deux commandes ne sont pas relayées à la racine.
 
 ```bash
-npm run variantes:valider -- --jours 8-14 --niveau tous
+npm run variantes -- --jour 7 --niveau debutant     # écrire
+npm run variantes:valider -- --jours 8-14 --niveau tous   # publier après relecture
 npm run variantes:valider -- --jours 21 --type apiculture
 ```
 

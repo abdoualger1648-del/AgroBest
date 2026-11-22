@@ -204,8 +204,7 @@
           },
           "explanation": "Rédiger, structurer : la traçabilité d'un lot n'est pas une affaire d'IA. Un délai d'attente mal respecté, c'est un résidu dans le miel : un risque pour celui qui consomme, et un lot refusé ou retiré pour vous. Le coût du traitement est une raison secondaire. Le délai exact se vérifie sur l'étiquette du produit et auprès du vétérinaire, jamais auprès de l'IA."
         }
-      },
-      "brouillon": true
+      }
     },
     "maraichage": {
       "questions": {
@@ -217,8 +216,7 @@
           },
           "explanation": "Rédiger, structurer : la traçabilité d'un lot n'est pas une affaire d'IA. Un délai avant récolte mal respecté, c'est un résidu dans ce que vous vendez : un risque pour celui qui consomme, et un lot refusé ou retiré pour vous. Le coût du traitement est une raison secondaire. Le délai exact se vérifie sur l'étiquette du produit et auprès du technicien, jamais auprès de l'IA."
         }
-      },
-      "brouillon": true
+      }
     },
     "serre": {
       "questions": {
@@ -230,8 +228,7 @@
           },
           "explanation": "Rédiger, structurer : la traçabilité d'un lot n'est pas une affaire d'IA. Un délai avant récolte mal respecté, c'est un résidu dans ce que vous vendez : un risque pour celui qui consomme, et un lot refusé ou retiré pour vous. Le coût du traitement est une raison secondaire. Le délai exact se vérifie sur l'étiquette du produit et auprès du technicien, jamais auprès de l'IA."
         }
-      },
-      "brouillon": true
+      }
     },
     "cereales": {
       "questions": {
@@ -243,8 +240,7 @@
           },
           "explanation": "Rédiger, structurer : la traçabilité d'un lot n'est pas une affaire d'IA. Un délai avant récolte mal respecté, c'est un résidu dans ce que vous vendez : un risque pour celui qui consomme, et un lot refusé ou retiré pour vous. Le coût du traitement est une raison secondaire. Le délai exact se vérifie sur l'étiquette du produit et auprès du technicien, jamais auprès de l'IA."
         }
-      },
-      "brouillon": true
+      }
     },
     "arboriculture": {
       "questions": {
@@ -256,8 +252,7 @@
           },
           "explanation": "Rédiger, structurer : la traçabilité d'un lot n'est pas une affaire d'IA. Un délai avant récolte mal respecté, c'est un résidu dans ce que vous vendez : un risque pour celui qui consomme, et un lot refusé ou retiré pour vous. Le coût du traitement est une raison secondaire. Le délai exact se vérifie sur l'étiquette du produit et auprès du technicien, jamais auprès de l'IA."
         }
-      },
-      "brouillon": true
+      }
     }
   }
 }

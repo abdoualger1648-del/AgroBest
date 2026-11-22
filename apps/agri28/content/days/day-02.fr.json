@@ -205,49 +205,42 @@
   },
   "variantes": {
     "ovin": {
-      "brouillon": true,
       "terrain": {
         "text": "Hamid élève 80 brebis à Djelfa. Il demande à l'IA : « comment avoir plus d'agneaux ? » Il reçoit une page de conseils de manuel, vrais partout et utiles nulle part. Il recommence autrement, et obtient une liste de points à vérifier, datés par rapport à ses agnelages.",
         "label": "Sur le terrain"
       }
     },
     "bovin": {
-      "brouillon": true,
       "terrain": {
         "text": "Nabil conduit un troupeau laitier à Souk Ahras. Il demande à l'IA : « comment avoir plus de lait ? » Il reçoit une page de conseils de manuel, vrais partout et utiles nulle part. Il recommence autrement, et obtient une liste de points à vérifier sur sa ration, datés par rapport à ses vêlages.",
         "label": "Sur le terrain"
       }
     },
     "avicole": {
-      "brouillon": true,
       "terrain": {
         "text": "Karim conduit des bandes de poulets à Aïn Témouchent. Il demande à l'IA : « comment réduire ma mortalité ? » Il reçoit une page de conseils de manuel, vrais partout et utiles nulle part. Il recommence autrement, et obtient une liste de contrôles datés sur le cycle de sa bande.",
         "label": "Sur le terrain"
       }
     },
     "apiculture": {
-      "brouillon": true,
       "terrain": {
         "text": "Yacine conduit 40 ruches à Médéa. Il demande à l'IA : « comment récolter plus de miel ? » Il reçoit une page de conseils de manuel, vrais partout et utiles nulle part. Il recommence autrement, et obtient une liste de visites datées autour de ses miellées.",
         "label": "Sur le terrain"
       }
     },
     "serre": {
-      "brouillon": true,
       "terrain": {
         "text": "Hakim conduit quatre serres à Biskra. Il demande à l'IA : « comment améliorer mes rendements ? » Il reçoit une page de conseils de manuel, vrais partout et utiles nulle part. Il recommence autrement, et obtient une liste de travaux datés pour sa campagne sous abri.",
         "label": "Sur le terrain"
       }
     },
     "cereales": {
-      "brouillon": true,
       "terrain": {
         "text": "Belkacem emblave du blé dur à Tiaret. Il demande à l'IA : « comment faire un meilleur rendement ? » Il reçoit une page de conseils de manuel, vrais partout et utiles nulle part. Il recommence autrement, et obtient une liste de travaux datés pour sa parcelle, du semis à la moisson.",
         "label": "Sur le terrain"
       }
     },
     "arboriculture": {
-      "brouillon": true,
       "terrain": {
         "text": "Fatiha conduit un verger d'oliviers à Jijel. Elle demande à l'IA : « comment faire produire mes arbres ? » Elle reçoit une page de conseils de manuel, vrais partout et utiles nulle part. Elle recommence autrement, et obtient une liste de travaux datés pour son verger, de la taille à la récolte.",
         "label": "Sur le terrain"

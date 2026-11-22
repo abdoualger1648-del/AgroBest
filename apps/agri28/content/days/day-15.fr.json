@@ -204,8 +204,7 @@
       "captures": {
         "c1": "Ma liste de surveillance (une ligne par chose à regarder : mamelle, ration, boiterie, eau — avec sa fréquence)",
         "c2": "Mes questions prêtes pour le vétérinaire"
-      },
-      "brouillon": true
+      }
     },
     "avicole": {
       "terrain": {
@@ -215,8 +214,7 @@
       "captures": {
         "c1": "Ma liste de surveillance (une ligne par chose à regarder : mortalité, litière, ventilation, consommation d'eau — avec sa fréquence)",
         "c2": "Mes questions prêtes pour le vétérinaire"
-      },
-      "brouillon": true
+      }
     },
     "apiculture": {
       "terrain": {
@@ -226,8 +224,7 @@
       "captures": {
         "c1": "Ma liste de surveillance (une ligne par chose à regarder : couvain, provisions, activité à la planche d'envol, mortalité — avec sa fréquence)",
         "c2": "Mes questions prêtes pour le technicien apicole ou le vétérinaire"
-      },
-      "brouillon": true
+      }
     },
     "maraichage": {
       "terrain": {
@@ -237,8 +234,7 @@
       "captures": {
         "c1": "Ma liste de surveillance (une ligne par chose à regarder : feuillage, sol, arrosage, ravageurs — avec sa fréquence)",
         "c2": "Mes questions prêtes pour le technicien de la Chambre d'agriculture"
-      },
-      "brouillon": true
+      }
     },
     "serre": {
       "terrain": {
@@ -248,8 +244,7 @@
       "captures": {
         "c1": "Ma liste de surveillance (une ligne par chose à regarder : température, condensation, aération, état des plants — avec sa fréquence)",
         "c2": "Mes questions prêtes pour le technicien"
-      },
-      "brouillon": true
+      }
     },
     "cereales": {
       "terrain": {
@@ -259,8 +254,7 @@
       "captures": {
         "c1": "Ma liste de surveillance (une ligne par chose à regarder : levée, enherbement, état du sol, stade de la culture — avec sa fréquence)",
         "c2": "Mes questions prêtes pour le technicien"
-      },
-      "brouillon": true
+      }
     },
     "arboriculture": {
       "terrain": {
@@ -270,8 +264,7 @@
       "captures": {
         "c1": "Ma liste de surveillance (une ligne par chose à regarder : charge en fruits, état des troncs, taille, irrigation — avec sa fréquence)",
         "c2": "Mes questions prêtes pour le technicien"
-      },
-      "brouillon": true
+      }
     }
   }
 }

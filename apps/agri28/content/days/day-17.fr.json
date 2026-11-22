@@ -209,8 +209,7 @@
       },
       "captures": {
         "c1": "Ma règle d'abreuvement, écrite avec mes mots"
-      },
-      "brouillon": true
+      }
     },
     "avicole": {
       "terrain": {
@@ -219,8 +218,7 @@
       },
       "captures": {
         "c1": "Ma règle sur l'eau du bâtiment, écrite avec mes mots"
-      },
-      "brouillon": true
+      }
     },
     "apiculture": {
       "terrain": {
@@ -229,8 +227,7 @@
       },
       "captures": {
         "c1": "Ma règle sur l'eau du rucher, écrite avec mes mots"
-      },
-      "brouillon": true
+      }
     },
     "maraichage": {
       "terrain": {
@@ -239,8 +236,7 @@
       },
       "captures": {
         "c1": "Ma règle d'irrigation, écrite avec mes mots"
-      },
-      "brouillon": true
+      }
     },
     "serre": {
       "terrain": {
@@ -249,8 +245,7 @@
       },
       "captures": {
         "c1": "Ma règle d'irrigation sous serre, écrite avec mes mots"
-      },
-      "brouillon": true
+      }
     },
     "cereales": {
       "terrain": {
@@ -259,8 +254,7 @@
       },
       "captures": {
         "c1": "Ma règle d'intervention selon l'état du sol, écrite avec mes mots"
-      },
-      "brouillon": true
+      }
     },
     "arboriculture": {
       "terrain": {
@@ -269,11 +263,9 @@
       },
       "captures": {
         "c1": "Ma règle d'irrigation du verger, écrite avec mes mots"
-      },
-      "brouillon": true
+      }
     },
     "ovin": {
-      "brouillon": true,
       "terrain": {
         "text": "« Si le troupeau rentre du parcours avant l'heure habituelle deux jours de suite et que l'abreuvoir est vide à midi, alors j'ajoute un remplissage et je sors plus tôt le matin. Sinon je garde mon rythme et je revérifie demain. » Cette phrase reste vraie toute la saison.",
         "label": "Une règle, ce n'est pas une prévision"

@@ -263,7 +263,6 @@
       "indices": {
         "p1": "Collez la reformulation obtenue ci-dessous. Si elle parle de viande au lieu de lait, corrigez : c'est votre texte, pas celui de l'IA."
       },
-      "brouillon": true,
       "questions": {
         "q2": {
           "choices": {
@@ -286,7 +285,6 @@
       "indices": {
         "p1": "Collez la reformulation obtenue ci-dessous. Si elle parle de ponte au lieu de chair, corrigez : c'est votre texte, pas celui de l'IA."
       },
-      "brouillon": true,
       "questions": {
         "q2": {
           "choices": {
@@ -309,7 +307,6 @@
       "indices": {
         "p1": "Collez la reformulation obtenue ci-dessous. Si elle parle de plein champ au lieu de serre, corrigez : c'est votre texte, pas celui de l'IA."
       },
-      "brouillon": true,
       "questions": {
         "q2": {
           "choices": {
@@ -333,7 +330,6 @@
       "indices": {
         "p1": "Collez la reformulation obtenue ci-dessous. Si elle vous suppose irrigué alors que vous êtes en sec, corrigez : c'est votre texte, pas celui de l'IA."
       },
-      "brouillon": true,
       "questions": {
         "q2": {
           "choices": {
@@ -357,7 +353,6 @@
       "indices": {
         "p1": "Collez la reformulation obtenue ci-dessous. Si elle parle de culture annuelle au lieu de verger, corrigez : c'est votre texte, pas celui de l'IA."
       },
-      "brouillon": true,
       "questions": {
         "q2": {
           "choices": {

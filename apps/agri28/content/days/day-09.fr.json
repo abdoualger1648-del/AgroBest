@@ -217,49 +217,41 @@
   },
   "variantes": {
     "ovin": {
-      "brouillon": true,
       "captures": {
         "c1": "Mes postes de dépense (aliment, fourrage, soins, transport, main-d'œuvre…) — une ligne par poste, colonne prix encore vide"
       }
     },
     "bovin": {
-      "brouillon": true,
       "captures": {
         "c1": "Mes postes de dépense (aliment, fourrage, soins vétérinaires, collecte du lait, main-d'œuvre…) — une ligne par poste, colonne prix encore vide"
       }
     },
     "avicole": {
-      "brouillon": true,
       "captures": {
         "c1": "Mes postes de dépense (poussins, aliment, chauffage, litière, soins…) — une ligne par poste, colonne prix encore vide"
       }
     },
     "apiculture": {
-      "brouillon": true,
       "captures": {
         "c1": "Mes postes de dépense (cire, cadres, nourrissement, transhumance, matériel de récolte…) — une ligne par poste, colonne prix encore vide"
       }
     },
     "maraichage": {
-      "brouillon": true,
       "captures": {
         "c1": "Mes postes de dépense (semences et plants, engrais, eau, emballage, transport…) — une ligne par poste, colonne prix encore vide"
       }
     },
     "serre": {
-      "brouillon": true,
       "captures": {
         "c1": "Mes postes de dépense (plants, plastique, engrais, eau, chauffage…) — une ligne par poste, colonne prix encore vide"
       }
     },
     "cereales": {
-      "brouillon": true,
       "captures": {
         "c1": "Mes postes de dépense (semences, engrais, travaux de sol, moisson, transport…) — une ligne par poste, colonne prix encore vide"
       }
     },
     "arboriculture": {
-      "brouillon": true,
       "captures": {
         "c1": "Mes postes de dépense (taille, traitements, eau, cueillette, transport…) — une ligne par poste, colonne prix encore vide"
       }
