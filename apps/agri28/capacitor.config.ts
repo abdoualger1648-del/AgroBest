@@ -20,6 +20,22 @@ const config: CapacitorConfig = {
     // téléphone, pas dans la vue web de l'application.
     allowMixedContent: false,
   },
+  plugins: {
+    FirebaseAuthentication: {
+      // Le plugin ne charge que les fournisseurs nommés ici : sa valeur par
+      // défaut est une liste vide, et `signInWithGoogle` échouerait sans
+      // cette ligne. Facebook en est absent tant que son SDK natif n'est pas
+      // configuré (voir android/variables.gradle).
+      providers: ['google.com'],
+      // Capital : le plugin NE doit PAS ouvrir la session lui-même. Toute
+      // l'application vit dans la vue web et s'appuie sur la session du SDK
+      // JavaScript — règles Firestore, `onAuthStateChanged`, écran
+      // d'administration. Une session native en plus donnerait une
+      // application connectée d'un côté et anonyme de l'autre. Le natif ne
+      // fournit que le jeton ; notre SDK ouvre l'unique session.
+      skipNativeAuth: true,
+    },
+  },
   server: {
     // Origine locale sécurisée : IndexedDB et l'authentification Firebase
     // exigent un contexte sûr, ce que `https://localhost` fournit.

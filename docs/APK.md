@@ -76,6 +76,7 @@ Puis, dans **Settings → Secrets and variables → Actions → New repository s
 | `APK_KEY_ALIAS` | `agricole360` |
 | `APK_KEY_PASSWORD` | le mot de passe de la clé (le même, sauf choix contraire) |
 | `VITE_EMAIL_ADMIN` | l'adresse qui reçoit les demandes d'activation |
+| `GOOGLE_SERVICES_JSON` | le contenu de `google-services.json` (voir « Connexion Google dans l'APK ») |
 
 Le workflow efface la clé du serveur après l'assemblage, même en cas d'échec.
 
@@ -108,6 +109,57 @@ Assembler l'APK demande le SDK Android ; c'est le rôle de GitHub Actions.
 | Service worker | oui | **non** — les fichiers sont déjà locaux |
 | Cartes de source | oui | **non** — elles pèsent plus que le code |
 | Compte | aucun | obligatoire, essai sur 3 leçons |
+
+## Connexion Google dans l'APK
+
+Depuis la phase 16, l'APK propose « Continuer avec Google ». Il ne passe pas par une fenêtre du
+navigateur — Google refuse l'OAuth depuis une WebView embarquée (D113) — mais par le compte Google
+du téléphone, via le plugin `@capacitor-firebase/authentication`.
+
+Cela exige **une configuration déposée dans le projet Android**, et le build échoue sans elle :
+le plugin initialise Firebase au démarrage, donc un APK construit sans cette configuration
+planterait au lancement, pas à l'appui sur le bouton.
+
+### Les deux choses à faire, une seule fois
+
+**1. Récupérer l'empreinte SHA-1 de votre clé de signature.** Deux moyens :
+
+```bash
+keytool -list -v -keystore agricole360.jks -alias agricole360 | grep SHA1
+```
+
+ou bien le résumé du premier build signé, qui l'affiche (D122).
+
+**2. Déclarer l'application Android dans la console Firebase**, puis déposer le fichier obtenu :
+
+1. [Console Firebase](https://console.firebase.google.com/) → projet `agricole360-4a470` →
+   *Paramètres du projet* → *Vos applications* → **Ajouter une application** → Android ;
+2. nom du paquet : **`dz.agricole360.app`** (exactement) ;
+3. collez l'empreinte **SHA-1** dans le champ d'empreinte de certificat. Le libellé parle de
+   « signature de débogage », ce qui prête à confusion : c'est bien là que va l'empreinte de
+   votre clé de **release**, et le champ accepte plusieurs empreintes ;
+4. téléchargez le **`google-services.json`** proposé à l'étape suivante ;
+5. dans *Authentication → Sign-in method*, activez **Google** s'il ne l'est pas déjà ;
+6. GitHub → *Settings → Secrets and variables → Actions* → nouveau secret
+   **`GOOGLE_SERVICES_JSON`**, dont le contenu est le fichier entier, collé tel quel.
+
+Le fichier n'est pas un secret au sens strict — il ne contient que des identifiants publics, comme
+la clé d'API web (D58) — mais il désigne un projet Firebase précis, et le passer par un secret
+évite qu'une copie commitée diverge sans que rien ne le signale.
+
+Si vous ajoutez plus tard une **seconde** empreinte (par exemple en changeant de clé), il faut
+l'ajouter dans la console **et** recoller le `google-services.json` mis à jour.
+
+### Facebook reste sur le web
+
+Le bouton Facebook n'apparaît pas dans l'APK, et c'est un choix (D127). Son SDK natif demande, en
+plus de ce qui précède, un App ID et un jeton client inscrits dans les ressources Android et deux
+activités déclarées au manifeste. Tant que ces valeurs n'existent pas, l'embarquer donnerait une
+application qui compile et échoue à l'appui sur le bouton — pire que pas de bouton. Sur le site
+web, Facebook fonctionne.
+
+Quelqu'un qui a créé son compte sur le web **avec Facebook** et installe l'APK n'a donc pas de
+mot de passe : l'écran de compte le lui dit et l'envoie vers « Mot de passe oublié ? » (D124).
 
 ## Mettre à jour sans rien perdre
 

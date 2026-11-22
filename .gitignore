@@ -15,3 +15,10 @@ blob-report/
 .env
 .env.local
 .env.*.local
+
+# Configuration Firebase du projet Android (phase 16). Elle ne contient que
+# des identifiants publics — comme la clé d'API web (D58) — mais elle désigne
+# UN projet Firebase précis, et le workflow la dépose depuis le secret
+# GOOGLE_SERVICES_JSON. Une copie commitée pourrait diverger du secret sans
+# que rien ne le signale.
+apps/agri28/android/app/google-services.json

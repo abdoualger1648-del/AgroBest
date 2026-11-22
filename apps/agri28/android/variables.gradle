@@ -13,4 +13,20 @@ ext {
     androidxJunitVersion = '1.3.0'
     androidxEspressoCoreVersion = '3.7.0'
     cordovaAndroidVersion = '14.0.1'
+
+    // Connexion par fournisseur, côté natif (phase 16).
+    //
+    // Le plugin @capacitor-firebase/authentication n'embarque les SDK de
+    // Google et de Facebook que si on le lui demande ici — ses valeurs par
+    // défaut sont `false`. Google est activé : il ne demande rien d'autre
+    // que `google-services.json`, déposé par le workflow.
+    //
+    // Facebook reste à `false`, et c'est un choix. Son SDK natif exige en
+    // plus un App ID et un jeton client inscrits dans les ressources
+    // Android, plus deux activités déclarées au manifeste. Les embarquer à
+    // moitié donnerait une application qui compile et échoue à l'appui sur
+    // le bouton — pire que pas de bouton. Facebook reste donc sur le web,
+    // où il fonctionne, jusqu'à ce que ces valeurs existent.
+    rgcfaIncludeGoogle = true
+    rgcfaIncludeFacebook = false
 }

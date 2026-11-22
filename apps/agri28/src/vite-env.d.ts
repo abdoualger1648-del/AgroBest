@@ -2,6 +2,8 @@ interface ImportMetaEnv {
   readonly VITE_EDITION?: string;
   readonly VITE_EMAIL_ADMIN?: string;
   readonly VITE_URL_APK?: string;
+  /** Fournisseurs natifs réellement configurés dans le projet Android (phase 16). */
+  readonly VITE_FOURNISSEURS_APK?: string;
   readonly VITE_FIREBASE_API_KEY?: string;
   readonly VITE_FIREBASE_AUTH_DOMAIN?: string;
   readonly VITE_FIREBASE_PROJECT_ID?: string;

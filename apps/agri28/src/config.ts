@@ -48,16 +48,40 @@ export function proposeApk(): boolean {
  * signale plutôt que d'ouvrir un email sans destinataire.
  */
 /**
- * Fournisseurs d'identité proposés par cette édition (phase 14).
+ * Fournisseurs d'identité proposés par cette édition (phase 14, revue en 16).
  *
- * **Vides dans l'APK, et c'est délibéré.** Google refuse l'OAuth depuis une
- * WebView embarquée — c'est exactement ce qu'est un APK Capacitor — et la
- * tentative échoue sur un « disallowed_useragent » que l'utilisateur ne peut
- * pas comprendre. Les boutons n'y apparaissent donc pas tant que le chemin
- * natif n'existe pas. Mieux vaut pas de bouton qu'un bouton qui échoue.
+ * Hors APK, les deux sont proposés : le navigateur ouvre une vraie fenêtre
+ * Google ou Facebook, ce qui a toujours fonctionné.
+ *
+ * Dans l'APK, la liste vient du BUILD (`VITE_FOURNISSEURS_APK`) et vaut vide
+ * par défaut. La raison est que le chemin natif n'est pas une affaire de code
+ * seul : il exige une configuration déposée dans le projet Android
+ * (`google-services.json` pour Google, App ID et jeton client pour Facebook).
+ * Un bouton affiché sans sa configuration échouerait sous les yeux d'un
+ * agriculteur — exactement ce que D113 voulait éviter. C'est donc le workflow
+ * qui déclare ce qu'il a réellement configuré, et l'application s'y tient.
  */
 export function fournisseursDisponibles(): readonly Fournisseur[] {
-  return edition() === 'apk' ? [] : FOURNISSEURS;
+  return edition() === 'apk' ? fournisseursNatifs() : FOURNISSEURS;
+}
+
+/**
+ * Lit la liste déclarée au build, en n'acceptant que des noms connus.
+ *
+ * Tolérante par construction : une valeur absente, vide ou fautive donne une
+ * liste vide, donc le comportement d'avant la phase 16. Une faute de frappe
+ * dans un secret GitHub ne doit pas afficher un bouton qui échoue.
+ */
+function fournisseursNatifs(): readonly Fournisseur[] {
+  const brut = import.meta.env.VITE_FOURNISSEURS_APK;
+  if (typeof brut !== 'string') return [];
+  const demandes = brut
+    .split(',')
+    .map((nom) => nom.trim().toLowerCase())
+    .filter((nom) => nom.length > 0);
+  // On parcourt FOURNISSEURS, pas `demandes` : l'ordre d'affichage reste
+  // celui de l'application, et aucun doublon ne peut passer.
+  return FOURNISSEURS.filter((connu) => demandes.includes(connu));
 }
 
 export function emailAdmin(): string {

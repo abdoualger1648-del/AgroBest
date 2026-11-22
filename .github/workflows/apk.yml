@@ -27,8 +27,14 @@ name: APK
 #   APK_KEY_ALIAS          nom de la clé
 #   APK_KEY_PASSWORD       mot de passe de la clé
 #   VITE_EMAIL_ADMIN       adresse qui reçoit les demandes d'activation
+#   GOOGLE_SERVICES_JSON   contenu de google-services.json (console Firebase)
 #
-# Voir docs/APK.md pour la commande qui crée le magasin de clés.
+# GOOGLE_SERVICES_JSON est **obligatoire** depuis la phase 16 : le plugin de
+# connexion native initialise Firebase au démarrage, et son absence fait
+# planter l'application au lancement. Le build échoue donc sans lui.
+#
+# Voir docs/APK.md pour la commande qui crée le magasin de clés, et pour la
+# marche à suivre dans la console Firebase.
 
 on:
   workflow_dispatch:
@@ -81,9 +87,33 @@ jobs:
       - name: Vérifier
         run: npm run verify
 
+      # Le plugin de connexion native appelle FirebaseAuth.getInstance() au
+      # démarrage du pont Capacitor. Sans google-services.json, cet appel
+      # lève une exception et l'application **plante au lancement** — pas
+      # au moment d'appuyer sur un bouton. Un APK livré ainsi serait
+      # inutilisable, d'où un échec de build plutôt qu'un APK piégé.
+      - name: Déposer la configuration Firebase Android
+        id: firebase
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -z "$GOOGLE_SERVICES_JSON" ]; then
+            echo "::error::Secret GOOGLE_SERVICES_JSON absent. Déclarez l'application Android dz.agricole360.app dans la console Firebase, téléchargez google-services.json et collez son contenu dans ce secret. Voir docs/APK.md."
+            exit 1
+          fi
+          printf '%s' "$GOOGLE_SERVICES_JSON" > apps/agri28/android/app/google-services.json
+          # Un fichier tronqué ou mal collé casserait Gradle plus loin, avec
+          # un message qui ne désignerait pas la cause.
+          node -e "JSON.parse(require('fs').readFileSync('apps/agri28/android/app/google-services.json','utf8'))" \
+            || { echo "::error::GOOGLE_SERVICES_JSON n'est pas du JSON valide. Recollez le fichier entier."; exit 1; }
+          echo "fournisseurs=google" >> "$GITHUB_OUTPUT"
+
       - name: Construire l'application web (édition APK)
         env:
           VITE_EMAIL_ADMIN: ${{ secrets.VITE_EMAIL_ADMIN }}
+          # Déclare ce que le projet Android sait réellement faire. Facebook
+          # n'y est pas : son SDK natif n'est pas configuré (D127).
+          VITE_FOURNISSEURS_APK: ${{ steps.firebase.outputs.fournisseurs }}
         run: npm run apk:web -w agri28
 
       - name: Préparer la clé de signature

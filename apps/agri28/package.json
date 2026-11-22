@@ -28,12 +28,13 @@
     "variantes:valider": "node --experimental-strip-types scripts/authoring/valider-variantes.ts"
   },
   "dependencies": {
+    "@capacitor-firebase/authentication": "^8.6.0",
     "@capacitor/android": "^8.6.2",
     "@capacitor/core": "^8.6.2",
     "dexie": "^4.4.7",
     "docx": "^9.15.4",
     "exceljs": "^4.4.0",
-    "firebase": "^13.4.0",
+    "firebase": "^12.19.0",
     "i18next": "^27.1.5",
     "i18next-browser-languagedetector": "^8.3.1",
     "pdf-lib": "^1.17.1",

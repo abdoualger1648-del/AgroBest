@@ -57,3 +57,39 @@ export function traduireErreurFirebase(erreur: unknown): CodeErreurCompte {
   if (brut === null) return 'inconnue';
   return TABLE[brut] ?? 'inconnue';
 }
+
+/** Lit le `message` d'une erreur sans jamais supposer sa forme. */
+function messageBrut(erreur: unknown): string {
+  if (typeof erreur === 'string') return erreur;
+  if (typeof erreur !== 'object' || erreur === null) return '';
+  const message: unknown = (erreur as { message?: unknown }).message;
+  return typeof message === 'string' ? message : '';
+}
+
+/**
+ * Traduit les erreurs du plugin natif (phase 16).
+ *
+ * Le plugin Capacitor ne renvoie pas de code stable pour tout : une
+ * annulation remonte comme une erreur dont seul le **message** dit
+ * « canceled » — « Sign in canceled. » côté Facebook, « Authorization
+ * canceled. » ou l'exception du Credential Manager côté Google. On commence
+ * donc par la table Firebase, qui couvre les cas où un vrai code arrive, et
+ * on ne lit le message qu'en dernier recours.
+ *
+ * Fermer la feuille de connexion est un geste délibéré, pas une panne : s'il
+ * était traduit en « inconnue », l'écran afficherait un message rouge pour un
+ * choix de l'utilisateur (D116).
+ */
+export function traduireErreurNative(erreur: unknown): CodeErreurCompte {
+  const parCode = traduireErreurFirebase(erreur);
+  if (parCode !== 'inconnue') return parCode;
+
+  const message = messageBrut(erreur).toLowerCase();
+  // « canceled » et « cancelled » contiennent tous deux « cancel ».
+  if (message.includes('cancel')) return 'connexion_annulee';
+  if (message.includes('no browser is available')) return 'fournisseur_indisponible';
+  // Configuration absente : google-services.json manquant dans l'APK.
+  if (message.includes('firebaseapp is not initialized')) return 'fournisseur_indisponible';
+  if (message.includes('network')) return 'hors_ligne';
+  return 'inconnue';
+}

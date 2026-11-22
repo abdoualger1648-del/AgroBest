@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { compteRequis, edition, emailAdmin, proposeApk } from './config';
+import { compteRequis, edition, emailAdmin, fournisseursDisponibles, proposeApk } from './config';
 import capacitor from '../capacitor.config';
 
 afterEach(() => {
@@ -56,5 +56,55 @@ describe("l'origine de la vue web de l'APK", () => {
     expect(capacitor.server?.androidScheme).toBe('https');
     expect(capacitor.server?.hostname).toBe('localhost');
     expect(capacitor.appId).toBe('dz.agricole360.app');
+  });
+
+  it('laisse le SDK JavaScript ouvrir la session, jamais le plugin natif', () => {
+    // `skipNativeAuth` est le pivot de la phase 16. Sans lui, le plugin ouvre
+    // une session NATIVE, tandis que l'application — qui vit dans la vue web
+    // — reste anonyme : écran de compte vide, règles Firestore refusées,
+    // administration invisible, alors que la connexion a « réussi ». Le
+    // retirer ne casse aucun type et aucun écran : d'où ce verrou.
+    const plugin = capacitor.plugins?.FirebaseAuthentication;
+    expect(plugin?.skipNativeAuth).toBe(true);
+    // Le plugin ne charge que les fournisseurs nommés : liste vide par
+    // défaut, et `signInWithGoogle` échouerait sans cette déclaration.
+    expect(plugin?.providers).toContain('google.com');
+  });
+});
+
+describe('fournisseurs proposés dans l’APK (phase 16)', () => {
+  it('aucun par défaut : un APK sans configuration native n’affiche pas de bouton', () => {
+    vi.stubEnv('VITE_EDITION', 'apk');
+    expect(fournisseursDisponibles()).toEqual([]);
+  });
+
+  it('ceux que le build déclare, et eux seuls', () => {
+    vi.stubEnv('VITE_EDITION', 'apk');
+    vi.stubEnv('VITE_FOURNISSEURS_APK', 'google');
+    expect([...fournisseursDisponibles()]).toEqual(['google']);
+
+    vi.stubEnv('VITE_FOURNISSEURS_APK', 'google,facebook');
+    expect([...fournisseursDisponibles()]).toEqual(['google', 'facebook']);
+  });
+
+  it('garde l’ordre de l’application et refuse doublons et noms inconnus', () => {
+    vi.stubEnv('VITE_EDITION', 'apk');
+    vi.stubEnv('VITE_FOURNISSEURS_APK', 'facebook, google , facebook, twitter');
+    expect([...fournisseursDisponibles()]).toEqual(['google', 'facebook']);
+  });
+
+  it('une faute de frappe dans le secret n’affiche aucun bouton, plutôt qu’un bouton qui échoue', () => {
+    vi.stubEnv('VITE_EDITION', 'apk');
+    vi.stubEnv('VITE_FOURNISSEURS_APK', 'gogle');
+    expect(fournisseursDisponibles()).toEqual([]);
+
+    vi.stubEnv('VITE_FOURNISSEURS_APK', '  ');
+    expect(fournisseursDisponibles()).toEqual([]);
+  });
+
+  it('ne change rien hors APK : le web propose toujours les deux', () => {
+    vi.stubEnv('VITE_EDITION', 'web');
+    vi.stubEnv('VITE_FOURNISSEURS_APK', '');
+    expect([...fournisseursDisponibles()]).toEqual(['google', 'facebook']);
   });
 });

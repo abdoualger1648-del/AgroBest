@@ -1,5 +1,7 @@
 import { ErreurCompte, type DemandeEnAttente, type Fournisseur, type ServiceCompte } from './port';
-import { traduireErreurFirebase } from './erreurs';
+import { traduireErreurFirebase, traduireErreurNative } from './erreurs';
+import { jetonNatif, type JetonFournisseur } from './natif';
+import { edition } from '@/config';
 import {
   COLLECTION_ADMINS,
   COLLECTION_UTILISATEURS,
@@ -181,20 +183,74 @@ export class ServiceFirebase implements ServiceCompte {
    * refuse l'OAuth. C'est pourquoi `fournisseursDisponibles()` ne propose rien
    * en édition APK, où il faudra un chemin natif.
    */
+  /**
+   * Connexion par Google ou Facebook, par deux chemins selon l'édition.
+   *
+   * Sur le web, une fenêtre du navigateur. Dans l'APK, le compte du
+   * téléphone via le plugin natif : Google refuse l'OAuth en WebView (D113).
+   * Les deux chemins finissent au même endroit — une session du SDK
+   * JavaScript — donc tout ce qui suit ignore lequel a été pris.
+   */
   connecterAvecFournisseur(fournisseur: Fournisseur): Promise<CompteDistantInfos> {
     return this.appel(async (modules) => {
-      const { auth, instanceAuth } = modules;
-      const outil =
-        fournisseur === 'google' ? new auth.GoogleAuthProvider() : new auth.FacebookAuthProvider();
-
-      // On ne demande RIEN de plus que l'identité. Pas les contacts, pas les
-      // amis, pas le profil étendu : la promesse de confidentialité doit
-      // rester courte et vérifiable (D48, révisée en D112).
-      outil.addScope('email');
-
-      const resultat = await auth.signInWithPopup(instanceAuth, outil);
+      const resultat =
+        edition() === 'apk'
+          ? await this.parFournisseurNatif(modules, fournisseur)
+          : await this.parFenetreDuNavigateur(modules, fournisseur);
       return this.etatComplet(modules, resultat.user);
     });
+  }
+
+  private parFenetreDuNavigateur(
+    modules: ModulesFirebase,
+    fournisseur: Fournisseur,
+  ): Promise<FirebaseAuth.UserCredential> {
+    const { auth, instanceAuth } = modules;
+    const outil =
+      fournisseur === 'google' ? new auth.GoogleAuthProvider() : new auth.FacebookAuthProvider();
+
+    // On ne demande RIEN de plus que l'identité. Pas les contacts, pas les
+    // amis, pas le profil étendu : la promesse de confidentialité doit
+    // rester courte et vérifiable (D48, révisée en D112).
+    outil.addScope('email');
+
+    return auth.signInWithPopup(instanceAuth, outil);
+  }
+
+  private async parFournisseurNatif(
+    modules: ModulesFirebase,
+    fournisseur: Fournisseur,
+  ): Promise<FirebaseAuth.UserCredential> {
+    const { auth, instanceAuth } = modules;
+
+    let jeton: JetonFournisseur;
+    try {
+      jeton = await jetonNatif(fournisseur);
+    } catch (erreur) {
+      // Le plugin n'a pas les codes de Firebase : une annulation n'y est
+      // qu'un message. Sans cette traduction, fermer la feuille de connexion
+      // afficherait un message rouge pour un geste délibéré.
+      if (erreur instanceof ErreurCompte) throw erreur;
+      throw new ErreurCompte(traduireErreurNative(erreur));
+    }
+
+    const identifiant = this.identifiantDepuisJeton(modules, fournisseur, jeton);
+    return auth.signInWithCredential(instanceAuth, identifiant);
+  }
+
+  private identifiantDepuisJeton(
+    modules: ModulesFirebase,
+    fournisseur: Fournisseur,
+    jeton: JetonFournisseur,
+  ): FirebaseAuth.AuthCredential {
+    const { auth } = modules;
+    if (fournisseur === 'google') {
+      return auth.GoogleAuthProvider.credential(jeton.idToken ?? null, jeton.accessToken ?? null);
+    }
+    // Facebook ne renvoie qu'un jeton d'accès ; sans lui il n'y a pas
+    // d'identifiant à construire.
+    if (!jeton.accessToken) throw new ErreurCompte('fournisseur_indisponible');
+    return auth.FacebookAuthProvider.credential(jeton.accessToken);
   }
 
   relire(): Promise<CompteDistantInfos | null> {
