@@ -16,7 +16,7 @@ export function appliquerVariante(lecon: Lesson, type: ProjectType | null | unde
   // humaine est un verrou, pas un pense-bête.
   if (!variante || variante.brouillon === true) return lecon;
 
-  const { terrain, captures, indices } = variante;
+  const { terrain, captures, indices, questions } = variante;
 
   return {
     ...lecon,
@@ -35,6 +35,26 @@ export function appliquerVariante(lecon: Lesson, type: ProjectType | null | unde
                 : bloc,
             )
           : lecon.sections.concept.body,
+      },
+      quiz: {
+        ...lecon.sections.quiz,
+        questions: lecon.sections.quiz.questions.map((question) => {
+          const habillage = questions?.[question.id];
+          if (!habillage) return question;
+
+          // `answer` n'est jamais touché, et les choix sont remplacés PAR
+          // CLÉ : le nombre de choix ne bouge pas, et la bonne réponse reste
+          // ancrée à son identifiant.
+          return {
+            ...question,
+            ...(habillage.text ? { text: habillage.text } : {}),
+            ...(habillage.explanation ? { explanation: habillage.explanation } : {}),
+            choices: question.choices.map((choix) => {
+              const remplacement = habillage.choices?.[choix.id];
+              return remplacement ? { ...choix, text: remplacement } : choix;
+            }),
+          };
+        }),
       },
       practice: {
         ...lecon.sections.practice,

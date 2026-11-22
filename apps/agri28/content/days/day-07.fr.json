@@ -233,6 +233,14 @@
       },
       "indices": {
         "p2": "Ajoutez à la main ceux que l'IA ne peut pas connaître : le collecteur de lait, le vétérinaire, le voisin du forage."
+      },
+      "questions": {
+        "q1": {
+          "choices": {
+            "b": "Livrer un volume de lait régulier d'octobre à mai en connaissant le coût de l'aliment par vache",
+            "c": "Devenir le meilleur éleveur laitier de la commune"
+          }
+        }
       }
     },
     "avicole": {
@@ -243,6 +251,14 @@
       },
       "indices": {
         "p2": "Ajoutez à la main ceux que l'IA ne peut pas connaître : le couvoir, le vétérinaire, l'acheteur."
+      },
+      "questions": {
+        "q1": {
+          "choices": {
+            "b": "Sortir quatre bandes dans l'année en connaissant le coût de revient de chacune",
+            "c": "Devenir le meilleur aviculteur de la commune"
+          }
+        }
       }
     },
     "apiculture": {
@@ -253,6 +269,14 @@
       },
       "indices": {
         "p2": "Ajoutez à la main ceux que l'IA ne peut pas connaître : le fournisseur d'essaims, le propriétaire du terrain d'emplacement, l'acheteur du miel."
+      },
+      "questions": {
+        "q1": {
+          "choices": {
+            "b": "Récolter sur 40 ruches entre avril et juin en connaissant le coût de chaque ruche conduite",
+            "c": "Devenir le meilleur apiculteur de la commune"
+          }
+        }
       }
     },
     "maraichage": {
@@ -263,6 +287,14 @@
       },
       "indices": {
         "p2": "Ajoutez à la main ceux que l'IA ne peut pas connaître : le mandataire du marché, le voisin du forage, le transporteur."
+      },
+      "questions": {
+        "q1": {
+          "choices": {
+            "b": "Écouler ma récolte d'été avant fin août en connaissant mon coût de revient au cageot",
+            "c": "Devenir le meilleur maraîcher de la commune"
+          }
+        }
       }
     },
     "serre": {
@@ -273,6 +305,14 @@
       },
       "indices": {
         "p2": "Ajoutez à la main ceux que l'IA ne peut pas connaître : le fournisseur de plants, le réparateur de plastique, le mandataire du marché."
+      },
+      "questions": {
+        "q1": {
+          "choices": {
+            "b": "Tenir une production continue de novembre à avril sur quatre serres, en connaissant le coût de revient au plant",
+            "c": "Devenir le meilleur producteur sous serre de la commune"
+          }
+        }
       }
     },
     "cereales": {
@@ -283,6 +323,14 @@
       },
       "indices": {
         "p2": "Ajoutez à la main ceux que l'IA ne peut pas connaître : l'organisme qui collecte votre récolte, le moissonneur, le transporteur."
+      },
+      "questions": {
+        "q1": {
+          "choices": {
+            "b": "Livrer ma récolte avant fin juillet en connaissant mon coût de revient au quintal",
+            "c": "Devenir le meilleur céréalier de la commune"
+          }
+        }
       }
     },
     "arboriculture": {
@@ -293,6 +341,14 @@
       },
       "indices": {
         "p2": "Ajoutez à la main ceux que l'IA ne peut pas connaître : le propriétaire de l'huilerie, le chef d'équipe de cueillette, l'acheteur."
+      },
+      "questions": {
+        "q1": {
+          "choices": {
+            "b": "Récolter et vendre avant fin décembre en connaissant mon coût de revient au litre",
+            "c": "Devenir le meilleur arboriculteur de la commune"
+          }
+        }
       }
     }
   }

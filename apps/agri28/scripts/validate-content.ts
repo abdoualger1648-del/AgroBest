@@ -112,6 +112,17 @@ function signatureVariantes(lesson: Lesson): string[] {
         variante.terrain ? 'terrain' : null,
         ...Object.keys(variante.captures ?? {}).map((id) => `capture:${id}`),
         ...Object.keys(variante.indices ?? {}).map((id) => `indice:${id}`),
+        ...Object.entries(variante.questions ?? {}).map(
+          ([id, habillage]) =>
+            `question:${id}(${[
+              habillage.text ? 'text' : null,
+              habillage.explanation ? 'explanation' : null,
+              ...Object.keys(habillage.choices ?? {}).map((choix) => `choix:${choix}`),
+            ]
+              .filter((champ): champ is string => champ !== null)
+              .sort()
+              .join(',')})`,
+        ),
       ].filter((champ): champ is string => champ !== null);
       return `${type}=${champs.sort().join(',')}`;
     })
@@ -306,6 +317,26 @@ for (const file of lessonFiles) {
     for (const id of Object.keys(variante.indices ?? {})) {
       if (!promptIds.has(id)) {
         fail(`${file} : variante « ${type} » vise un prompt inexistant « ${id} ».`);
+      }
+    }
+
+    // ——— habillage des questions de quiz (phase 15) ———
+    for (const [id, habillage] of Object.entries(variante.questions ?? {})) {
+      const question = lesson.sections.quiz.questions.find((q) => q.id === id);
+      if (!question) {
+        fail(`${file} : variante « ${type} » vise une question inexistante « ${id} ».`);
+        continue;
+      }
+      const choixConnus = new Set(question.choices.map((choix) => choix.id));
+      for (const choix of Object.keys(habillage.choices ?? {})) {
+        if (!choixConnus.has(choix)) {
+          fail(
+            `${file} : variante « ${type} », question « ${id} » : choix inexistant « ${choix} ».`,
+          );
+        }
+      }
+      if (!habillage.text && !habillage.explanation && !habillage.choices) {
+        fail(`${file} : variante « ${type} » habille la question « ${id} » sans rien changer.`);
       }
     }
   }

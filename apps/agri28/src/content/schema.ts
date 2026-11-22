@@ -114,6 +114,29 @@ export const sourceRefSchema = z.object({
  * Laisser une variante le réécrire ouvrirait une porte sur le seul endroit
  * du contenu qui protège l'utilisateur.
  */
+/**
+ * Variante d'une question de quiz selon le type d'activité (phase 15).
+ *
+ * La phase 10 posait que « les concepts et les quiz ne dépendent pas du
+ * métier » (D80). Un audit l'a démenti : cinq questions nommaient l'élevage,
+ * et un serriste lisait « vendre 40 agneaux » comme modèle d'objectif.
+ *
+ * Deux choses restent HORS d'atteinte, et c'est le verrou de ce schéma :
+ *   — `answer`, la bonne réponse, qui reste ancrée à son identifiant ;
+ *   — les identifiants de choix eux-mêmes, qu'on ne peut que **remplacer par
+ *     clé**, jamais ajouter ni retirer.
+ * Une variante ne peut donc pas déplacer la bonne réponse, ni changer le
+ * nombre de choix. Elle habille la question ; elle ne la réécrit pas.
+ */
+export const varianteQuestionSchema = z
+  .object({
+    text: md.optional(),
+    /** Textes de choix à remplacer, par identifiant de choix existant. */
+    choices: z.record(z.string().min(1), md).optional(),
+    explanation: md.optional(),
+  })
+  .strict();
+
 export const varianteSchema = z
   .object({
     /** Remplace le bloc « exemple » du concept : l'histoire de terrain. */
@@ -122,6 +145,8 @@ export const varianteSchema = z
     captures: z.record(z.string().min(1), md).optional(),
     /** Indices de prompt à remplacer, par identifiant de prompt. */
     indices: z.record(z.string().min(1), md).optional(),
+    /** Questions de quiz à habiller, par identifiant de question (phase 15). */
+    questions: z.record(z.string().min(1), varianteQuestionSchema).optional(),
     /**
      * Variante écrite par l'IA et pas encore relue. L'application l'ignore
      * tant que ce drapeau est là : le contenu engendré ne peut donc pas
@@ -279,6 +304,7 @@ export type Capture = z.infer<typeof captureSchema>;
 export type Step = z.infer<typeof stepSchema>;
 export type Question = z.infer<typeof questionSchema>;
 export type Variante = z.infer<typeof varianteSchema>;
+export type VarianteQuestion = z.infer<typeof varianteQuestionSchema>;
 export type VarianteNiveau = z.infer<typeof varianteNiveauSchema>;
 export type Lesson = z.infer<typeof lessonSchema>;
 export type DossierKind = z.infer<typeof dossierKindSchema>;

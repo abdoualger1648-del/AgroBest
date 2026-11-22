@@ -91,6 +91,26 @@ C'est d'ailleurs pourquoi **le type `ovin` n'a pas de variante** — le texte g�
 1, 2, 4, 6, 7, 9, 14, 15, 17 et 19 en portent un. Sur les dix-huit autres, une variante de métier
 ne peut changer que les libellés de capture et les indices de prompt.
 
+Depuis la phase 15, une variante peut aussi **habiller une question de quiz** :
+
+```json
+"variantes": {
+  "serre": {
+    "questions": {
+      "q1": {
+        "text": "Énoncé réécrit pour la serre ?",
+        "choices": { "b": "Tenir une production continue de novembre à avril…" },
+        "explanation": "…"
+      }
+    }
+  }
+}
+```
+
+Les choix sont remplacés **par clé**. On ne peut donc ni en ajouter, ni en retirer, ni toucher
+`answer` : la bonne réponse reste ancrée à son identifiant. On habille la question, on ne la
+réécrit pas.
+
 **Le gabarit d'un prompt n'est pas remplaçable**, et le schéma ne l'autorise même pas. C'est lui
 qui porte les garde-fous, et il interpole déjà `{{project.type}}` : l'IA reçoit l'activité sans
 qu'on réécrive rien.

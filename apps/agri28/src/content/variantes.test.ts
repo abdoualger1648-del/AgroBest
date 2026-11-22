@@ -277,3 +277,117 @@ describe('appliquerVariantes : les deux axes', () => {
     });
   });
 });
+
+// ——— habillage des questions de quiz (phase 15) ———
+
+describe('variante appliquée au quiz', () => {
+  function avecQuiz(): Lesson {
+    const premiere = generique.sections.quiz.questions[0]!;
+    return {
+      ...generique,
+      variantes: {
+        serre: {
+          questions: {
+            [premiere.id]: {
+              text: 'Question habillée pour la serre ?',
+              choices: { [premiere.choices[0]!.id]: 'Choix habillé' },
+              explanation: 'Explication habillée.',
+            },
+          },
+        },
+      },
+    };
+  }
+
+  it('remplace l’énoncé, le choix visé et l’explication', () => {
+    const avant = avecQuiz();
+    const apres = appliquerVariante(avant, 'serre');
+    const question = apres.sections.quiz.questions[0]!;
+
+    expect(question.text).toBe('Question habillée pour la serre ?');
+    expect(question.explanation).toBe('Explication habillée.');
+    expect(question.choices[0]?.text).toBe('Choix habillé');
+  });
+
+  it('laisse intacts les choix non visés', () => {
+    const avant = avecQuiz();
+    const apres = appliquerVariante(avant, 'serre');
+    apres.sections.quiz.questions[0]?.choices.slice(1).forEach((choix, index) => {
+      expect(choix.text).toBe(avant.sections.quiz.questions[0]?.choices[index + 1]?.text);
+    });
+  });
+
+  it('ne déplace JAMAIS la bonne réponse', () => {
+    // Le verrou de ce schéma. `answer` n'est pas exposé aux variantes, et les
+    // choix sont remplacés PAR CLÉ : leur nombre et leurs identifiants ne
+    // bougent pas, donc la bonne réponse reste ancrée où elle était.
+    const avant = avecQuiz();
+    const apres = appliquerVariante(avant, 'serre');
+
+    apres.sections.quiz.questions.forEach((question, index) => {
+      const origine = avant.sections.quiz.questions[index]!;
+      expect(question.answer).toBe(origine.answer);
+      expect(question.choices.map((c) => c.id)).toEqual(origine.choices.map((c) => c.id));
+      expect(question.choices.some((c) => c.id === question.answer)).toBe(true);
+    });
+  });
+
+  it('laisse les autres questions du jour intactes', () => {
+    const avant = avecQuiz();
+    const apres = appliquerVariante(avant, 'serre');
+    expect(apres.sections.quiz.questions.slice(1)).toEqual(avant.sections.quiz.questions.slice(1));
+  });
+
+  it('ne modifie pas la leçon d’origine', () => {
+    const avant = avecQuiz();
+    const copie = structuredClone(avant);
+    appliquerVariante(avant, 'serre');
+    expect(avant).toEqual(copie);
+  });
+});
+
+describe('le vrai contenu : un serriste ne lit plus d’élevage', () => {
+  const ELEVAGE = /brebis|agneau|vache|troupeau|élevage|bétail|poulet|ruche|abeille|cheptel/i;
+
+  it('le jour 1 lui parle de serres, exemple et quiz compris', async () => {
+    const jour = await loadLesson(1, 'fr');
+    // La variante est encore en brouillon : on l'applique en la relisant,
+    // comme le fera la commande de validation.
+    const relue: Lesson = {
+      ...jour,
+      variantes: Object.fromEntries(
+        Object.entries(jour.variantes ?? {}).map(([type, v]) => [
+          type,
+          { ...v, brouillon: undefined },
+        ]),
+      ),
+    };
+    const vue = appliquerVariante(relue, 'serre');
+
+    const exemple = vue.sections.concept.body.find((bloc) => bloc.type === 'example');
+    expect(exemple && 'text' in exemple ? exemple.text : '').toMatch(/serre/i);
+
+    const q3 = vue.sections.quiz.questions.find((q) => q.id === 'q3');
+    expect(q3?.explanation).not.toMatch(ELEVAGE);
+    expect(q3?.explanation).toMatch(/serre/i);
+  });
+
+  it('le jour 7 lui propose un objectif de serre, pas 40 agneaux', async () => {
+    const jour = await loadLesson(7, 'fr');
+    const relue: Lesson = {
+      ...jour,
+      variantes: Object.fromEntries(
+        Object.entries(jour.variantes ?? {}).map(([type, v]) => [
+          type,
+          { ...v, brouillon: undefined },
+        ]),
+      ),
+    };
+    const vue = appliquerVariante(relue, 'serre');
+
+    const q1 = vue.sections.quiz.questions.find((q) => q.id === 'q1');
+    const bonne = q1?.choices.find((c) => c.id === q1.answer);
+    expect(bonne?.text).not.toMatch(ELEVAGE);
+    expect(bonne?.text).toMatch(/serre/i);
+  });
+});

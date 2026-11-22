@@ -217,6 +217,16 @@
       },
       "indices": {
         "p1": "Collez la reformulation obtenue ci-dessous. Si elle parle de pâturage au lieu de miellée, corrigez : c'est votre texte, pas celui de l'IA."
+      },
+      "questions": {
+        "q2": {
+          "choices": {
+            "a": "Décider du traitement à appliquer à mes ruches"
+          }
+        },
+        "q3": {
+          "explanation": "« Comment récolter plus de miel ? » donne une réponse de manuel. « Apiculture, 40 ruches, Médéa, objectif une récolte entre avril et juin » donne une réponse utilisable. Votre fiche sera insérée automatiquement dans chaque prompt des 27 jours suivants."
+        }
       }
     },
     "maraichage": {
@@ -229,6 +239,17 @@
       },
       "indices": {
         "p1": "Collez la reformulation obtenue ci-dessous. Si elle se trompe de culture ou de saison, corrigez : c'est votre texte, pas celui de l'IA."
+      },
+      "questions": {
+        "q2": {
+          "choices": {
+            "a": "Décider du traitement à appliquer sur mes légumes"
+          },
+          "explanation": "Rédiger, structurer, reformuler : c'est son terrain. Le traitement relève du technicien ou de l'agronome, la mesure d'un capteur ou de votre observation, et vos dépenses réelles ne sont connues que si vous les saisissez."
+        },
+        "q3": {
+          "explanation": "« Comment mieux vendre mes légumes ? » donne une réponse de manuel. « Maraîchage, 2 hectares, Aïn Defla, objectif écouler la récolte d'été avant fin août » donne une réponse utilisable. Votre fiche sera insérée automatiquement dans chaque prompt des 27 jours suivants."
+        }
       }
     },
     "bovin": {
@@ -242,7 +263,17 @@
       "indices": {
         "p1": "Collez la reformulation obtenue ci-dessous. Si elle parle de viande au lieu de lait, corrigez : c'est votre texte, pas celui de l'IA."
       },
-      "brouillon": true
+      "brouillon": true,
+      "questions": {
+        "q2": {
+          "choices": {
+            "a": "Décider si je dois traiter mes vaches contre les parasites"
+          }
+        },
+        "q3": {
+          "explanation": "« Comment avoir plus de lait ? » donne une réponse de manuel. « Troupeau laitier, 12 vaches, Souk Ahras, objectif un volume régulier d'octobre à mai » donne une réponse utilisable. Votre fiche sera insérée automatiquement dans chaque prompt des 27 jours suivants."
+        }
+      }
     },
     "avicole": {
       "terrain": {
@@ -255,7 +286,17 @@
       "indices": {
         "p1": "Collez la reformulation obtenue ci-dessous. Si elle parle de ponte au lieu de chair, corrigez : c'est votre texte, pas celui de l'IA."
       },
-      "brouillon": true
+      "brouillon": true,
+      "questions": {
+        "q2": {
+          "choices": {
+            "a": "Décider du traitement à donner à ma bande"
+          }
+        },
+        "q3": {
+          "explanation": "« Comment réduire ma mortalité ? » donne une réponse de manuel. « Poulets de chair, bande de 20 jours, Aïn Témouchent, objectif quatre bandes dans l'année » donne une réponse utilisable. Votre fiche sera insérée automatiquement dans chaque prompt des 27 jours suivants."
+        }
+      }
     },
     "serre": {
       "terrain": {
@@ -268,7 +309,18 @@
       "indices": {
         "p1": "Collez la reformulation obtenue ci-dessous. Si elle parle de plein champ au lieu de serre, corrigez : c'est votre texte, pas celui de l'IA."
       },
-      "brouillon": true
+      "brouillon": true,
+      "questions": {
+        "q2": {
+          "choices": {
+            "a": "Décider du traitement à appliquer sous mes serres"
+          },
+          "explanation": "Rédiger, structurer, reformuler : c'est son terrain. Le traitement relève du technicien ou de l'agronome, la mesure d'un capteur ou de votre observation, et vos dépenses réelles ne sont connues que si vous les saisissez."
+        },
+        "q3": {
+          "explanation": "« Comment améliorer mes rendements ? » donne une réponse de manuel. « Culture sous serre, 4 serres de tomate, Biskra, objectif une production continue de novembre à avril » donne une réponse utilisable. Votre fiche sera insérée automatiquement dans chaque prompt des 27 jours suivants."
+        }
+      }
     },
     "cereales": {
       "terrain": {
@@ -281,7 +333,18 @@
       "indices": {
         "p1": "Collez la reformulation obtenue ci-dessous. Si elle vous suppose irrigué alors que vous êtes en sec, corrigez : c'est votre texte, pas celui de l'IA."
       },
-      "brouillon": true
+      "brouillon": true,
+      "questions": {
+        "q2": {
+          "choices": {
+            "a": "Décider du traitement à appliquer sur mon blé"
+          },
+          "explanation": "Rédiger, structurer, reformuler : c'est son terrain. Le traitement relève du technicien ou de l'agronome, la mesure d'un capteur ou de votre observation, et vos dépenses réelles ne sont connues que si vous les saisissez."
+        },
+        "q3": {
+          "explanation": "« Comment faire un meilleur rendement ? » donne une réponse de manuel. « Céréales, 30 hectares de blé dur, Tiaret, objectif livrer avant fin juillet » donne une réponse utilisable. Votre fiche sera insérée automatiquement dans chaque prompt des 27 jours suivants."
+        }
+      }
     },
     "arboriculture": {
       "terrain": {
@@ -294,7 +357,18 @@
       "indices": {
         "p1": "Collez la reformulation obtenue ci-dessous. Si elle parle de culture annuelle au lieu de verger, corrigez : c'est votre texte, pas celui de l'IA."
       },
-      "brouillon": true
+      "brouillon": true,
+      "questions": {
+        "q2": {
+          "choices": {
+            "a": "Décider du traitement à appliquer sur mes arbres"
+          },
+          "explanation": "Rédiger, structurer, reformuler : c'est son terrain. Le traitement relève du technicien ou de l'agronome, la mesure d'un capteur ou de votre observation, et vos dépenses réelles ne sont connues que si vous les saisissez."
+        },
+        "q3": {
+          "explanation": "« Comment faire produire mes arbres ? » donne une réponse de manuel. « Arboriculture, verger de 300 oliviers, Jijel, objectif récolter et vendre avant fin décembre » donne une réponse utilisable. Votre fiche sera insérée automatiquement dans chaque prompt des 27 jours suivants."
+        }
+      }
     }
   },
   "variantesNiveau": {
