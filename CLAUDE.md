@@ -341,7 +341,7 @@ L'APK lui-même est assemblé par le workflow **APK** de GitHub Actions : voir
 | 13 | Gestion des comptes par l'administrateur : liste complète, ouverture et fermeture d'accès, niveau accordé ou retiré | terminée |
 | 14 | Connexion par Google et Facebook (édition web) ; texte de confidentialité révisé | terminée |
 | 15 | Le quiz s'adapte aussi au métier ; D80 corrigée sur sa prémisse | terminée |
-| 16 | Connexion Google **native** dans l'APK ; mise à jour sans désinstallation garantie et prouvée | code terminé — **non compilé** : en attente des secrets `APK_KEYSTORE_*` et `GOOGLE_SERVICES_JSON` |
+| 16 | Connexion Google **native** dans l'APK ; mise à jour sans désinstallation garantie et prouvée | terminée — **APK 1.7.0 signé** construit le 2026-11-22 (run 16, `versionCode` 16, empreinte SHA-1 `11:91:67:D0:…:59:5E`). Android compile avec le plugin. Reste à éprouver sur un téléphone : la connexion Google elle-même |
 
 ### Méthode de travail imposée
 Une phase à la fois. À la fin de chaque phase : résumé, tests, commit, puis **arrêt et attente d'un GO explicite**.
